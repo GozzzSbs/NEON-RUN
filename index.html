@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEON RUN</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="background-grid"></div>
+
+<header>
+    <div class="logo">NEON<span>RUN</span></div>
+    <div class="status">● ARCADE ONLINE</div>
+</header>
+
+<main>
+
+<section id="menu">
+
+    <div class="hero">
+        <p>⚡ THE CITY NEVER SLEEPS</p>
+        <h1>RUN YOUR<br><span>OWN RULES.</span></h1>
+        <p class="description">
+            Cours, esquive et bats ton record dans une ville futuriste.
+        </p>
+    </div>
+
+    <div class="container">
+
+        <div class="panel">
+
+            <h2>GAME MODES</h2>
+
+            <button class="mode selected" onclick="selectMode('classic',this)">
+                🏙️ CLASSIC RUN
+                <small>Évite les obstacles et récupère les pièces.</small>
+            </button>
+
+            <button class="mode" onclick="selectMode('nocoin',this)">
+                🪙 NO COIN CHALLENGE
+                <small>Une pièce touchée = GAME OVER.</small>
+            </button>
+
+            <button class="mode" onclick="selectMode('lava',this)">
+                🔥 THE FLOOR IS LAVA
+                <small>Ne touche jamais le sol !</small>
+            </button>
+
+            <button class="play" onclick="startGame()">
+                PLAY NOW →
+            </button>
+
+            <p class="controls">
+                ESPACE / FLÈCHE HAUT POUR SAUTER
+            </p>
+
+        </div>
+
+        <div class="panel">
+
+            <h2>CHOOSE YOUR RUNNER</h2>
+
+            <div class="character" id="character">
+                ⚡
+            </div>
+
+            <h2 id="skinName">VOLT</h2>
+
+            <div class="skins">
+
+                <button onclick="chooseSkin(0)">⚡</button>
+                <button onclick="chooseSkin(1)">🔥</button>
+                <button onclick="chooseSkin(2)">👾</button>
+                <button onclick="chooseSkin(3)">🥷</button>
+                <button onclick="chooseSkin(4)">🍀</button>
+                <button onclick="chooseSkin(5)">💗</button>
+                <button onclick="chooseSkin(6)">❄️</button>
+                <button onclick="chooseSkin(7)">👑</button>
+
+            </div>
+
+            <p class="controls">8 SKINS DISPONIBLES</p>
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+        NEON RUN © 2026 — PLAY • SURVIVE • REPEAT
+    </div>
+
+</section>
+
+
+<section id="gameScreen" class="hidden">
+
+    <div class="gameHeader">
+
+        <div>
+            <small>GAME MODE</small>
+            <h2 id="modeName">CLASSIC RUN</h2>
+        </div>
+
+        <div class="stats">
+            <div>SCORE <b id="score">0</b></div>
+            <div>COINS <b id="coins">0</b></div>
+            <div>BEST <b id="best">0</b></div>
+        </div>
+
+        <button onclick="pauseGame()">Ⅱ</button>
+
+    </div>
+
+    <canvas id="game" width="900" height="450"></canvas>
+
+    <div class="gameFooter">
+        <span>ESPACE POUR SAUTER</span>
+        <button onclick="backToMenu()">← QUITTER</button>
+    </div>
+
+</section>
+
+</main>
+
+
+<div id="gameOver" class="overlay hidden">
+
+    <div class="result">
+
+        <p>RUN TERMINÉE</p>
+
+        <h1 id="gameOverTitle">GAME OVER</h1>
+
+        <p id="gameOverReason">Tu peux faire mieux !</p>
+
+        <div class="resultStats">
+            <div>SCORE <b id="finalScore">0</b></div>
+            <div>COINS <b id="finalCoins">0</b></div>
+        </div>
+
+        <button class="play" onclick="startGame()">REJOUER →</button>
+
+        <button class="back" onclick="backToMenu()">MENU PRINCIPAL</button>
+
+    </div>
+
+</div>
+
+<script src="game.js"></script>
+
+</body>
+</html>
