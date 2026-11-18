@@ -72,10 +72,13 @@ const SUPABASE_URL = "https://xumhnzfrvyjiiwftarje.supabase.co";
 
 const SUPABASE_KEY = "sb_publishable_oJUFcIernBcgfNZqw9vBbA_TeNIJwHc";
 
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
+const supabaseClient = window.supabase?.createClient
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+    : null;
+
+if (!supabaseClient) {
+    console.warn("Supabase non chargé : espace développeur indisponible.");
+}
 let running = false;
 let paused = false;
 let gameEnded = false;
