@@ -16,7 +16,31 @@
 <body>
 
 <div class="background-grid"></div>
+<!-- CREATION DU PROFIL -->
 
+<div id="profileSetup" class="profile-setup">
+
+    <div class="profile-box">
+        <h1>🌌 NEON RUN</h1>
+        <h2>BIENVENUE RUNNER !</h2>
+
+        <p>Choisis ton pseudo pour commencer l'aventure.</p>
+
+        <input
+            type="text"
+            id="playerPseudo"
+            placeholder="Ton pseudo..."
+            maxlength="16"
+        >
+
+        <p id="pseudoError"></p>
+
+        <button onclick="savePlayerPseudo()">
+            🚀 COMMENCER
+        </button>
+    </div>
+
+</div>
 <!-- MENU PRINCIPAL -->
 
 <section id="menu">
