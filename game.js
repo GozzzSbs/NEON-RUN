@@ -1294,7 +1294,27 @@ function animate() {
 // DÉMARRER
 // ======================================================
 
-function startGame() {
+function startGame()// MODE THE FLOOR IS LAVA : MODE BIENTÔT DISPONIBLE
+if (selectedMode === "lava") {
+    document.body.innerHTML = `
+        <div style="
+            position: fixed;
+            inset: 0;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 60px;
+            font-weight: bold;
+            z-index: 999999;
+        ">
+            SOON...
+        </div>
+    `;
+    return;
+}{
     score = 0;
     coins = 0;
 
