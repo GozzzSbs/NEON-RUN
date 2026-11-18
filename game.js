@@ -1,9 +1,5 @@
-
-
-
 // ======================================================
 // NEON RUN 3D - MOTEUR COMPLET
-// Three.js
 // ======================================================
 
 const canvas = document.getElementById("game");
@@ -14,7 +10,7 @@ if (!window.THREE) {
 }
 
 if (!canvas) {
-    throw new Error("Canvas #game introuvable dans index.html");
+    throw new Error("Canvas #game introuvable");
 }
 
 // ======================================================
@@ -42,6 +38,7 @@ const renderer = new THREE.WebGLRenderer({
 });
 
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
 renderer.setSize(
     canvas.clientWidth || window.innerWidth,
     canvas.clientHeight || window.innerHeight
@@ -113,6 +110,18 @@ let movingStones = [];
 let player;
 let playerParts = {};
 
+const normalTrackMeshes = [];
+
+let roadMesh;
+let lavaGroup;
+let lavaPlatforms = [];
+
+let lavaPlatformTimer = 0;
+let lavaLastLane = 1;
+let lavaDistance = 0;
+
+const LAVA_PLATFORM_TOP = 0.42;
+
 // ======================================================
 // MATÉRIAUX
 // ======================================================
@@ -131,25 +140,13 @@ const roadMaterial = material(0x45413d);
 const railMaterial = material(0xaaaaaa, 0.3, 0.8);
 const woodMaterial = material(0x59402d);
 
-const normalTrackMeshes = [];
-
-let roadMesh;
-let lavaGroup;
-let lavaPlatforms = [];
-
-let lavaPlatformTimer = 0;
-let lavaLastLane = 1;
-let lavaDistance = 0;
-
-const LAVA_PLATFORM_TOP = 0.42;
-
 const skinMaterial = material(0xd99b79);
 const shirtMaterial = material(0x13b9e5);
 const pantsMaterial = material(0x26334f);
 const shoeMaterial = material(0xffffff);
 
 // ======================================================
-// CRÉATION DES OBJETS
+// OUTILS DE CRÉATION
 // ======================================================
 
 function box(w, h, d, color, x, y, z, parent = scene) {
@@ -192,40 +189,24 @@ function createTrack() {
 
         const x = lanePositions[i];
 
-        // Rails métalliques
-
         normalTrackMeshes.push(box(
-            0.12,
-            0.16,
-            200,
+            0.12, 0.16, 200,
             railMaterial,
-            x - 0.85,
-            0,
-            -75
+            x - 0.85, 0, -75
         ));
 
         normalTrackMeshes.push(box(
-            0.12,
-            0.16,
-            200,
+            0.12, 0.16, 200,
             railMaterial,
-            x + 0.85,
-            0,
-            -75
+            x + 0.85, 0, -75
         ));
-
-        // Traverses qui défileront
 
         for (let j = 0; j < 50; j++) {
 
             const sleeper = box(
-                2.05,
-                0.18,
-                0.45,
+                2.05, 0.18, 0.45,
                 woodMaterial,
-                x,
-                -0.05,
-                15 - j * 4
+                x, -0.05, 15 - j * 4
             );
 
             movingSleepers.push(sleeper);
@@ -234,8 +215,6 @@ function createTrack() {
         }
 
     }
-
-    // Gravier
 
     for (let i = 0; i < 500; i++) {
 
@@ -277,17 +256,11 @@ function createBuilding(x, z) {
     const building = new THREE.Group();
 
     box(
-        width,
-        height,
-        6,
+        width, height, 6,
         0x30334d,
-        0,
-        height / 2,
-        0,
+        0, height / 2, 0,
         building
     );
-
-    // Fenêtres
 
     for (let y = 1; y < height - 1; y += 2.5) {
 
@@ -296,21 +269,13 @@ function createBuilding(x, z) {
             if (Math.random() > 0.25) {
 
                 const win = box(
-                    0.65,
-                    1.1,
-                    0.12,
-                    Math.random() > 0.5
-                        ? 0xffd77a
-                        : 0x8fdfff,
-                    w * 1.4,
-                    y,
-                    3.07,
+                    0.65, 1.1, 0.12,
+                    Math.random() > 0.5 ? 0xffd77a : 0x8fdfff,
+                    w * 1.4, y, 3.07,
                     building
                 );
 
-                win.material.emissive =
-                    win.material.color;
-
+                win.material.emissive = win.material.color;
                 win.material.emissiveIntensity = 0.7;
 
             }
@@ -322,16 +287,13 @@ function createBuilding(x, z) {
     building.position.set(x, 0, z);
 
     scene.add(building);
-
     movingBuildings.push(building);
 
 }
 
 for (let i = 0; i < 22; i++) {
-
     createBuilding(-9, -i * 9);
     createBuilding(9, -i * 9);
-
 }
 
 // ======================================================
@@ -348,22 +310,16 @@ function createTree(x, z) {
     );
 
     trunk.position.y = 1;
-
     tree.add(trunk);
 
     for (let i = 0; i < 3; i++) {
 
         const leaves = new THREE.Mesh(
-            new THREE.ConeGeometry(
-                1.8 - i * 0.3,
-                3,
-                8
-            ),
+            new THREE.ConeGeometry(1.8 - i * 0.3, 3, 8),
             material(0x148d48)
         );
 
         leaves.position.y = 2.5 + i * 1.5;
-
         tree.add(leaves);
 
     }
@@ -371,27 +327,22 @@ function createTree(x, z) {
     tree.position.set(x, 0, z);
 
     scene.add(tree);
-
     movingTrees.push(tree);
 
 }
 
 for (let i = 0; i < 18; i++) {
-
     createTree(-6, -i * 10);
     createTree(6, -i * 10);
-
 }
 
 // ======================================================
-// PERSONNAGE 3D
+// PERSONNAGE
 // ======================================================
 
 function createPlayer() {
 
     player = new THREE.Group();
-
-    // TORSE
 
     const body = new THREE.Mesh(
         new THREE.BoxGeometry(0.85, 1.1, 0.45),
@@ -399,12 +350,9 @@ function createPlayer() {
     );
 
     body.position.y = 1.8;
-
     player.add(body);
 
     playerParts.body = body;
-
-    // TÊTE
 
     const head = new THREE.Mesh(
         new THREE.SphereGeometry(0.35, 16, 16),
@@ -412,29 +360,17 @@ function createPlayer() {
     );
 
     head.position.y = 2.65;
-
     player.add(head);
-
-    // CHEVEUX
 
     const hair = new THREE.Mesh(
         new THREE.SphereGeometry(
-            0.36,
-            16,
-            16,
-            0,
-            Math.PI * 2,
-            0,
-            Math.PI / 2
+            0.36, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2
         ),
         material(0x173b69)
     );
 
     hair.position.y = 2.76;
-
     player.add(hair);
-
-    // CAPUCHE
 
     const hood = new THREE.Mesh(
         new THREE.SphereGeometry(0.38, 16, 16),
@@ -442,25 +378,16 @@ function createPlayer() {
     );
 
     hood.position.set(0, 2.58, 0.05);
-
     player.add(hood);
 
     playerParts.arms = [];
     playerParts.legs = [];
 
-    // BRAS ET JAMBES
-
     for (const side of [-1, 1]) {
-
-        // Bras articulé
 
         const arm = new THREE.Group();
 
-        arm.position.set(
-            side * 0.55,
-            2.1,
-            0
-        );
+        arm.position.set(side * 0.55, 2.1, 0);
 
         const armMesh = new THREE.Mesh(
             new THREE.BoxGeometry(0.23, 0.9, 0.25),
@@ -468,7 +395,6 @@ function createPlayer() {
         );
 
         armMesh.position.y = -0.4;
-
         arm.add(armMesh);
 
         const hand = new THREE.Mesh(
@@ -477,22 +403,14 @@ function createPlayer() {
         );
 
         hand.position.y = -0.9;
-
         arm.add(hand);
 
         player.add(arm);
-
         playerParts.arms.push(arm);
-
-        // Jambes articulées
 
         const leg = new THREE.Group();
 
-        leg.position.set(
-            side * 0.23,
-            1.2,
-            0
-        );
+        leg.position.set(side * 0.23, 1.2, 0);
 
         const legMesh = new THREE.Mesh(
             new THREE.BoxGeometry(0.3, 0.9, 0.35),
@@ -500,7 +418,6 @@ function createPlayer() {
         );
 
         legMesh.position.y = -0.4;
-
         leg.add(legMesh);
 
         const shoe = new THREE.Mesh(
@@ -509,16 +426,12 @@ function createPlayer() {
         );
 
         shoe.position.set(0, -0.85, -0.1);
-
         leg.add(shoe);
 
         player.add(leg);
-
         playerParts.legs.push(leg);
 
     }
-
-    // CAPE
 
     const cape = new THREE.Mesh(
         new THREE.BoxGeometry(0.8, 1.3, 0.08),
@@ -526,7 +439,6 @@ function createPlayer() {
     );
 
     cape.position.set(0, 1.45, 0.3);
-
     player.add(cape);
 
     player.position.set(0, 0, 0);
@@ -538,116 +450,38 @@ function createPlayer() {
 createPlayer();
 
 // ======================================================
-// TRAIN 3D
+// TRAINS
 // ======================================================
 
 function createTrain(laneIndex, z) {
 
     const train = new THREE.Group();
 
-    // Corps du train
+    box(2.5, 3.5, 13, 0x087f9c, 0, 2, 0, train);
 
-    box(
-        2.5,
-        3.5,
-        13,
-        0x087f9c,
-        0,
-        2,
-        0,
-        train
-    );
+    box(2.3, 1.1, 0.15, 0x12c5e5, 0, 3, 6.55, train);
 
-    // Face avant
-
-    box(
-        2.3,
-        1.1,
-        0.15,
-        0x12c5e5,
-        0,
-        3,
-        6.55,
-        train
-    );
-
-    // Pare-brise
-
-    box(
-        1.6,
-        0.8,
-        0.1,
-        0x15213c,
-        0,
-        2.8,
-        6.65,
-        train
-    );
-
-    // Fenêtres latérales
+    box(1.6, 0.8, 0.1, 0x15213c, 0, 2.8, 6.65, train);
 
     for (let zPos = -5; zPos <= 4; zPos += 3) {
 
-        box(
-            0.08,
-            1,
-            1.5,
-            0x9eeaff,
-            -1.27,
-            2.8,
-            zPos,
-            train
-        );
-
-        box(
-            0.08,
-            1,
-            1.5,
-            0x9eeaff,
-            1.27,
-            2.8,
-            zPos,
-            train
-        );
+        box(0.08, 1, 1.5, 0x9eeaff, -1.27, 2.8, zPos, train);
+        box(0.08, 1, 1.5, 0x9eeaff, 1.27, 2.8, zPos, train);
 
     }
-
-    // Phares
 
     for (const side of [-1, 1]) {
 
-        const light = new THREE.PointLight(
-            0xffeeaa,
-            3,
-            10
-        );
+        const light = new THREE.PointLight(0xffeeaa, 3, 10);
 
-        light.position.set(
-            side * 0.8,
-            0.8,
-            7
-        );
-
+        light.position.set(side * 0.8, 0.8, 7);
         train.add(light);
 
-        box(
-            0.35,
-            0.35,
-            0.15,
-            0xffee99,
-            side * 0.8,
-            0.8,
-            6.7,
-            train
-        );
+        box(0.35, 0.35, 0.15, 0xffee99, side * 0.8, 0.8, 6.7, train);
 
     }
 
-    train.position.set(
-        lanePositions[laneIndex],
-        0,
-        z
-    );
+    train.position.set(lanePositions[laneIndex], 0, z);
 
     scene.add(train);
 
@@ -660,65 +494,24 @@ function createTrain(laneIndex, z) {
 }
 
 // ======================================================
-// BARRIÈRES 3D
+// BARRIÈRES
 // ======================================================
 
 function createBarrier(laneIndex, z) {
 
     const barrier = new THREE.Group();
 
-    // Barre rouge
-
-    box(
-        2.1,
-        0.8,
-        0.3,
-        0xe52e3d,
-        0,
-        1,
-        0,
-        barrier
-    );
-
-    // Pieds
+    box(2.1, 0.8, 0.3, 0xe52e3d, 0, 1, 0, barrier);
 
     for (const side of [-1, 1]) {
-
-        box(
-            0.15,
-            1.3,
-            0.2,
-            0xdddddd,
-            side * 0.8,
-            0.65,
-            0,
-            barrier
-        );
-
+        box(0.15, 1.3, 0.2, 0xdddddd, side * 0.8, 0.65, 0, barrier);
     }
-
-    // Bandes blanches
 
     for (let i = -2; i <= 2; i++) {
-
-        box(
-            0.2,
-            0.85,
-            0.32,
-            0xffffff,
-            i * 0.4,
-            1,
-            0,
-            barrier
-        );
-
+        box(0.2, 0.85, 0.32, 0xffffff, i * 0.4, 1, 0, barrier);
     }
 
-    barrier.position.set(
-        lanePositions[laneIndex],
-        0,
-        z
-    );
+    barrier.position.set(lanePositions[laneIndex], 0, z);
 
     scene.add(barrier);
 
@@ -746,20 +539,15 @@ function createCoin(laneIndex, z) {
         })
     );
 
-    coin.position.set(
-        lanePositions[laneIndex],
-        1.3,
-        z
-    );
+    coin.position.set(lanePositions[laneIndex], 1.3, z);
 
     scene.add(coin);
-
     coinObjects.push(coin);
 
 }
 
 // ======================================================
-// MODE THE FLOOR IS LAVA
+// ENVIRONNEMENT LAVE
 // ======================================================
 
 function createLavaEnvironment() {
@@ -790,8 +578,6 @@ function createLavaEnvironment() {
         opacity: 0.8
     });
 
-    // Fissures lumineuses sur la lave
-
     for (let i = 0; i < 65; i++) {
 
         const crack = new THREE.Mesh(
@@ -812,21 +598,15 @@ function createLavaEnvironment() {
         crack.rotation.y = (Math.random() - 0.5) * 0.8;
 
         lavaGroup.add(crack);
-
         crack.userData.isLavaCrack = true;
 
     }
 
     scene.add(lavaGroup);
 
-    const lavaLight = new THREE.PointLight(
-        0xff3b12,
-        2.2,
-        38
-    );
+    const lavaLight = new THREE.PointLight(0xff3b12, 2.2, 38);
 
     lavaLight.position.set(0, 2.5, -8);
-
     lavaGroup.add(lavaLight);
 
 }
@@ -838,9 +618,6 @@ function setLavaVisuals(enabled) {
     normalTrackMeshes.forEach(mesh => {
         mesh.visible = !enabled;
     });
-
-    movingSleepers.forEach(mesh => mesh.visible = !enabled);
-    movingStones.forEach(mesh => mesh.visible = !enabled);
 
     if (lavaGroup) {
         lavaGroup.visible = enabled;
@@ -860,7 +637,7 @@ function setLavaVisuals(enabled) {
 }
 
 // ======================================================
-// CRÉATION DES PLATEFORMES DE LAVE
+// PLATEFORMES DE LAVE
 // ======================================================
 
 function createLavaPlatform(
@@ -910,11 +687,7 @@ function createLavaPlatform(
     for (const side of [-1, 1]) {
 
         const edge = new THREE.Mesh(
-            new THREE.BoxGeometry(
-                0.09,
-                0.08,
-                depth
-            ),
+            new THREE.BoxGeometry(0.09, 0.08, depth),
             edgeMaterial
         );
 
@@ -928,15 +701,7 @@ function createLavaPlatform(
 
     }
 
-    // laneIndex = 1 place la grande plateforme au centre des trois voies.
-
-    platform.position.set(
-        lanePositions[laneIndex],
-        0,
-        z
-    );
-
-    // On conserve les dimensions pour les collisions.
+    platform.position.set(lanePositions[laneIndex], 0, z);
 
     platform.userData.width = width;
     platform.userData.depth = depth;
@@ -950,14 +715,7 @@ function createLavaPlatform(
 
 }
 
-// ======================================================
-// GÉNÉRATION DU PARCOURS DE LAVE
-// ======================================================
-
 function spawnLavaSegment(z) {
-
-    // Le parcours change progressivement de voie,
-    // sans saut impossible de gauche à droite.
 
     const choices = [lavaLastLane];
 
@@ -976,9 +734,6 @@ function spawnLavaSegment(z) {
 
     createLavaPlatform(nextLane, z);
 
-    // Une deuxième plateforme apparaît parfois
-    // pour offrir un autre chemin.
-
     if (Math.random() < 0.38) {
 
         const otherLanes = [0, 1, 2].filter(
@@ -993,10 +748,6 @@ function spawnLavaSegment(z) {
     }
 
 }
-
-// ======================================================
-// RÉINITIALISATION DES PLATEFORMES
-// ======================================================
 
 function resetLavaPlatforms() {
 
@@ -1014,43 +765,15 @@ function resetLavaPlatforms() {
 
     createLavaEnvironment();
 
-    // 1. GRANDE PLATEFORME DE DÉPART
-    // Couvre les trois voies.
+    createLavaPlatform(1, -25, 9.2, 60);
 
-    createLavaPlatform(
-        1,
-        -25,
-        9.2,
-        60
-    );
-
-    // 2. PLATEFORME DE TRANSITION
-    // Elle couvre également les trois voies.
-    // Elle évite de tomber au moment du changement.
-
-    createLavaPlatform(
-        1,
-        -59,
-        9.2,
-        12
-    );
-
-    // 3. PARCOURS NORMAL
-    // Les petites plateformes commencent ensuite.
+    createLavaPlatform(1, -59, 9.2, 12);
 
     for (let i = 0; i < 9; i++) {
-
-        spawnLavaSegment(
-            -77 - i * 12
-        );
-
+        spawnLavaSegment(-77 - i * 12);
     }
 
 }
-
-// ======================================================
-// DÉPLACEMENT DES PLATEFORMES
-// ======================================================
 
 function moveLavaPlatforms() {
 
@@ -1060,12 +783,8 @@ function moveLavaPlatforms() {
     lavaPlatformTimer++;
 
     lavaPlatforms.forEach(item => {
-
         item.object.position.z += speed;
-
     });
-
-    // Supprimer les plateformes passées.
 
     lavaPlatforms = lavaPlatforms.filter(item => {
 
@@ -1080,8 +799,6 @@ function moveLavaPlatforms() {
         return true;
 
     });
-
-    // Garder toujours un parcours devant le joueur.
 
     if (
         lavaPlatformTimer >=
@@ -1101,8 +818,6 @@ function moveLavaPlatforms() {
         lavaPlatformTimer = 0;
 
     }
-
-    // Animation des fissures lumineuses.
 
     if (lavaGroup) {
 
@@ -1124,31 +839,20 @@ function moveLavaPlatforms() {
 
 }
 
-// ======================================================
-// COLLISION AVEC LES PLATEFORMES
-// ======================================================
-
 function isPlayerAboveLavaPlatform() {
 
     return lavaPlatforms.some(item => {
 
         const platform = item.object;
 
-        const width =
-            platform.userData.width || 2.55;
-
-        const depth =
-            platform.userData.depth || 5.2;
+        const width = platform.userData.width || 2.55;
+        const depth = platform.userData.depth || 5.2;
 
         const insideX =
-            Math.abs(
-                platform.position.x - player.position.x
-            ) < width / 2 - 0.15;
+            Math.abs(platform.position.x - player.position.x) < width / 2 - 0.15;
 
         const insideZ =
-            Math.abs(
-                platform.position.z
-            ) < depth / 2 - 0.15;
+            Math.abs(platform.position.z) < depth / 2 - 0.15;
 
         return insideX && insideZ;
 
@@ -1162,27 +866,16 @@ function isPlayerAboveLavaPlatform() {
 
 function spawnObjects() {
 
-    const laneIndex =
-        Math.floor(Math.random() * 3);
-
+    const laneIndex = Math.floor(Math.random() * 3);
     const random = Math.random();
 
     if (random < 0.35) {
-
         createTrain(laneIndex, -100);
-
     } else {
-
         createBarrier(laneIndex, -100);
-
     }
 
-    // Le mode lave est un mode NO COIN :
-    // aucune pièce n'est générée.
-
     if (selectedMode === "lava") return;
-
-    // Ligne de pièces dans une autre voie.
 
     if (Math.random() < 0.8) {
 
@@ -1191,17 +884,10 @@ function spawnObjects() {
         );
 
         const coinLane =
-            possibleLanes[
-                Math.floor(Math.random() * possibleLanes.length)
-            ];
+            possibleLanes[Math.floor(Math.random() * possibleLanes.length)];
 
         for (let i = 0; i < 5; i++) {
-
-            createCoin(
-                coinLane,
-                -75 - i * 3
-            );
-
+            createCoin(coinLane, -75 - i * 3);
         }
 
     }
@@ -1216,9 +902,7 @@ function selectMode(mode, button) {
 
     selectedMode = mode;
 
-    document.querySelectorAll(
-        ".mode-buttons button"
-    ).forEach(b => {
+    document.querySelectorAll(".mode-buttons button").forEach(b => {
         b.classList.remove("active");
     });
 
@@ -1239,14 +923,10 @@ function selectMode(mode, button) {
 
     };
 
-    const description =
-        document.getElementById("modeDescription");
+    const description = document.getElementById("modeDescription");
 
     if (description) {
-
-        description.textContent =
-            descriptions[mode] || descriptions.classic;
-
+        description.textContent = descriptions[mode] || descriptions.classic;
     }
 
 }
@@ -1261,9 +941,7 @@ function setDifficulty(level, button) {
 
     difficulty = level;
 
-    document.querySelectorAll(
-        ".difficulty-buttons button"
-    ).forEach(b => {
+    document.querySelectorAll(".difficulty-buttons button").forEach(b => {
         b.classList.remove("active");
     });
 
@@ -1272,12 +950,10 @@ function setDifficulty(level, button) {
     }
 
     const speeds = {
-
         facile: 0.45,
         normal: 0.65,
         difficile: 0.85,
         extreme: 1.1
-
     };
 
     speed = speeds[level] || 0.65;
@@ -1287,7 +963,7 @@ function setDifficulty(level, button) {
 window.setDifficulty = setDifficulty;
 
 // ======================================================
-// COMMANDES ZQSD
+// COMMANDES
 // ======================================================
 
 function moveLeft() {
@@ -1295,7 +971,6 @@ function moveLeft() {
     if (!running || paused) return;
 
     lane = Math.max(0, lane - 1);
-
     targetX = lanePositions[lane];
 
 }
@@ -1305,7 +980,6 @@ function moveRight() {
     if (!running || paused) return;
 
     lane = Math.min(2, lane + 1);
-
     targetX = lanePositions[lane];
 
 }
@@ -1325,14 +999,33 @@ function jump() {
 
 }
 
+// NOUVELLE GLISSADE :
+// Si on appuie pendant un saut, on plonge rapidement.
+
 function slide() {
 
     if (!running || paused) return;
 
-    if (!sliding && !jumping) {
+    if (jumping) {
+
+        // Forte impulsion vers le bas.
+
+        jumpVelocity = -0.38;
+
+        // La glissade commence à l'atterrissage.
 
         sliding = true;
+        slideTimer = 50;
 
+        return;
+
+    }
+
+    // Glissade classique au sol.
+
+    if (!sliding) {
+
+        sliding = true;
         slideTimer = 50;
 
     }
@@ -1347,9 +1040,7 @@ window.addEventListener("keydown", e => {
         ["arrowleft", "arrowright", "arrowup", "arrowdown", " "]
         .includes(key)
     ) {
-
         e.preventDefault();
-
     }
 
     if (key === "q" || key === "arrowleft") {
@@ -1360,14 +1051,8 @@ window.addEventListener("keydown", e => {
         moveRight();
     }
 
-    if (
-        key === "z" ||
-        key === "arrowup" ||
-        key === " "
-    ) {
-
+    if (key === "z" || key === "arrowup" || key === " ") {
         jump();
-
     }
 
     if (key === "s" || key === "arrowdown") {
@@ -1386,9 +1071,6 @@ window.addEventListener("keydown", e => {
 
 function checkCollisions() {
 
-    // Vérifier la lave uniquement quand le personnage
-    // est au niveau des plateformes.
-
     if (
         selectedMode === "lava" &&
         !jumping &&
@@ -1396,25 +1078,18 @@ function checkCollisions() {
     ) {
 
         endGame("Tombé dans la lave !");
-
         return;
 
     }
 
     for (const obstacle of obstacles) {
 
-        const distance =
-            obstacle.object.position.z;
+        const distance = obstacle.object.position.z;
 
         const sameLane =
-            Math.abs(
-                obstacle.object.position.x -
-                player.position.x
-            ) < 1.25;
+            Math.abs(obstacle.object.position.x - player.position.x) < 1.25;
 
         if (!sameLane) continue;
-
-        // TRAIN
 
         if (
             obstacle.type === "train" &&
@@ -1423,12 +1098,9 @@ function checkCollisions() {
         ) {
 
             endGame("Tu as percuté un train !");
-
             return;
 
         }
-
-        // BARRIÈRE
 
         if (
             obstacle.type === "barrier" &&
@@ -1452,28 +1124,17 @@ function checkCollisions() {
 
     }
 
-    // PIÈCES
-
-    for (
-        let i = coinObjects.length - 1;
-        i >= 0;
-        i--
-    ) {
+    for (let i = coinObjects.length - 1; i >= 0; i--) {
 
         const coin = coinObjects[i];
 
         if (
             Math.abs(coin.position.z) < 1.5 &&
-            Math.abs(
-                coin.position.x - player.position.x
-            ) < 1.2 &&
-            Math.abs(
-                coin.position.y - (1.3 + player.position.y)
-            ) < 1.5
+            Math.abs(coin.position.x - player.position.x) < 1.2 &&
+            Math.abs(coin.position.y - (1.3 + player.position.y)) < 1.5
         ) {
 
             scene.remove(coin);
-
             coinObjects.splice(i, 1);
 
             if (selectedMode === "nocoin") {
@@ -1487,7 +1148,6 @@ function checkCollisions() {
             }
 
             coins++;
-
             score += 100;
 
         }
@@ -1504,20 +1164,13 @@ function animateRunner() {
 
     if (jumping || sliding) return;
 
-    const movement =
-        Math.sin(frame * 0.18);
+    const movement = Math.sin(frame * 0.18);
 
-    playerParts.arms[0].rotation.x =
-        movement * 0.8;
+    playerParts.arms[0].rotation.x = movement * 0.8;
+    playerParts.arms[1].rotation.x = -movement * 0.8;
 
-    playerParts.arms[1].rotation.x =
-        -movement * 0.8;
-
-    playerParts.legs[0].rotation.x =
-        -movement * 0.9;
-
-    playerParts.legs[1].rotation.x =
-        movement * 0.9;
+    playerParts.legs[0].rotation.x = -movement * 0.9;
+    playerParts.legs[1].rotation.x = movement * 0.9;
 
     player.position.y =
         selectedMode === "lava"
@@ -1532,58 +1185,42 @@ function animateRunner() {
 
 function moveEnvironment() {
 
-    // Traverses des rails
-
     movingSleepers.forEach(sleeper => {
 
         sleeper.position.z += speed;
 
         if (sleeper.position.z > 20) {
-
             sleeper.position.z -= 200;
-
         }
 
     });
-
-    // Gravier
 
     movingStones.forEach(stone => {
 
         stone.position.z += speed;
 
         if (stone.position.z > 20) {
-
             stone.position.z -= 200;
-
         }
 
     });
-
-    // Immeubles
 
     movingBuildings.forEach(building => {
 
         building.position.z += speed;
 
         if (building.position.z > 25) {
-
             building.position.z -= 198;
-
         }
 
     });
-
-    // Arbres
 
     movingTrees.forEach(tree => {
 
         tree.position.z += speed;
 
         if (tree.position.z > 20) {
-
             tree.position.z -= 180;
-
         }
 
     });
@@ -1591,15 +1228,13 @@ function moveEnvironment() {
 }
 
 // ======================================================
-// DÉPLACEMENT DES TRAINS ET BARRIÈRES
+// DÉPLACEMENT DES OBSTACLES
 // ======================================================
 
 function moveObstacles() {
 
     obstacles.forEach(obstacle => {
-
         obstacle.object.position.z += speed;
-
     });
 
     obstacles = obstacles.filter(obstacle => {
@@ -1607,7 +1242,6 @@ function moveObstacles() {
         if (obstacle.object.position.z > 18) {
 
             scene.remove(obstacle.object);
-
             return false;
 
         }
@@ -1627,9 +1261,7 @@ function moveCoins() {
     coinObjects.forEach(coin => {
 
         coin.position.z += speed;
-
         coin.rotation.y += 0.08;
-
         coin.rotation.z += 0.04;
 
     });
@@ -1639,7 +1271,6 @@ function moveCoins() {
         if (coin.position.z > 18) {
 
             scene.remove(coin);
-
             return false;
 
         }
@@ -1651,31 +1282,18 @@ function moveCoins() {
 }
 
 // ======================================================
-// INTERFACE SCORE
+// HUD
 // ======================================================
 
 function updateHUD() {
 
-    const scoreElement =
-        document.getElementById("score");
+    const scoreElement = document.getElementById("score");
+    const coinElement = document.getElementById("coins");
+    const bestElement = document.getElementById("best");
 
-    const coinElement =
-        document.getElementById("coins");
-
-    const bestElement =
-        document.getElementById("best");
-
-    if (scoreElement) {
-        scoreElement.textContent = score;
-    }
-
-    if (coinElement) {
-        coinElement.textContent = coins;
-    }
-
-    if (bestElement) {
-        bestElement.textContent = best;
-    }
+    if (scoreElement) scoreElement.textContent = score;
+    if (coinElement) coinElement.textContent = coins;
+    if (bestElement) bestElement.textContent = best;
 
 }
 
@@ -1688,55 +1306,31 @@ function endGame(reason) {
     if (gameEnded) return;
 
     gameEnded = true;
-
     running = false;
-
     paused = false;
 
     if (score > best) {
 
         best = score;
 
-        localStorage.setItem(
-            "neonBest",
-            best
-        );
+        localStorage.setItem("neonBest", best);
 
     }
 
-    const gameOver =
-        document.getElementById("gameOver");
+    const gameOver = document.getElementById("gameOver");
+    const title = document.getElementById("gameOverTitle");
+    const reasonElement = document.getElementById("gameOverReason");
+    const finalScore = document.getElementById("finalScore");
+    const finalCoins = document.getElementById("finalCoins");
 
-    const title =
-        document.getElementById("gameOverTitle");
-
-    const reasonElement =
-        document.getElementById("gameOverReason");
-
-    const finalScore =
-        document.getElementById("finalScore");
-
-    const finalCoins =
-        document.getElementById("finalCoins");
-
-    if (title) {
-        title.textContent = "GAME OVER";
-    }
+    if (title) title.textContent = "GAME OVER";
 
     if (reasonElement) {
-
-        reasonElement.textContent =
-            reason || "Fin de la partie !";
-
+        reasonElement.textContent = reason || "Fin de la partie !";
     }
 
-    if (finalScore) {
-        finalScore.textContent = score;
-    }
-
-    if (finalCoins) {
-        finalCoins.textContent = coins;
-    }
+    if (finalScore) finalScore.textContent = score;
+    if (finalCoins) finalCoins.textContent = coins;
 
     if (gameOver) {
         gameOver.classList.remove("hidden");
@@ -1757,30 +1351,27 @@ function animate() {
     if (!running || paused || gameEnded) return;
 
     frame++;
-
     score++;
 
     spawnTimer++;
 
-    // Apparition des obstacles
-
-    const spawnDelay =
-        Math.max(55, 100 - speed * 25);
+    const spawnDelay = Math.max(55, 100 - speed * 25);
 
     if (spawnTimer >= spawnDelay) {
 
         spawnObjects();
-
         spawnTimer = 0;
 
     }
 
-    // Déplacement du personnage entre les voies
+    // Déplacement latéral.
 
     player.position.x +=
         (targetX - player.position.x) * 0.18;
 
-    // Saut
+    // ==================================================
+    // SAUT ET DESCENTE RAPIDE
+    // ==================================================
 
     if (jumping) {
 
@@ -1794,7 +1385,24 @@ function animate() {
                 ? LAVA_PLATFORM_TOP
                 : 0;
 
+        // Le personnage touche le sol.
+
         if (player.position.y <= landingHeight) {
+
+            player.position.y = landingHeight;
+
+            jumping = false;
+
+            jumpVelocity = 0;
+
+            // S'il avait demandé une glissade en plein saut,
+            // elle continue automatiquement au sol.
+
+            if (sliding) {
+                slideTimer = Math.max(slideTimer, 35);
+            }
+
+            // Vérifier la plateforme à l'atterrissage en mode lave.
 
             if (
                 selectedMode === "lava" &&
@@ -1802,20 +1410,17 @@ function animate() {
             ) {
 
                 endGame("Tombé dans la lave !");
-
                 return;
 
             }
-
-            player.position.y = landingHeight;
-
-            jumping = false;
 
         }
 
     }
 
-    // Glissade
+    // ==================================================
+    // GLISSADE
+    // ==================================================
 
     if (sliding) {
 
@@ -1833,49 +1438,41 @@ function animate() {
 
     }
 
-    // En mode lave, le personnage court au niveau
-    // du dessus des plateformes.
+    // En mode lave, garder le personnage sur le dessus
+    // des plateformes lorsqu'il ne saute pas.
 
-    if (
-        selectedMode === "lava" &&
-        !jumping
-    ) {
+    if (selectedMode === "lava" && !jumping) {
 
         player.position.y = LAVA_PLATFORM_TOP;
 
     }
 
-    // Animation de course
+    // Animation de course.
 
     animateRunner();
 
-    // Décor qui défile
+    // Décor.
 
     moveEnvironment();
-
     moveLavaPlatforms();
 
-    // Trains et barrières
+    // Obstacles et pièces.
 
     moveObstacles();
-
-    // Pièces
-
     moveCoins();
 
-    // Collisions
+    // Collisions.
 
     checkCollisions();
 
     if (!running) return;
 
-    // Caméra derrière le personnage
+    // Caméra.
 
     camera.position.x +=
         (player.position.x * 0.35 - camera.position.x) * 0.08;
 
-    camera.position.y =
-        5 + player.position.y * 0.3;
+    camera.position.y = 5 + player.position.y * 0.3;
 
     camera.lookAt(
         player.position.x * 0.25,
@@ -1912,108 +1509,62 @@ function startGame() {
 
     player.position.set(
         0,
-        selectedMode === "lava"
-            ? LAVA_PLATFORM_TOP
-            : 0,
+        selectedMode === "lava" ? LAVA_PLATFORM_TOP : 0,
         0
     );
 
     player.rotation.set(0, 0, 0);
-
     player.scale.set(1, 1, 1);
 
-    // Supprimer les anciens obstacles
-
     obstacles.forEach(obstacle => {
-
         scene.remove(obstacle.object);
-
     });
 
     coinObjects.forEach(coin => {
-
         scene.remove(coin);
-
     });
 
     obstacles = [];
     coinObjects = [];
 
-    // Activer ou désactiver le décor de lave.
-
     setLavaVisuals(selectedMode === "lava");
-
-    // Recréer le parcours de plateformes.
 
     resetLavaPlatforms();
 
-    // Réinitialiser la caméra
-
     camera.position.set(0, 5, 9);
-
     camera.lookAt(0, 1.5, -20);
 
-    // Réinitialiser la vitesse
-
     const speeds = {
-
         facile: 0.45,
         normal: 0.65,
         difficile: 0.85,
         extreme: 1.1
-
     };
 
     speed = speeds[difficulty] || 0.65;
-
-    // Interface
 
     running = true;
     paused = false;
     gameEnded = false;
 
-    const menu =
-        document.getElementById("menu");
+    const menu = document.getElementById("menu");
+    const gameScreen = document.getElementById("gameScreen");
+    const gameOver = document.getElementById("gameOver");
 
-    const gameScreen =
-        document.getElementById("gameScreen");
+    if (menu) menu.classList.add("hidden");
+    if (gameScreen) gameScreen.classList.remove("hidden");
+    if (gameOver) gameOver.classList.add("hidden");
 
-    const gameOver =
-        document.getElementById("gameOver");
-
-    if (menu) {
-        menu.classList.add("hidden");
-    }
-
-    if (gameScreen) {
-        gameScreen.classList.remove("hidden");
-    }
-
-    if (gameOver) {
-        gameOver.classList.add("hidden");
-    }
-
-    const modeName =
-        document.getElementById("modeName");
+    const modeName = document.getElementById("modeName");
 
     if (modeName) {
 
         if (selectedMode === "nocoin") {
-
             modeName.textContent = "NO COIN";
-
-        }
-
-        else if (selectedMode === "lava") {
-
+        } else if (selectedMode === "lava") {
             modeName.textContent = "THE FLOOR IS LAVA";
-
-        }
-
-        else {
-
+        } else {
             modeName.textContent = "CLASSIC RUN";
-
         }
 
     }
@@ -2022,12 +1573,9 @@ function startGame() {
 
     renderer.render(scene, camera);
 
-    // UNE SEULE BOUCLE D'ANIMATION
-
     if (!animationStarted) {
 
         animationStarted = true;
-
         animate();
 
     }
@@ -2046,8 +1594,7 @@ function pauseGame() {
 
     paused = !paused;
 
-    const buttons =
-        document.querySelectorAll(".gameHeader button");
+    const buttons = document.querySelectorAll(".gameHeader button");
 
     buttons.forEach(button => {
 
@@ -2074,7 +1621,6 @@ window.pauseGame = pauseGame;
 function backToMenu() {
 
     running = false;
-
     paused = false;
 
     setLavaVisuals(false);
@@ -2085,26 +1631,13 @@ function backToMenu() {
 
     lavaPlatforms = [];
 
-    const menu =
-        document.getElementById("menu");
+    const menu = document.getElementById("menu");
+    const gameScreen = document.getElementById("gameScreen");
+    const gameOver = document.getElementById("gameOver");
 
-    const gameScreen =
-        document.getElementById("gameScreen");
-
-    const gameOver =
-        document.getElementById("gameOver");
-
-    if (menu) {
-        menu.classList.remove("hidden");
-    }
-
-    if (gameScreen) {
-        gameScreen.classList.add("hidden");
-    }
-
-    if (gameOver) {
-        gameOver.classList.add("hidden");
-    }
+    if (menu) menu.classList.remove("hidden");
+    if (gameScreen) gameScreen.classList.add("hidden");
+    if (gameOver) gameOver.classList.add("hidden");
 
 }
 
@@ -2116,14 +1649,10 @@ window.backToMenu = backToMenu;
 
 window.addEventListener("resize", () => {
 
-    const width =
-        canvas.clientWidth || window.innerWidth;
-
-    const height =
-        canvas.clientHeight || window.innerHeight;
+    const width = canvas.clientWidth || window.innerWidth;
+    const height = canvas.clientHeight || window.innerHeight;
 
     camera.aspect = width / height;
-
     camera.updateProjectionMatrix();
 
     renderer.setSize(width, height);
