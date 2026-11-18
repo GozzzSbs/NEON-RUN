@@ -927,9 +927,7 @@ window.addEventListener("keydown", e => {
     if (key === "z" || key === "arrowup" || key === " ") jump();
     if (key === "s" || key === "arrowdown") slide();
     if (key === "escape") pauseGame();
-});
-
-// ======================================================
+});// ======================================================
 // COLLISIONS
 // ======================================================
 
@@ -989,8 +987,6 @@ function checkCollisions() {
                 return;
             }
 
-            // Une pièce = une pièce dans le portefeuille.
-            // Elle ne donne PLUS de points.
             coins++;
 
             shopWallet++;
@@ -1029,7 +1025,9 @@ function showDiamondMessage(amount) {
 
     if (!message) return;
 
-    message.textContent = "💎 +" + amount + " DIAMANTS !";
+    message.textContent =
+        "💎 VOUS AVEZ GAGNÉ " + amount + " DIAMANTS !";
+
     message.style.opacity = "1";
 
     clearTimeout(window.neonDiamondMessageTimer);
@@ -1211,10 +1209,8 @@ function animate() {
 
     frame++;
 
-    // Le score augmente avec le temps, pas avec les pièces.
     score++;
 
-    // Vérification des récompenses de diamants
     checkDiamondMilestones();
 
     speedMultiplier = Math.min(
@@ -1233,10 +1229,8 @@ function animate() {
         spawnTimer = 0;
     }
 
-    // Déplacement du joueur
     player.position.x += (targetX - player.position.x) * 0.18;
 
-    // Saut
     if (jumping) {
         player.position.y += jumpVelocity;
 
@@ -1260,7 +1254,6 @@ function animate() {
         }
     }
 
-    // Glissade
     if (sliding) {
         slideTimer--;
         player.scale.y = 0.65;
@@ -1305,7 +1298,6 @@ function startGame() {
     score = 0;
     coins = 0;
 
-    // Réinitialise les paliers de diamants pour cette partie.
     diamondMilestones = 0;
 
     lane = 1;
@@ -1353,7 +1345,6 @@ function startGame() {
     setLavaVisuals(selectedMode === "lava");
     resetLavaPlatforms();
 
-    // Réapplique les cosmétiques équipés.
     applyShopSkin();
     applyShopCape();
 
@@ -1454,9 +1445,7 @@ window.addEventListener("resize", () => {
     camera.updateProjectionMatrix();
 
     renderer.setSize(width, height);
-});
-
-// ======================================================
+});// ======================================================
 // BOUTIQUE NEON RUN
 // ======================================================
 
@@ -1488,8 +1477,8 @@ const SHOP_CATALOG = {
         {
             id: "nr",
             name: "CAPE NR",
-            price: 0,
-            currency: "coins",
+            price: 100,
+            currency: "diamonds",
             color: 0x050505,
             description: "Cape noire avec le logo NR."
         }
@@ -1519,34 +1508,37 @@ let ownedSkins = readSavedArray(
 
 let ownedCapes = readSavedArray(
     "neonOwnedCapes",
-    ["nr"]
+    []
 );
 
-// Les nouveaux objets sont automatiquement disponibles
-// pour les anciens joueurs.
+// JACKO est le skin de départ.
 if (!ownedSkins.includes("default")) {
     ownedSkins.push("default");
 }
 
-if (!ownedCapes.includes("nr")) {
-    ownedCapes.push("nr");
-}
+// La cape NR n'est plus offerte automatiquement.
+// On retire aussi la cape des anciennes sauvegardes gratuites.
+ownedCapes = ownedCapes.filter(id => id !== "nr");
 
 let equippedSkin = localStorage.getItem("neonEquippedSkin") || "default";
-let equippedCape = localStorage.getItem("neonEquippedCape") || "nr";
+let equippedCape = localStorage.getItem("neonEquippedCape") || "";
 
 if (!["default", "el_blackito"].includes(equippedSkin)) {
     equippedSkin = "default";
 }
 
-equippedCape = "nr";
+// La cape ne peut être équipée que si elle a été achetée.
+if (!ownedCapes.includes("nr")) {
+    equippedCape = "";
+} else if (equippedCape !== "nr") {
+    equippedCape = "";
+}
 
 let currentShopTab = "skins";
 
 let shopElement = null;
 let shopCapeObject = null;
 
-// Sauvegarde des couleurs originales des matériaux du joueur.
 const originalPlayerMaterials = new Map();
 
 // ======================================================
@@ -2018,7 +2010,7 @@ function handleShopItem(item, isSkin) {
         if (item.currency === "diamonds") {
             if (shopDiamonds < item.price) {
                 message.textContent =
-                    "❌ Il te faut " + item.price + " diamants pour acheter ce skin !";
+                    "❌ Il te faut " + item.price + " diamants pour acheter cet article !";
                 return;
             }
 
@@ -2061,7 +2053,6 @@ window.handleShopItem = handleShopItem;
 function applyShopSkin() {
     if (!player) return;
 
-    // On mémorise les couleurs d'origine une seule fois.
     player.traverse(object => {
         if (!object.isMesh || !object.material) return;
 
@@ -2084,7 +2075,6 @@ function applyShopSkin() {
         });
     });
 
-    // JACKO : restaure exactement les couleurs d'origine.
     if (equippedSkin === "default") {
         originalPlayerMaterials.forEach((original, material) => {
             material.color.copy(original.color);
@@ -2099,12 +2089,10 @@ function applyShopSkin() {
         return;
     }
 
-    // EL BLACKITO : noir avec détails blancs.
     if (equippedSkin === "el_blackito") {
         originalPlayerMaterials.forEach((original, material) => {
             const originalColor = original.color;
 
-            // Les parties violettes et vertes deviennent blanches.
             const isDetail =
                 originalColor.r > 0.25 ||
                 originalColor.g > 0.35 ||
@@ -2119,7 +2107,6 @@ function applyShopSkin() {
 
                 material.emissiveIntensity = 0.35;
             } else {
-                // Tout le reste devient noir.
                 material.color.set(0x050505);
 
                 if (material.emissive) {
@@ -2139,7 +2126,6 @@ function applyShopSkin() {
 function createCape() {
     if (!player) return;
 
-    // Supprimer l'ancienne cape
     if (shopCapeObject) {
         player.remove(shopCapeObject);
 
@@ -2162,12 +2148,16 @@ function createCape() {
         shopCapeObject = null;
     }
 
-    // Vérifier que la cape NR est équipée
-    if (equippedCape !== "nr") return;
+    // La cape apparaît uniquement si elle est achetée et équipée.
+    if (
+        equippedCape !== "nr" ||
+        !ownedCapes.includes("nr")
+    ) {
+        return;
+    }
 
     const cape = new THREE.Group();
 
-    // Tissu noir
     const geometry = new THREE.BufferGeometry();
 
     const vertices = new Float32Array([
@@ -2196,11 +2186,11 @@ function createCape() {
     cape.add(cloth);
 
     // Logo NR blanc
-    const canvas = document.createElement("canvas");
-    canvas.width = 512;
-    canvas.height = 256;
+    const logoCanvas = document.createElement("canvas");
+    logoCanvas.width = 512;
+    logoCanvas.height = 256;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = logoCanvas.getContext("2d");
 
     ctx.fillStyle = "#ffffff";
     ctx.font = "bold 230px Arial";
@@ -2208,7 +2198,7 @@ function createCape() {
     ctx.textBaseline = "middle";
     ctx.fillText("NR", 256, 128);
 
-    const texture = new THREE.CanvasTexture(canvas);
+    const texture = new THREE.CanvasTexture(logoCanvas);
 
     const logoMaterial = new THREE.MeshBasicMaterial({
         map: texture,
@@ -2217,37 +2207,35 @@ function createCape() {
         depthWrite: false
     });
 
-   const logo = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.95, 0.48),
-    logoMaterial
-); 
+    const logo = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.95, 0.48),
+        logoMaterial
+    );
 
     logo.position.set(0, 1.35, 0.52);
     cape.add(logo);
 
-    // Ajouter la cape au personnage
     player.add(cape);
 
     shopCapeObject = cape;
+
+    // Permet à l'animation de faire bouger le tissu.
+    shopCapeObject.userData.cloth = cloth;
 }
-let capePreviousY = 0;
+
+// ======================================================
+// ANIMATION CAPE
+// ======================================================
 
 function animateCape() {
     if (!shopCapeObject || !player) return;
 
     const time = performance.now() * 0.001;
 
-    // Mouvement naturel de la cape
     shopCapeObject.rotation.z = Math.sin(time * 4) * 0.045;
     shopCapeObject.rotation.x = Math.sin(time * 3) * 0.035;
-
-    // Réaction aux mouvements verticaux du personnage
-    const currentY = player.position.y;
-    const movementY = currentY - capePreviousY;
-
-    shopCapeObject.rotation.x += movementY * 5;
-    capePreviousY = currentY;
 }
+
 // ======================================================
 // APPLIQUER LA CAPE
 // ======================================================
@@ -2257,7 +2245,7 @@ function applyShopCape() {
 }
 
 // ======================================================
-// ANIMATION CAPE
+// ANIMATION CAPE DANS LE JEU
 // ======================================================
 
 function animateShopCape() {
@@ -2345,7 +2333,7 @@ function initShop() {
 
     updateShopWallet();
 
-    // Sauvegarde les nouveaux équipements gratuits.
+    // Sauvegarde les équipements et achats.
     saveShop();
 }
 
