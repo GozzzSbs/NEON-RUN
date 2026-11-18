@@ -1333,10 +1333,11 @@ if (!pseudo || pseudo.trim() === "" || pseudo === "TON_PSEUDO") {
         .from("neon_scores")
         .insert([
             {
-                player_pseudo: pseudo,
-                score: Math.floor(score),
-                coins: Math.floor(coins)
-            }
+    player_pseudo: pseudo.trim(),
+    score: Math.floor(score),
+    coins: Math.floor(coins),
+    game_mode: selectedMode || "classic"
+}
         ]);
 
     if (error) {
