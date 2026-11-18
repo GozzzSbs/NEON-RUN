@@ -2846,7 +2846,18 @@ async function savePlayerPseudo() {
 // ======================================================
 // CLASSEMENT MONDIAL
 // ======================================================
+function changeLeaderboardMode(mode) {
 
+    selectedLeaderboardMode = mode;
+
+    document.getElementById("classicLeaderboardBtn")
+        .classList.toggle("active", mode === "classic");
+
+    document.getElementById("noCoinLeaderboardBtn")
+        .classList.toggle("active", mode === "nocoin");
+
+    openLeaderboard();
+}
 async function openLeaderboard() {
 
     const screen = document.getElementById("leaderboardScreen");
