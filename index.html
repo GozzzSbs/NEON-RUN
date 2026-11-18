@@ -173,7 +173,20 @@
 
         <h1>🏆 CLASSEMENT MONDIAL</h1>
         <p>LES MEILLEURS RUNNERS DE NEON RUN</p>
+<div class="leaderboard-tabs">
 
+    <button id="classicLeaderboardBtn"
+        class="active"
+        onclick="changeLeaderboardMode('classic')">
+        🏆 CLASSIQUE
+    </button>
+
+    <button id="noCoinLeaderboardBtn"
+        onclick="changeLeaderboardMode('nocoin')">
+        🪙 NO COIN
+    </button>
+
+</div>
         <div id="leaderboardPodium" class="leaderboard-podium"></div>
 
         <div class="leaderboard-list">
