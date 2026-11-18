@@ -1173,7 +1173,15 @@ function startGame() {
 
     player.position.set(0, selectedMode === "lava" ? LAVA_PLATFORM_TOP : 0, 0);
     player.scale.set(1, 1, 1);
+playerParts.body.position.y = 1.75;
 
+playerParts.arms.forEach(arm => {
+    arm.rotation.set(0, 0, 0);
+});
+
+playerParts.legs.forEach(leg => {
+    leg.rotation.set(0, 0, 0);
+});
     obstacles.forEach(obstacle => scene.remove(obstacle.object));
     coinObjects.forEach(coin => scene.remove(coin));
     obstacles = [];
