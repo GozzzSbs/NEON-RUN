@@ -2248,17 +2248,24 @@ function applyShopCape() {
 // ANIMATION CAPE DANS LE JEU
 // ======================================================
 
-function animateShopCape() {
-    if (!shopCapeObject) return;
+// Réinitialisation des animations de la cape
+capeVelocityX = 0;
+capeVelocityY = 0;
+capeJumpOffset = 0;
+
+previousPlayerX = player.position.x;
+previousPlayerY = player.position.y;
+
+if (shopCapeObject) {
+    shopCapeObject.rotation.set(0, 0, 0);
 
     const cloth = shopCapeObject.userData.cloth;
 
-    if (!cloth) return;
-
-    cloth.rotation.x = Math.sin(frame * 0.12) * 0.12;
-    cloth.rotation.z = Math.sin(frame * 0.09) * 0.08;
+    if (cloth) {
+        cloth.rotation.set(0, 0, 0);
+        cloth.position.set(0, 0, 0);
+    }
 }
-
 // ======================================================
 // OUVRIR BOUTIQUE
 // ======================================================
