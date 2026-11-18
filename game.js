@@ -1712,7 +1712,7 @@ window.updateShopWallet = updateShopWallet;
 // ======================================================
 
 function createDeveloperTools() {
-    if (!IS_DEVELOPER) return;
+    if (!isDeveloper) return;
 
     if (document.getElementById("neonDeveloperBadge")) return;
 
