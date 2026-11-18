@@ -2184,7 +2184,8 @@ function createCape() {
 
     const cloth = new THREE.Mesh(geometry, capeMaterial);
     cape.add(cloth);
-
+cloth.position.set(0, 0, 0);
+cloth.userData.originalPosition = cloth.position.clone();
     // Logo NR blanc
     const logoCanvas = document.createElement("canvas");
     logoCanvas.width = 512;
