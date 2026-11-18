@@ -2217,10 +2217,10 @@ function createCape() {
         depthWrite: false
     });
 
-    const logo = new THREE.Mesh(
-        new THREE.PlaneGeometry(0.95, 0.48)
-        logoMaterial
-    );
+   const logo = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.95, 0.48),
+    logoMaterial
+); 
 
     logo.position.set(0, 1.35, 0.52);
     cape.add(logo);
