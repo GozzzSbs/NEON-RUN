@@ -999,7 +999,15 @@ function checkCollisions() {
             }
 
             coins++;
-            score += 100;
+score += 100;
+
+let wallet = Number(localStorage.getItem("neonWallet") || 0);
+wallet++;
+localStorage.setItem("neonWallet", wallet);
+
+if (typeof updateShopWallet === "function") {
+    updateShopWallet();
+}
         }
     }
 }
@@ -1419,3 +1427,785 @@ updateHUD();
 renderer.render(scene, camera);
 
 console.log("NEON RUN - SPACE GALAXY chargé !");
+// ======================================================
+// NEON RUN - BOUTIQUE COSMÉTIQUE
+// SKINS + CAPES
+// ======================================================
+
+const SHOP_CATALOG = {
+    skins: [
+        {
+            id: "default",
+            name: "NEON RUNNER",
+            price: 0,
+            color: 0x7900b8,
+            description: "Le personnage original."
+        },
+        {
+            id: "fire",
+            name: "FIRE DEMON",
+            price: 100,
+            color: 0xff321c,
+            description: "Un guerrier enflammé."
+        },
+        {
+            id: "ice",
+            name: "ICE WARRIOR",
+            price: 150,
+            color: 0x25dfff,
+            description: "Un combattant glacé."
+        },
+        {
+            id: "gold",
+            name: "GOLD LEGEND",
+            price: 250,
+            color: 0xffc928,
+            description: "Un skin légendaire doré."
+        },
+        {
+            id: "toxic",
+            name: "TOXIC",
+            price: 300,
+            color: 0x7dff19,
+            description: "Un personnage radioactif."
+        },
+        {
+            id: "galaxy",
+            name: "GALAXY KING",
+            price: 500,
+            color: 0xa12cff,
+            description: "Le maître de la galaxie."
+        }
+    ],
+
+    capes: [
+        {
+            id: "none",
+            name: "AUCUNE",
+            price: 0,
+            color: 0x000000,
+            description: "Aucune cape."
+        },
+        {
+            id: "red",
+            name: "CAPE ROUGE",
+            price: 100,
+            color: 0xff2525,
+            description: "Une cape rouge flamboyante."
+        },
+        {
+            id: "blue",
+            name: "CAPE CYAN",
+            price: 150,
+            color: 0x00dfff,
+            description: "Une cape futuriste."
+        },
+        {
+            id: "purple",
+            name: "CAPE ROYALE",
+            price: 250,
+            color: 0x9b25ff,
+            description: "Une cape violette royale."
+        },
+        {
+            id: "gold",
+            name: "CAPE DORÉE",
+            price: 350,
+            color: 0xffd12e,
+            description: "Une cape digne d'une légende."
+        },
+        {
+            id: "rainbow",
+            name: "CAPE COSMIQUE",
+            price: 500,
+            color: 0xff45d9,
+            description: "Une cape aux couleurs cosmiques."
+        }
+    ]
+};
+
+// ======================================================
+// SAUVEGARDE
+// ======================================================
+
+let shopWallet = Number(localStorage.getItem("neonWallet") || 0);
+
+let ownedSkins = JSON.parse(
+    localStorage.getItem("neonOwnedSkins") || '["default"]'
+);
+
+let ownedCapes = JSON.parse(
+    localStorage.getItem("neonOwnedCapes") || '["none"]'
+);
+
+let equippedSkin = localStorage.getItem("neonEquippedSkin") || "default";
+let equippedCape = localStorage.getItem("neonEquippedCape") || "none";
+
+let currentShopTab = "skins";
+
+let shopElement = null;
+let shopCapeObject = null;
+
+// ======================================================
+// SAUVEGARDE DES ACHATS
+// ======================================================
+
+function saveShop() {
+    localStorage.setItem("neonWallet", shopWallet);
+    localStorage.setItem("neonOwnedSkins", JSON.stringify(ownedSkins));
+    localStorage.setItem("neonOwnedCapes", JSON.stringify(ownedCapes));
+    localStorage.setItem("neonEquippedSkin", equippedSkin);
+    localStorage.setItem("neonEquippedCape", equippedCape);
+}
+
+function updateShopWallet() {
+    shopWallet = Number(localStorage.getItem("neonWallet") || 0);
+
+    const wallet = document.getElementById("shopWallet");
+
+    if (wallet) {
+        wallet.textContent = shopWallet;
+    }
+}
+
+window.updateShopWallet = updateShopWallet;
+
+// ======================================================
+// STYLE DE LA BOUTIQUE
+// ======================================================
+
+function createShopStyles() {
+    if (document.getElementById("neonShopStyles")) return;
+
+    const style = document.createElement("style");
+    style.id = "neonShopStyles";
+
+    style.textContent = `
+        #neonShop {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            background:
+                radial-gradient(ellipse at 50% 0%, #42117d99, transparent 60%),
+                rgba(3, 2, 15, 0.94);
+            backdrop-filter: blur(12px);
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+
+        #neonShop.open {
+            display: flex;
+        }
+
+        .neon-shop-panel {
+            position: relative;
+            width: min(850px, 100%);
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 2px solid #a52cff;
+            border-radius: 22px;
+            padding: 25px;
+            background: linear-gradient(145deg, #17102e, #080716);
+            box-shadow:
+                0 0 25px #8d24ff66,
+                inset 0 0 25px #5520a022;
+        }
+
+        .neon-shop-title {
+            text-align: center;
+            font-size: clamp(27px, 5vw, 43px);
+            font-weight: 1000;
+            letter-spacing: 5px;
+            color: #d69aff;
+            text-shadow: 0 0 18px #a52cff;
+            margin: 5px 0 8px;
+        }
+
+        .neon-shop-subtitle {
+            text-align: center;
+            color: #aaa0ca;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .neon-shop-wallet {
+            text-align: center;
+            color: #ffd84a;
+            font-weight: bold;
+            font-size: 19px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #ffae00;
+        }
+
+        .neon-shop-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .neon-shop-tab {
+            border: 1px solid #7134bd;
+            background: #211438;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            letter-spacing: 2px;
+            transition: 0.2s;
+        }
+
+        .neon-shop-tab.active {
+            background: #8d28d8;
+            border-color: #e2aaff;
+            box-shadow: 0 0 17px #a52cff;
+        }
+
+        .neon-shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 15px;
+        }
+
+        .neon-shop-card {
+            position: relative;
+            overflow: hidden;
+            padding: 17px;
+            min-height: 210px;
+            text-align: center;
+            border: 1px solid #49336d;
+            border-radius: 16px;
+            background: linear-gradient(150deg, #261a40, #100d21);
+            transition: 0.2s;
+        }
+
+        .neon-shop-card:hover {
+            transform: translateY(-4px);
+            border-color: #c36aff;
+            box-shadow: 0 0 18px #9a36ff55;
+        }
+
+        .neon-shop-preview {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 53px;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 0 12px currentColor);
+        }
+
+        .neon-shop-card h3 {
+            margin: 5px 0;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        .neon-shop-card p {
+            color: #aaa0c4;
+            font-size: 12px;
+            min-height: 30px;
+        }
+
+        .neon-shop-price {
+            color: #ffd84a;
+            font-weight: bold;
+            margin: 9px 0;
+        }
+
+        .neon-shop-action {
+            width: 100%;
+            padding: 10px;
+            border: 0;
+            border-radius: 9px;
+            cursor: pointer;
+            color: white;
+            background: linear-gradient(90deg, #8126ce, #bd35f5);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .neon-shop-action:hover {
+            filter: brightness(1.25);
+        }
+
+        .neon-shop-action.equipped {
+            background: #176b49;
+            cursor: default;
+        }
+
+        .neon-shop-action.locked {
+            background: #454052;
+        }
+
+        .neon-shop-close {
+            display: block;
+            margin: 23px auto 0;
+            padding: 11px 35px;
+            border: 1px solid #a52cff;
+            border-radius: 10px;
+            color: white;
+            background: #28133e;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .neon-shop-close:hover {
+            background: #6520a0;
+        }
+
+        .neon-shop-message {
+            text-align: center;
+            min-height: 22px;
+            color: #ffdc68;
+            margin-top: 12px;
+            font-size: 13px;
+        }
+
+        @media(max-width: 500px) {
+            .neon-shop-panel {
+                padding: 15px;
+            }
+
+            .neon-shop-tab {
+                padding: 11px 20px;
+            }
+        }
+    `;
+
+    document.head.appendChild(style);
+}
+
+// ======================================================
+// CRÉATION HTML BOUTIQUE
+// ======================================================
+
+function createShop() {
+    if (document.getElementById("neonShop")) {
+        shopElement = document.getElementById("neonShop");
+        return;
+    }
+
+    createShopStyles();
+
+    shopElement = document.createElement("div");
+    shopElement.id = "neonShop";
+
+    shopElement.innerHTML = `
+        <div class="neon-shop-panel">
+
+            <h1 class="neon-shop-title">NEON SHOP</h1>
+
+            <div class="neon-shop-subtitle">
+                PERSONNALISE TON PERSONNAGE ET DEVIENS UNE LÉGENDE
+            </div>
+
+            <div class="neon-shop-wallet">
+                💰 <span id="shopWallet">0</span> PIÈCES
+            </div>
+
+            <div class="neon-shop-tabs">
+                <button class="neon-shop-tab active"
+                    id="shopSkinsTab">
+                    🧑 SKINS
+                </button>
+
+                <button class="neon-shop-tab"
+                    id="shopCapesTab">
+                    🦸 CAPES
+                </button>
+            </div>
+
+            <div class="neon-shop-grid" id="shopItems"></div>
+
+            <div class="neon-shop-message" id="shopMessage"></div>
+
+            <button class="neon-shop-close" id="closeNeonShop">
+                ✕ FERMER LA BOUTIQUE
+            </button>
+
+        </div>
+    `;
+
+    document.body.appendChild(shopElement);
+
+    document.getElementById("shopSkinsTab").onclick = () => {
+        changeShopTab("skins");
+    };
+
+    document.getElementById("shopCapesTab").onclick = () => {
+        changeShopTab("capes");
+    };
+
+    document.getElementById("closeNeonShop").onclick = closeShop;
+
+    shopElement.addEventListener("click", event => {
+        if (event.target === shopElement) closeShop();
+    });
+
+    renderShop();
+}
+
+// ======================================================
+// CHANGER D'ONGLET
+// ======================================================
+
+function changeShopTab(tab) {
+    currentShopTab = tab;
+
+    document.getElementById("shopSkinsTab").classList.toggle(
+        "active",
+        tab === "skins"
+    );
+
+    document.getElementById("shopCapesTab").classList.toggle(
+        "active",
+        tab === "capes"
+    );
+
+    renderShop();
+}
+
+// ======================================================
+// AFFICHER LES ARTICLES
+// ======================================================
+
+function renderShop() {
+    if (!shopElement) return;
+
+    updateShopWallet();
+
+    const container = document.getElementById("shopItems");
+    const catalog = SHOP_CATALOG[currentShopTab];
+
+    container.innerHTML = "";
+
+    catalog.forEach(item => {
+        const isSkin = currentShopTab === "skins";
+
+        const owned = isSkin
+            ? ownedSkins.includes(item.id)
+            : ownedCapes.includes(item.id);
+
+        const equipped = isSkin
+            ? equippedSkin === item.id
+            : equippedCape === item.id;
+
+        let buttonText = "";
+        let buttonClass = "";
+
+        if (equipped) {
+            buttonText = "✓ ÉQUIPÉ";
+            buttonClass = "equipped";
+        } else if (owned) {
+            buttonText = "ÉQUIPER";
+        } else {
+            buttonText = "ACHETER";
+            buttonClass = "locked";
+        }
+
+        const card = document.createElement("div");
+        card.className = "neon-shop-card";
+
+        const icon = isSkin ? "🧑" : "🦸";
+
+        card.innerHTML = `
+            <div class="neon-shop-preview"
+                style="color:#${item.color.toString(16).padStart(6, "0")}">
+                ${icon}
+            </div>
+
+            <h3>${item.name}</h3>
+
+            <p>${item.description}</p>
+
+            <div class="neon-shop-price">
+                ${item.price === 0 ? "GRATUIT" : "💰 " + item.price}
+            </div>
+
+            <button class="neon-shop-action ${buttonClass}">
+                ${buttonText}
+            </button>
+        `;
+
+        card.querySelector("button").onclick = () => {
+            handleShopItem(item, isSkin);
+        };
+
+        container.appendChild(card);
+    });
+}
+
+// ======================================================
+// ACHETER OU ÉQUIPER
+// ======================================================
+
+function handleShopItem(item, isSkin) {
+    const ownedList = isSkin ? ownedSkins : ownedCapes;
+    const equipped = isSkin ? equippedSkin : equippedCape;
+
+    const message = document.getElementById("shopMessage");
+
+    if (equipped === item.id) return;
+
+    // Achat
+    if (!ownedList.includes(item.id)) {
+        if (shopWallet < item.price) {
+            message.textContent =
+                "❌ Tu n'as pas assez de pièces !";
+            return;
+        }
+
+        shopWallet -= item.price;
+        ownedList.push(item.id);
+
+        message.textContent =
+            "🎉 " + item.name + " acheté !";
+    }
+
+    // Équipement
+    if (isSkin) {
+        equippedSkin = item.id;
+        applyShopSkin();
+    } else {
+        equippedCape = item.id;
+        applyShopCape();
+    }
+
+    saveShop();
+    renderShop();
+}
+
+// ======================================================
+// APPLIQUER LE SKIN
+// ======================================================
+
+function applyShopSkin() {
+    if (!player) return;
+
+    const skin = SHOP_CATALOG.skins.find(
+        item => item.id === equippedSkin
+    );
+
+    if (!skin) return;
+
+    const color = new THREE.Color(skin.color);
+
+    player.traverse(object => {
+        if (!object.isMesh || !object.material) return;
+
+        const materials = Array.isArray(object.material)
+            ? object.material
+            : [object.material];
+
+        materials.forEach(material => {
+            if (!material.color) return;
+
+            // On recolore les éléments violets/verts du personnage,
+            // sans toucher à la peau ni aux détails noirs.
+            const oldColor = material.color;
+
+            if (
+                oldColor.r > 0.25 ||
+                oldColor.g > 0.35 ||
+                oldColor.b > 0.25
+            ) {
+                material.color.copy(color);
+
+                if (material.emissive) {
+                    material.emissive.copy(color).multiplyScalar(0.15);
+                }
+            }
+        });
+    });
+}
+
+// ======================================================
+// CRÉER UNE CAPE
+// ======================================================
+
+function createCape() {
+    if (!player) return;
+
+    if (shopCapeObject) {
+        player.remove(shopCapeObject);
+        shopCapeObject = null;
+    }
+
+    if (equippedCape === "none") return;
+
+    const capeData = SHOP_CATALOG.capes.find(
+        item => item.id === equippedCape
+    );
+
+    if (!capeData) return;
+
+    const cape = new THREE.Group();
+
+    const material = new THREE.MeshStandardMaterial({
+        color: capeData.color,
+        emissive: capeData.color,
+        emissiveIntensity: 0.25,
+        side: THREE.DoubleSide,
+        roughness: 0.7
+    });
+
+    const geometry = new THREE.BufferGeometry();
+
+    const vertices = new Float32Array([
+        -0.42, 2.35, -0.28,
+         0.42, 2.35, -0.28,
+
+        -0.65, 0.35, -0.42,
+         0.65, 0.35, -0.42,
+
+        -0.42, 2.35, -0.28,
+        -0.65, 0.35, -0.42,
+
+         0.42, 2.35, -0.28,
+         0.65, 0.35, -0.42
+    ]);
+
+    geometry.setAttribute(
+        "position",
+        new THREE.BufferAttribute(vertices, 3)
+    );
+
+    geometry.setIndex([
+        0, 1, 2,
+        1, 3, 2,
+        4, 5, 6,
+        6, 5, 7
+    ]);
+
+    geometry.computeVertexNormals();
+
+    const cloth = new THREE.Mesh(geometry, material);
+    cape.add(cloth);
+
+    const collar = new THREE.Mesh(
+        new THREE.BoxGeometry(0.85, 0.18, 0.16),
+        material
+    );
+
+    collar.position.set(0, 2.35, -0.2);
+    cape.add(collar);
+
+    cape.userData.cloth = cloth;
+
+    player.add(cape);
+
+    shopCapeObject = cape;
+}
+
+// ======================================================
+// ANIMATION CAPE
+// ======================================================
+
+function animateShopCape() {
+    if (!shopCapeObject) return;
+
+    const cloth = shopCapeObject.userData.cloth;
+
+    if (!cloth) return;
+
+    cloth.rotation.x = Math.sin(frame * 0.12) * 0.12;
+    cloth.rotation.z = Math.sin(frame * 0.09) * 0.08;
+}
+
+// ======================================================
+// OUVRIR BOUTIQUE
+// ======================================================
+
+function openShop() {
+    createShop();
+
+    shopWallet = Number(localStorage.getItem("neonWallet") || 0);
+
+    shopElement.classList.add("open");
+
+    renderShop();
+}
+
+window.openShop = openShop;
+
+// ======================================================
+// FERMER BOUTIQUE
+// ======================================================
+
+function closeShop() {
+    if (shopElement) {
+        shopElement.classList.remove("open");
+    }
+}
+
+window.closeShop = closeShop;
+
+// ======================================================
+// CONNECTER LE BOUTON BOUTIQUE EXISTANT
+// ======================================================
+
+function connectShopButton() {
+    const buttons = document.querySelectorAll("button");
+
+    buttons.forEach(button => {
+        const text = button.textContent.trim().toLowerCase();
+
+        const isShopButton =
+            text.includes("boutique") ||
+            text.includes("shop") ||
+            button.id.toLowerCase().includes("shop") ||
+            button.id.toLowerCase().includes("boutique");
+
+        if (!isShopButton) return;
+
+        if (button.dataset.neonShopConnected === "true") return;
+
+        button.dataset.neonShopConnected = "true";
+
+        button.addEventListener("click", event => {
+            event.preventDefault();
+            event.stopPropagation();
+            openShop();
+        });
+    });
+}
+
+// ======================================================
+// INITIALISATION COSMÉTIQUES
+// ======================================================
+
+function initShop() {
+    createShop();
+    connectShopButton();
+
+    applyShopSkin();
+    applyShopCape();
+
+    updateShopWallet();
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initShop);
+} else {
+    initShop();
+}
+
+// Sécurité : si le bouton boutique est ajouté plus tard
+const shopButtonObserver = new MutationObserver(() => {
+    connectShopButton();
+});
+
+shopButtonObserver.observe(document.body, {
+    childList: true,
+    subtree: true
+});
+
+// ======================================================
+// FIN BOUTIQUE NEON RUN
+// ======================================================
