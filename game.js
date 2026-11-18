@@ -1601,8 +1601,10 @@ function startGame() {
     }
 
     running = true;
-    paused = false;
-    gameEnded = false;
+paused = false;
+gameEnded = false;
+
+startNoCoinTimer();
 
     const menu = document.getElementById("menu");
     const gameScreen = document.getElementById("gameScreen");
