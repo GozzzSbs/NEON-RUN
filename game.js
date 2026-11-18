@@ -237,26 +237,49 @@ function spawn() {
 
     const lane = Math.floor(Math.random() * 3);
 
-    if(selectedMode === "lava") {
+    if (selectedMode === "lava") {
 
         obstacles.push({
-            lane:lane,
-            z:0.02,
-            type:"gap"
+            lane: lane,
+            z: 0.02,
+            type: "gap"
         });
 
     } else {
 
-        const type = Math.random() < 0.5
-            ? "barrier"
-            : "overhead";
+        const random = Math.random();
+
+        let type;
+
+        if (random < 0.35) {
+            type = "train";
+        } else if (random < 0.75) {
+            type = "barrier";
+        } else {
+            type = "overhead";
+        }
 
         obstacles.push({
-            lane:lane,
-            z:0.02,
-            type:type
+            lane: lane,
+            z: 0.02,
+            type: type
         });
     }
+
+    if (selectedMode !== "lava" && Math.random() < 0.8) {
+
+        const coinLane = Math.floor(Math.random() * 3);
+
+        for (let i = 0; i < 4; i++) {
+
+            coins.push({
+                lane: coinLane,
+                z: -0.2 - i * 0.10,
+                collected: false
+            });
+        }
+    }
+}
 
     // Pièces
 
