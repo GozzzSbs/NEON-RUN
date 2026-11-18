@@ -2860,9 +2860,14 @@ async function openLeaderboard() {
 
     players.textContent = "Chargement...";
 
+    // MODE DU CLASSEMENT
+    const leaderboardMode = selectedLeaderboardMode || "classic";
+
+    // RÉCUPÉRATION DES SCORES
     const { data, error } = await supabaseClient
         .from("neon_scores")
-        .select("player_pseudo, score")
+        .select("player_pseudo, score, game_mode")
+        .eq("game_mode", leaderboardMode)
         .order("score", { ascending: false })
         .limit(100);
 
@@ -2879,6 +2884,7 @@ async function openLeaderboard() {
         players.textContent = "Aucun joueur pour le moment.";
         return;
     }
+}
 
     // PODIUM
     [1, 0, 2].forEach(index => {
