@@ -1,31 +1,30 @@
 // ======================================================
-// NEON RUN 3D - MOTEUR COMPLET
-// Three.js
+// NEON RUN 3D - CHRISTMAS EDITION 🎄
 // ======================================================
 
 const canvas = document.getElementById("game");
 
 if (!window.THREE) {
-    alert("Erreur : Three.js n'est pas chargé.");
+    alert("Three.js n'est pas chargé !");
     throw new Error("Three.js missing");
 }
 
 if (!canvas) {
-    throw new Error("Canvas #game introuvable dans index.html");
+    throw new Error("Canvas #game introuvable");
 }
 
 // ======================================================
-// SCÈNE ET CAMÉRA
+// SCÈNE
 // ======================================================
 
 const scene = new THREE.Scene();
 
-scene.background = new THREE.Color(0x101b42);
-scene.fog = new THREE.Fog(0x101b42, 35, 155);
+scene.background = new THREE.Color(0x07152f);
+scene.fog = new THREE.Fog(0x14284b, 40, 160);
 
 const camera = new THREE.PerspectiveCamera(
     65,
-    canvas.clientWidth / canvas.clientHeight || 1,
+    1,
     0.1,
     300
 );
@@ -59,20 +58,41 @@ scene.add(
     )
 );
 
-const sun = new THREE.DirectionalLight(0xffffff, 2);
+const sun = new THREE.DirectionalLight(0xb9d9ff, 1.8);
 
 sun.position.set(-10, 20, 10);
 sun.castShadow = true;
 
 scene.add(sun);
 
+// Lumières décoratives de Noël
+
+const christmasLight1 = new THREE.PointLight(
+    0x268aff,
+    2,
+    35
+);
+
+christmasLight1.position.set(-8, 8, -15);
+scene.add(christmasLight1);
+
+const christmasLight2 = new THREE.PointLight(
+    0xff3344,
+    2,
+    35
+);
+
+christmasLight2.position.set(8, 7, -35);
+scene.add(christmasLight2);
+
 // ======================================================
-// VARIABLES DU JEU
+// VARIABLES
 // ======================================================
 
 let running = false;
 let paused = false;
 let gameEnded = false;
+let animationStarted = false;
 
 let score = 0;
 let coins = 0;
@@ -95,8 +115,6 @@ let selectedMode = "classic";
 let frame = 0;
 let spawnTimer = 0;
 
-let animationStarted = false;
-
 const lanePositions = [-3, 0, 3];
 
 let obstacles = [];
@@ -106,13 +124,18 @@ let movingBuildings = [];
 let movingTrees = [];
 let movingSleepers = [];
 let movingStones = [];
-// NEIGE DE NOËL
+
 let snowParticles;
 let snowPositions;
 let snowVelocities = [];
-const SNOW_COUNT = 1800;
+
+const SNOW_COUNT = 1200;
+
 let player;
-let playerParts = {};
+let playerParts = {
+    arms: [],
+    legs: []
+};
 
 // ======================================================
 // MATÉRIAUX
@@ -121,9 +144,9 @@ let playerParts = {};
 function material(color, roughness = 0.8, metalness = 0) {
 
     return new THREE.MeshStandardMaterial({
-        color: color,
-        roughness: roughness,
-        metalness: metalness
+        color,
+        roughness,
+        metalness
     });
 
 }
@@ -138,7 +161,7 @@ const pantsMaterial = material(0x26334f);
 const shoeMaterial = material(0xffffff);
 
 // ======================================================
-// CRÉATION DES OBJETS
+// OUTIL POUR CRÉER DES BLOCS 3D
 // ======================================================
 
 function box(w, h, d, color, x, y, z, parent = scene) {
@@ -149,14 +172,12 @@ function box(w, h, d, color, x, y, z, parent = scene) {
     );
 
     mesh.position.set(x, y, z);
-
     mesh.castShadow = true;
     mesh.receiveShadow = true;
 
     parent.add(mesh);
 
     return mesh;
-
 }
 
 // ======================================================
@@ -181,27 +202,10 @@ function createTrack() {
 
         // Rails métalliques
 
-        box(
-            0.12,
-            0.16,
-            200,
-            railMaterial,
-            x - 0.85,
-            0,
-            -75
-        );
+        box(0.12, 0.16, 200, railMaterial, x - 0.85, 0, -75);
+        box(0.12, 0.16, 200, railMaterial, x + 0.85, 0, -75);
 
-        box(
-            0.12,
-            0.16,
-            200,
-            railMaterial,
-            x + 0.85,
-            0,
-            -75
-        );
-
-        // Traverses qui défileront
+        // Traverses
 
         for (let j = 0; j < 50; j++) {
 
@@ -216,14 +220,12 @@ function createTrack() {
             );
 
             movingSleepers.push(sleeper);
-
         }
-
     }
 
     // Gravier
 
-    for (let i = 0; i < 500; i++) {
+    for (let i = 0; i < 350; i++) {
 
         const stone = new THREE.Mesh(
             new THREE.BoxGeometry(
@@ -241,132 +243,416 @@ function createTrack() {
         );
 
         scene.add(stone);
-
         movingStones.push(stone);
-
     }
-
 }
 
 createTrack();
 
 // ======================================================
-// IMMEUBLES
+// IMMEUBLES DÉTAILLÉS
 // ======================================================
 
 function createBuilding(x, z) {
 
-    const height = 12 + Math.random() * 20;
+    const building = new THREE.Group();
+
+    const height = 15 + Math.random() * 18;
     const width = 5 + Math.random() * 3;
 
-    const building = new THREE.Group();
+    const facadeColors = [
+        0x292d48,
+        0x34334e,
+        0x303c54,
+        0x393348
+    ];
+
+    const facadeColor =
+        facadeColors[Math.floor(Math.random() * facadeColors.length)];
+
+    // Façade
 
     box(
         width,
         height,
         6,
-        0x30334d,
+        facadeColor,
         0,
         height / 2,
         0,
         building
     );
 
+    // Toit
+
+    box(
+        width + 0.5,
+        0.45,
+        6.5,
+        0x171d32,
+        0,
+        height + 0.2,
+        0,
+        building
+    );
+
+    // Corniche
+
+    box(
+        width + 0.25,
+        0.25,
+        0.25,
+        0x65708c,
+        0,
+        height - 0.5,
+        3.1,
+        building
+    );
+
     // Fenêtres
 
-    for (let y = 1; y < height - 1; y += 2.5) {
+    for (let y = 1.5; y < height - 2; y += 2.5) {
 
         for (let w = -1; w <= 1; w++) {
 
-            if (Math.random() > 0.25) {
+            if (Math.random() > 0.12) {
 
-                const win = box(
-                    0.65,
-                    1.1,
-                    0.12,
-                    Math.random() > 0.5
-                        ? 0xffd77a
-                        : 0x8fdfff,
-                    w * 1.4,
+                const wx = w * 1.35;
+
+                box(
+                    0.95,
+                    1.55,
+                    0.16,
+                    0x151c30,
+                    wx,
                     y,
-                    3.07,
+                    3.08,
                     building
                 );
 
-                win.material.emissive =
-                    win.material.color;
+                const colors = [
+                    0xffd477,
+                    0xffe7a6,
+                    0x8edcff,
+                    0xffbd70
+                ];
 
-                win.material.emissiveIntensity = 0.7;
+                const windowColor =
+                    colors[Math.floor(Math.random() * colors.length)];
 
+                const windowMesh = box(
+                    0.7,
+                    1.25,
+                    0.08,
+                    windowColor,
+                    wx,
+                    y,
+                    3.18,
+                    building
+                );
+
+                windowMesh.material.emissive =
+                    new THREE.Color(windowColor);
+
+                windowMesh.material.emissiveIntensity = 0.8;
+
+                // Séparations des vitres
+
+                box(
+                    0.06,
+                    1.3,
+                    0.04,
+                    0x242b40,
+                    wx,
+                    y,
+                    3.24,
+                    building
+                );
+
+                box(
+                    0.8,
+                    0.06,
+                    0.04,
+                    0x242b40,
+                    wx,
+                    y,
+                    3.24,
+                    building
+                );
             }
-
         }
+    }
 
+    // Balcons
+
+    if (Math.random() > 0.4) {
+
+        for (let y = 4; y < height - 3; y += 7) {
+
+            box(
+                width * 0.8,
+                0.15,
+                0.8,
+                0x65708c,
+                0,
+                y,
+                3.5,
+                building
+            );
+        }
+    }
+
+    // Guirlandes lumineuses
+
+    if (Math.random() > 0.5) {
+
+        const lightColors = [
+            0xff3333,
+            0x33ff99,
+            0x44bbff,
+            0xffdd33
+        ];
+
+        for (let i = -2; i <= 2; i++) {
+
+            const color =
+                lightColors[Math.floor(Math.random() * lightColors.length)];
+
+            const light = new THREE.Mesh(
+                new THREE.SphereGeometry(0.09, 8, 8),
+                new THREE.MeshBasicMaterial({ color })
+            );
+
+            light.position.set(i * 0.8, height - 1, 3.35);
+            building.add(light);
+        }
     }
 
     building.position.set(x, 0, z);
 
     scene.add(building);
-
     movingBuildings.push(building);
-
 }
+
+// Création des immeubles
 
 for (let i = 0; i < 22; i++) {
 
     createBuilding(-9, -i * 9);
     createBuilding(9, -i * 9);
-
 }
 
 // ======================================================
-// ARBRES
+// SAPINS DE NOËL 🎄
 // ======================================================
 
 function createTree(x, z) {
 
     const tree = new THREE.Group();
 
+    // Tronc
+
     const trunk = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.25, 0.35, 2),
+        new THREE.CylinderGeometry(0.25, 0.4, 1.8, 12),
         material(0x65402b)
     );
 
-    trunk.position.y = 1;
-
+    trunk.position.y = 0.9;
     tree.add(trunk);
 
-    for (let i = 0; i < 3; i++) {
+    // Branches
+
+    for (let i = 0; i < 4; i++) {
 
         const leaves = new THREE.Mesh(
             new THREE.ConeGeometry(
-                1.8 - i * 0.3,
-                3,
-                8
+                2.1 - i * 0.32,
+                3.2,
+                12
             ),
-            material(0x148d48)
+            material(i % 2 === 0 ? 0x08763b : 0x0a9147)
         );
 
-        leaves.position.y = 2.5 + i * 1.5;
+        leaves.position.y = 2.2 + i * 1.35;
+        leaves.castShadow = true;
 
         tree.add(leaves);
-
     }
 
+    // Guirlande lumineuse
+
+    for (let i = 0; i < 35; i++) {
+
+        const angle = i * 0.65;
+        const y = 1.6 + i * 0.19;
+        const radius = 1.8 - i * 0.035;
+
+        const bulb = new THREE.Mesh(
+            new THREE.SphereGeometry(0.09, 8, 8),
+            new THREE.MeshBasicMaterial({
+                color: [
+                    0xff3333,
+                    0xffdd33,
+                    0x33ddff,
+                    0xffffff
+                ][i % 4]
+            })
+        );
+
+        bulb.position.set(
+            Math.cos(angle) * radius,
+            y,
+            Math.sin(angle) * radius
+        );
+
+        tree.add(bulb);
+    }
+
+    // Boules de Noël
+
+    const ornamentColors = [
+        0xff3333,
+        0xffd700,
+        0x3399ff,
+        0xff66bb
+    ];
+
+    for (let i = 0; i < 18; i++) {
+
+        const angle = Math.random() * Math.PI * 2;
+        const y = 1.8 + Math.random() * 4.5;
+        const radius = 1.5 - (y - 1.8) * 0.2;
+
+        const ornament = new THREE.Mesh(
+            new THREE.SphereGeometry(0.16, 12, 12),
+            new THREE.MeshStandardMaterial({
+                color: ornamentColors[i % 4],
+                metalness: 0.65,
+                roughness: 0.2,
+                emissive: ornamentColors[i % 4],
+                emissiveIntensity: 0.25
+            })
+        );
+
+        ornament.position.set(
+            Math.cos(angle) * radius,
+            y,
+            Math.sin(angle) * radius
+        );
+
+        tree.add(ornament);
+    }
+
+    // Étoile au sommet
+
+    const star = new THREE.Mesh(
+        new THREE.OctahedronGeometry(0.45),
+        new THREE.MeshBasicMaterial({
+            color: 0xffdf55
+        })
+    );
+
+    star.position.y = 7.2;
+    tree.add(star);
+
     tree.position.set(x, 0, z);
+    tree.scale.setScalar(0.85 + Math.random() * 0.3);
 
     scene.add(tree);
-
     movingTrees.push(tree);
-
 }
+
+// Création des sapins
 
 for (let i = 0; i < 18; i++) {
 
     createTree(-6, -i * 10);
     createTree(6, -i * 10);
-
 }
+
+// ======================================================
+// NEIGE 3D ❄️
+// ======================================================
+
+function createSnow() {
+
+    snowPositions = new Float32Array(SNOW_COUNT * 3);
+
+    for (let i = 0; i < SNOW_COUNT; i++) {
+
+        snowPositions[i * 3] =
+            (Math.random() - 0.5) * 40;
+
+        snowPositions[i * 3 + 1] =
+            Math.random() * 25;
+
+        snowPositions[i * 3 + 2] =
+            Math.random() * -120 + 15;
+
+        snowVelocities.push(
+            0.04 + Math.random() * 0.08
+        );
+    }
+
+    const geometry = new THREE.BufferGeometry();
+
+    geometry.setAttribute(
+        "position",
+        new THREE.BufferAttribute(snowPositions, 3)
+    );
+
+    const snowMaterial = new THREE.PointsMaterial({
+        color: 0xffffff,
+        size: 0.16,
+        transparent: true,
+        opacity: 0.9,
+        depthWrite: false,
+        sizeAttenuation: true
+    });
+
+    snowParticles = new THREE.Points(
+        geometry,
+        snowMaterial
+    );
+
+    scene.add(snowParticles);
+}
+
+function updateSnow() {
+
+    if (!snowParticles) return;
+
+    for (let i = 0; i < SNOW_COUNT; i++) {
+
+        const index = i * 3;
+
+        snowPositions[index + 1] -= snowVelocities[i];
+
+        snowPositions[index] +=
+            Math.sin(frame * 0.015 + i) * 0.018;
+
+        snowPositions[index + 2] += speed * 0.25;
+
+        if (
+            snowPositions[index + 1] < -1 ||
+            snowPositions[index + 2] > 15
+        ) {
+
+            snowPositions[index] =
+                (Math.random() - 0.5) * 40;
+
+            snowPositions[index + 1] =
+                18 + Math.random() * 10;
+
+            snowPositions[index + 2] =
+                -100 - Math.random() * 30;
+        }
+    }
+
+    snowParticles.geometry.attributes.position.needsUpdate = true;
+}
+
+createSnow();
 
 // ======================================================
 // PERSONNAGE 3D
@@ -376,7 +662,7 @@ function createPlayer() {
 
     player = new THREE.Group();
 
-    // TORSE
+    // Torse
 
     const body = new THREE.Mesh(
         new THREE.BoxGeometry(0.85, 1.1, 0.45),
@@ -384,12 +670,11 @@ function createPlayer() {
     );
 
     body.position.y = 1.8;
-
     player.add(body);
 
     playerParts.body = body;
 
-    // TÊTE
+    // Tête
 
     const head = new THREE.Mesh(
         new THREE.SphereGeometry(0.35, 16, 16),
@@ -397,10 +682,9 @@ function createPlayer() {
     );
 
     head.position.y = 2.65;
-
     player.add(head);
 
-    // CHEVEUX
+    // Cheveux
 
     const hair = new THREE.Mesh(
         new THREE.SphereGeometry(
@@ -416,10 +700,9 @@ function createPlayer() {
     );
 
     hair.position.y = 2.76;
-
     player.add(hair);
 
-    // CAPUCHE
+    // Capuche
 
     const hood = new THREE.Mesh(
         new THREE.SphereGeometry(0.38, 16, 16),
@@ -427,17 +710,13 @@ function createPlayer() {
     );
 
     hood.position.set(0, 2.58, 0.05);
-
     player.add(hood);
 
-    playerParts.arms = [];
-    playerParts.legs = [];
-
-    // BRAS ET JAMBES
+    // Bras et jambes
 
     for (const side of [-1, 1]) {
 
-        // Bras articulé
+        // Bras
 
         const arm = new THREE.Group();
 
@@ -453,7 +732,6 @@ function createPlayer() {
         );
 
         armMesh.position.y = -0.4;
-
         arm.add(armMesh);
 
         const hand = new THREE.Mesh(
@@ -462,14 +740,12 @@ function createPlayer() {
         );
 
         hand.position.y = -0.9;
-
         arm.add(hand);
 
         player.add(arm);
-
         playerParts.arms.push(arm);
 
-        // Jambes articulées
+        // Jambes
 
         const leg = new THREE.Group();
 
@@ -485,7 +761,6 @@ function createPlayer() {
         );
 
         legMesh.position.y = -0.4;
-
         leg.add(legMesh);
 
         const shoe = new THREE.Mesh(
@@ -494,16 +769,13 @@ function createPlayer() {
         );
 
         shoe.position.set(0, -0.85, -0.1);
-
         leg.add(shoe);
 
         player.add(leg);
-
         playerParts.legs.push(leg);
-
     }
 
-    // CAPE
+    // Cape
 
     const cape = new THREE.Mesh(
         new THREE.BoxGeometry(0.8, 1.3, 0.08),
@@ -511,90 +783,41 @@ function createPlayer() {
     );
 
     cape.position.set(0, 1.45, 0.3);
-
     player.add(cape);
 
     player.position.set(0, 0, 0);
 
     scene.add(player);
-
 }
 
 createPlayer();
 
 // ======================================================
-// TRAIN 3D
+// TRAINS 3D 🚆
 // ======================================================
 
 function createTrain(laneIndex, z) {
 
     const train = new THREE.Group();
 
-    // Corps du train
+    // Corps
 
-    box(
-        2.5,
-        3.5,
-        13,
-        0x087f9c,
-        0,
-        2,
-        0,
-        train
-    );
+    box(2.5, 3.5, 13, 0x087f9c, 0, 2, 0, train);
 
     // Face avant
 
-    box(
-        2.3,
-        1.1,
-        0.15,
-        0x12c5e5,
-        0,
-        3,
-        6.55,
-        train
-    );
+    box(2.3, 1.1, 0.15, 0x12c5e5, 0, 3, 6.55, train);
 
     // Pare-brise
 
-    box(
-        1.6,
-        0.8,
-        0.1,
-        0x15213c,
-        0,
-        2.8,
-        6.65,
-        train
-    );
+    box(1.6, 0.8, 0.1, 0x15213c, 0, 2.8, 6.65, train);
 
     // Fenêtres latérales
 
     for (let zPos = -5; zPos <= 4; zPos += 3) {
 
-        box(
-            0.08,
-            1,
-            1.5,
-            0x9eeaff,
-            -1.27,
-            2.8,
-            zPos,
-            train
-        );
-
-        box(
-            0.08,
-            1,
-            1.5,
-            0x9eeaff,
-            1.27,
-            2.8,
-            zPos,
-            train
-        );
-
+        box(0.08, 1, 1.5, 0x9eeaff, -1.27, 2.8, zPos, train);
+        box(0.08, 1, 1.5, 0x9eeaff, 1.27, 2.8, zPos, train);
     }
 
     // Phares
@@ -607,12 +830,7 @@ function createTrain(laneIndex, z) {
             10
         );
 
-        light.position.set(
-            side * 0.8,
-            0.8,
-            7
-        );
-
+        light.position.set(side * 0.8, 0.8, 7);
         train.add(light);
 
         box(
@@ -625,7 +843,6 @@ function createTrain(laneIndex, z) {
             6.7,
             train
         );
-
     }
 
     train.position.set(
@@ -641,11 +858,10 @@ function createTrain(laneIndex, z) {
         type: "train",
         lane: laneIndex
     });
-
 }
 
 // ======================================================
-// BARRIÈRES 3D
+// BARRIÈRES 3D 🚧
 // ======================================================
 
 function createBarrier(laneIndex, z) {
@@ -654,16 +870,7 @@ function createBarrier(laneIndex, z) {
 
     // Barre rouge
 
-    box(
-        2.1,
-        0.8,
-        0.3,
-        0xe52e3d,
-        0,
-        1,
-        0,
-        barrier
-    );
+    box(2.1, 0.8, 0.3, 0xe52e3d, 0, 1, 0, barrier);
 
     // Pieds
 
@@ -679,7 +886,6 @@ function createBarrier(laneIndex, z) {
             0,
             barrier
         );
-
     }
 
     // Bandes blanches
@@ -696,7 +902,6 @@ function createBarrier(laneIndex, z) {
             0,
             barrier
         );
-
     }
 
     barrier.position.set(
@@ -712,7 +917,6 @@ function createBarrier(laneIndex, z) {
         type: "barrier",
         lane: laneIndex
     });
-
 }
 
 // ======================================================
@@ -738,32 +942,22 @@ function createCoin(laneIndex, z) {
     );
 
     scene.add(coin);
-
     coinObjects.push(coin);
-
 }
 
 // ======================================================
-// GÉNÉRATION DES OBSTACLES
+// APPARITION DES OBSTACLES ET PIÈCES
 // ======================================================
 
 function spawnObjects() {
 
     const laneIndex = Math.floor(Math.random() * 3);
 
-    const random = Math.random();
-
-    if (random < 0.35) {
-
+    if (Math.random() < 0.35) {
         createTrain(laneIndex, -100);
-
     } else {
-
         createBarrier(laneIndex, -100);
-
     }
-
-    // Ligne de pièces dans une autre voie
 
     if (Math.random() < 0.8) {
 
@@ -777,16 +971,9 @@ function spawnObjects() {
             ];
 
         for (let i = 0; i < 5; i++) {
-
-            createCoin(
-                coinLane,
-                -75 - i * 3
-            );
-
+            createCoin(coinLane, -75 - i * 3);
         }
-
     }
-
 }
 
 // ======================================================
@@ -797,27 +984,18 @@ function selectMode(mode, button) {
 
     selectedMode = mode;
 
-    document.querySelectorAll(
-        ".mode-buttons button"
-    ).forEach(b => {
-        b.classList.remove("active");
+    document.querySelectorAll(".mode").forEach(b => {
+        b.classList.remove("selected");
     });
 
     if (button) {
-        button.classList.add("active");
+        button.classList.add("selected");
     }
 
     const descriptions = {
-
-        classic:
-            "Évite les trains et les barrières. Ramasse les pièces et bats ton record !",
-
-        nocoin:
-            "Attention : toucher une seule pièce provoque immédiatement un GAME OVER !",
-
-        lava:
-            "Le sol est de la lave ! Saute pour éviter de toucher le sol."
-
+        classic: "Évite les obstacles et récupère les pièces.",
+        nocoin: "Une seule pièce touchée = GAME OVER !",
+        lava: "Ne touche jamais le sol !"
     };
 
     const description =
@@ -827,7 +1005,6 @@ function selectMode(mode, button) {
         description.textContent =
             descriptions[mode] || descriptions.classic;
     }
-
 }
 
 window.selectMode = selectMode;
@@ -840,9 +1017,7 @@ function setDifficulty(level, button) {
 
     difficulty = level;
 
-    document.querySelectorAll(
-        ".difficulty-buttons button"
-    ).forEach(b => {
+    document.querySelectorAll(".difficulty-buttons button").forEach(b => {
         b.classList.remove("active");
     });
 
@@ -851,16 +1026,13 @@ function setDifficulty(level, button) {
     }
 
     const speeds = {
-
         facile: 0.45,
         normal: 0.65,
         difficile: 0.85,
         extreme: 1.1
-
     };
 
     speed = speeds[level] || 0.65;
-
 }
 
 window.setDifficulty = setDifficulty;
@@ -874,9 +1046,7 @@ function moveLeft() {
     if (!running || paused) return;
 
     lane = Math.max(0, lane - 1);
-
     targetX = lanePositions[lane];
-
 }
 
 function moveRight() {
@@ -884,9 +1054,7 @@ function moveRight() {
     if (!running || paused) return;
 
     lane = Math.min(2, lane + 1);
-
     targetX = lanePositions[lane];
-
 }
 
 function jump() {
@@ -894,13 +1062,9 @@ function jump() {
     if (!running || paused) return;
 
     if (!jumping && !sliding) {
-
         jumping = true;
-
         jumpVelocity = 0.22;
-
     }
-
 }
 
 function slide() {
@@ -908,13 +1072,9 @@ function slide() {
     if (!running || paused) return;
 
     if (!sliding && !jumping) {
-
         sliding = true;
-
         slideTimer = 50;
-
     }
-
 }
 
 window.addEventListener("keydown", e => {
@@ -928,30 +1088,15 @@ window.addEventListener("keydown", e => {
         e.preventDefault();
     }
 
-    if (key === "q" || key === "arrowleft") {
-        moveLeft();
-    }
+    if (key === "q" || key === "arrowleft") moveLeft();
 
-    if (key === "d" || key === "arrowright") {
-        moveRight();
-    }
+    if (key === "d" || key === "arrowright") moveRight();
 
-    if (
-        key === "z" ||
-        key === "arrowup" ||
-        key === " "
-    ) {
-        jump();
-    }
+    if (key === "z" || key === "arrowup" || key === " ") jump();
 
-    if (key === "s" || key === "arrowdown") {
-        slide();
-    }
+    if (key === "s" || key === "arrowdown") slide();
 
-    if (key === "escape") {
-        pauseGame();
-    }
-
+    if (key === "escape") pauseGame();
 });
 
 // ======================================================
@@ -966,47 +1111,37 @@ function checkCollisions() {
 
         const sameLane =
             Math.abs(
-                obstacle.object.position.x -
-                player.position.x
+                obstacle.object.position.x - player.position.x
             ) < 1.25;
 
         if (!sameLane) continue;
 
-        // TRAIN
+        // Train
 
         if (
             obstacle.type === "train" &&
             distance > -7 &&
             distance < 2
         ) {
-
             endGame("Tu as percuté un train !");
-
             return;
-
         }
 
-        // BARRIÈRE
+        // Barrière
 
         if (
             obstacle.type === "barrier" &&
             distance > -1.3 &&
             distance < 1.3
         ) {
-
             if (!jumping && !sliding) {
-
                 endGame("Tu as heurté une barrière !");
-
                 return;
-
             }
-
         }
-
     }
 
-    // PIÈCES
+    // Pièces
 
     for (let i = coinObjects.length - 1; i >= 0; i--) {
 
@@ -1019,27 +1154,17 @@ function checkCollisions() {
         ) {
 
             scene.remove(coin);
-
             coinObjects.splice(i, 1);
 
             if (selectedMode === "nocoin") {
-
-                endGame(
-                    "Tu as ramassé une pièce : interdit en mode No Coin !"
-                );
-
+                endGame("Tu as ramassé une pièce : interdit en mode No Coin !");
                 return;
-
             }
 
             coins++;
-
             score += 100;
-
         }
-
     }
-
 }
 
 // ======================================================
@@ -1052,21 +1177,14 @@ function animateRunner() {
 
     const movement = Math.sin(frame * 0.18);
 
-    playerParts.arms[0].rotation.x =
-        movement * 0.8;
+    playerParts.arms[0].rotation.x = movement * 0.8;
+    playerParts.arms[1].rotation.x = -movement * 0.8;
 
-    playerParts.arms[1].rotation.x =
-        -movement * 0.8;
-
-    playerParts.legs[0].rotation.x =
-        -movement * 0.9;
-
-    playerParts.legs[1].rotation.x =
-        movement * 0.9;
+    playerParts.legs[0].rotation.x = -movement * 0.9;
+    playerParts.legs[1].rotation.x = movement * 0.9;
 
     player.position.y =
         Math.abs(Math.sin(frame * 0.18)) * 0.08;
-
 }
 
 // ======================================================
@@ -1075,74 +1193,51 @@ function animateRunner() {
 
 function moveEnvironment() {
 
-    // Traverses des rails
-
     movingSleepers.forEach(sleeper => {
 
         sleeper.position.z += speed;
 
         if (sleeper.position.z > 20) {
-
             sleeper.position.z -= 200;
-
         }
-
     });
-
-    // Gravier
 
     movingStones.forEach(stone => {
 
         stone.position.z += speed;
 
         if (stone.position.z > 20) {
-
             stone.position.z -= 200;
-
         }
-
     });
-
-    // Immeubles
 
     movingBuildings.forEach(building => {
 
         building.position.z += speed;
 
         if (building.position.z > 25) {
-
             building.position.z -= 198;
-
         }
-
     });
-
-    // Arbres
 
     movingTrees.forEach(tree => {
 
         tree.position.z += speed;
 
         if (tree.position.z > 20) {
-
             tree.position.z -= 180;
-
         }
-
     });
-
 }
 
 // ======================================================
-// DÉPLACEMENT DES TRAINS ET BARRIÈRES
+// DÉPLACEMENT DES OBSTACLES
 // ======================================================
 
 function moveObstacles() {
 
     obstacles.forEach(obstacle => {
-
         obstacle.object.position.z += speed;
-
     });
 
     obstacles = obstacles.filter(obstacle => {
@@ -1150,15 +1245,11 @@ function moveObstacles() {
         if (obstacle.object.position.z > 18) {
 
             scene.remove(obstacle.object);
-
             return false;
-
         }
 
         return true;
-
     });
-
 }
 
 // ======================================================
@@ -1170,11 +1261,8 @@ function moveCoins() {
     coinObjects.forEach(coin => {
 
         coin.position.z += speed;
-
         coin.rotation.y += 0.08;
-
         coin.rotation.z += 0.04;
-
     });
 
     coinObjects = coinObjects.filter(coin => {
@@ -1182,15 +1270,11 @@ function moveCoins() {
         if (coin.position.z > 18) {
 
             scene.remove(coin);
-
             return false;
-
         }
 
         return true;
-
     });
-
 }
 
 // ======================================================
@@ -1199,27 +1283,13 @@ function moveCoins() {
 
 function updateHUD() {
 
-    const scoreElement =
-        document.getElementById("score");
+    const scoreElement = document.getElementById("score");
+    const coinElement = document.getElementById("coins");
+    const bestElement = document.getElementById("best");
 
-    const coinElement =
-        document.getElementById("coins");
-
-    const bestElement =
-        document.getElementById("best");
-
-    if (scoreElement) {
-        scoreElement.textContent = score;
-    }
-
-    if (coinElement) {
-        coinElement.textContent = coins;
-    }
-
-    if (bestElement) {
-        bestElement.textContent = best;
-    }
-
+    if (scoreElement) scoreElement.textContent = score;
+    if (coinElement) coinElement.textContent = coins;
+    if (bestElement) bestElement.textContent = best;
 }
 
 // ======================================================
@@ -1231,60 +1301,33 @@ function endGame(reason) {
     if (gameEnded) return;
 
     gameEnded = true;
-
     running = false;
-
     paused = false;
 
     if (score > best) {
 
         best = score;
 
-        localStorage.setItem(
-            "neonBest",
-            best
-        );
-
+        localStorage.setItem("neonBest", best);
     }
 
-    const gameOver =
-        document.getElementById("gameOver");
+    const gameOver = document.getElementById("gameOver");
+    const title = document.getElementById("gameOverTitle");
+    const reasonElement = document.getElementById("gameOverReason");
+    const finalScore = document.getElementById("finalScore");
+    const finalCoins = document.getElementById("finalCoins");
 
-    const title =
-        document.getElementById("gameOverTitle");
+    if (title) title.textContent = "GAME OVER";
 
-    const reasonElement =
-        document.getElementById("gameOverReason");
+    if (reasonElement) reasonElement.textContent = reason;
 
-    const finalScore =
-        document.getElementById("finalScore");
+    if (finalScore) finalScore.textContent = score;
 
-    const finalCoins =
-        document.getElementById("finalCoins");
+    if (finalCoins) finalCoins.textContent = coins;
 
-    if (title) {
-        title.textContent = "GAME OVER";
-    }
-
-    if (reasonElement) {
-        reasonElement.textContent =
-            reason || "Fin de la partie !";
-    }
-
-    if (finalScore) {
-        finalScore.textContent = score;
-    }
-
-    if (finalCoins) {
-        finalCoins.textContent = coins;
-    }
-
-    if (gameOver) {
-        gameOver.classList.remove("hidden");
-    }
+    if (gameOver) gameOver.classList.remove("hidden");
 
     updateHUD();
-
 }
 
 // ======================================================
@@ -1298,25 +1341,19 @@ function animate() {
     if (!running || paused || gameEnded) return;
 
     frame++;
-
     score++;
 
     spawnTimer++;
 
-    // Apparition des obstacles
-
-    const spawnDelay =
-        Math.max(55, 100 - speed * 25);
+    const spawnDelay = Math.max(55, 100 - speed * 25);
 
     if (spawnTimer >= spawnDelay) {
 
         spawnObjects();
-
         spawnTimer = 0;
-
     }
 
-    // Déplacement du personnage entre les voies
+    // Déplacement du personnage
 
     player.position.x +=
         (targetX - player.position.x) * 0.18;
@@ -1332,11 +1369,8 @@ function animate() {
         if (player.position.y <= 0) {
 
             player.position.y = 0;
-
             jumping = false;
-
         }
-
     }
 
     // Glissade
@@ -1350,27 +1384,22 @@ function animate() {
         if (slideTimer <= 0) {
 
             sliding = false;
-
             player.scale.y = 1;
-
         }
-
     }
 
-    // Animation de course
+    // Animation
 
     animateRunner();
 
-    // Décor qui défile
+    // Décor
 
     moveEnvironment();
+    updateSnow();
 
-    // Trains et barrières
+    // Obstacles et pièces
 
     moveObstacles();
-
-    // Pièces
-
     moveCoins();
 
     // Collisions
@@ -1379,13 +1408,12 @@ function animate() {
 
     if (!running) return;
 
-    // Caméra derrière le personnage
+    // Caméra
 
     camera.position.x +=
         (player.position.x * 0.35 - camera.position.x) * 0.08;
 
-    camera.position.y =
-        5 + player.position.y * 0.3;
+    camera.position.y = 5 + player.position.y * 0.3;
 
     camera.lookAt(
         player.position.x * 0.25,
@@ -1396,7 +1424,6 @@ function animate() {
     updateHUD();
 
     renderer.render(scene, camera);
-
 }
 
 // ======================================================
@@ -1421,107 +1448,70 @@ function startGame() {
     spawnTimer = 0;
 
     player.position.set(0, 0, 0);
-
     player.rotation.set(0, 0, 0);
-
     player.scale.set(1, 1, 1);
 
-    // Supprimer les anciens obstacles
+    // Nettoyer les anciens obstacles
 
     obstacles.forEach(obstacle => {
-
         scene.remove(obstacle.object);
-
     });
 
     coinObjects.forEach(coin => {
-
         scene.remove(coin);
-
     });
 
     obstacles = [];
     coinObjects = [];
 
-    // Réinitialiser la caméra
-
     camera.position.set(0, 5, 9);
-
     camera.lookAt(0, 1.5, -20);
 
-    // Réinitialiser la vitesse
-
     const speeds = {
-
         facile: 0.45,
         normal: 0.65,
         difficile: 0.85,
         extreme: 1.1
-
     };
 
     speed = speeds[difficulty] || 0.65;
-
-    // Interface
 
     running = true;
     paused = false;
     gameEnded = false;
 
-    const menu =
-        document.getElementById("menu");
+    const menu = document.getElementById("menu");
+    const gameScreen = document.getElementById("gameScreen");
+    const gameOver = document.getElementById("gameOver");
 
-    const gameScreen =
-        document.getElementById("gameScreen");
+    if (menu) menu.classList.add("hidden");
 
-    const gameOver =
-        document.getElementById("gameOver");
+    if (gameScreen) gameScreen.classList.remove("hidden");
 
-    if (menu) {
-        menu.classList.add("hidden");
-    }
+    if (gameOver) gameOver.classList.add("hidden");
 
-    if (gameScreen) {
-        gameScreen.classList.remove("hidden");
-    }
-
-    if (gameOver) {
-        gameOver.classList.add("hidden");
-    }
-
-    const modeName =
-        document.getElementById("modeName");
+    const modeName = document.getElementById("modeName");
 
     if (modeName) {
 
         if (selectedMode === "nocoin") {
             modeName.textContent = "NO COIN";
-        }
-
-        else if (selectedMode === "lava") {
+        } else if (selectedMode === "lava") {
             modeName.textContent = "THE FLOOR IS LAVA";
-        }
-
-        else {
+        } else {
             modeName.textContent = "CLASSIC RUN";
         }
-
     }
 
     updateHUD();
 
     renderer.render(scene, camera);
 
-    // UNE SEULE BOUCLE D'ANIMATION
-
     if (!animationStarted) {
 
         animationStarted = true;
-
         animate();
-
     }
-
 }
 
 window.startGame = startGame;
@@ -1541,16 +1531,14 @@ function pauseGame() {
 
     buttons.forEach(button => {
 
-        if (button.textContent.includes("PAUSE") ||
-            button.textContent.includes("REPRENDRE")) {
-
+        if (
+            button.textContent.includes("PAUSE") ||
+            button.textContent.includes("REPRENDRE")
+        ) {
             button.textContent =
                 paused ? "▶ REPRENDRE" : "Ⅱ PAUSE";
-
         }
-
     });
-
 }
 
 window.pauseGame = pauseGame;
@@ -1562,30 +1550,17 @@ window.pauseGame = pauseGame;
 function backToMenu() {
 
     running = false;
-
     paused = false;
 
-    const menu =
-        document.getElementById("menu");
+    const menu = document.getElementById("menu");
+    const gameScreen = document.getElementById("gameScreen");
+    const gameOver = document.getElementById("gameOver");
 
-    const gameScreen =
-        document.getElementById("gameScreen");
+    if (menu) menu.classList.remove("hidden");
 
-    const gameOver =
-        document.getElementById("gameOver");
+    if (gameScreen) gameScreen.classList.add("hidden");
 
-    if (menu) {
-        menu.classList.remove("hidden");
-    }
-
-    if (gameScreen) {
-        gameScreen.classList.add("hidden");
-    }
-
-    if (gameOver) {
-        gameOver.classList.add("hidden");
-    }
-
+    if (gameOver) gameOver.classList.add("hidden");
 }
 
 window.backToMenu = backToMenu;
@@ -1594,28 +1569,25 @@ window.backToMenu = backToMenu;
 // REDIMENSIONNEMENT
 // ======================================================
 
-window.addEventListener("resize", () => {
+function resizeGame() {
 
-    const width =
-        canvas.clientWidth || window.innerWidth;
-
-    const height =
-        canvas.clientHeight || window.innerHeight;
+    const width = canvas.clientWidth || window.innerWidth;
+    const height = canvas.clientHeight || window.innerHeight;
 
     camera.aspect = width / height;
-
     camera.updateProjectionMatrix();
 
     renderer.setSize(width, height);
+}
 
-});
+window.addEventListener("resize", resizeGame);
 
 // ======================================================
-// PREMIER AFFICHAGE
+// AFFICHAGE INITIAL
 // ======================================================
 
 updateHUD();
-
+resizeGame();
 renderer.render(scene, camera);
 
-console.log("NEON RUN 3D chargé correctement !");
+console.log("🎄 NEON RUN CHRISTMAS EDITION chargé !");
