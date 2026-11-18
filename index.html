@@ -20,42 +20,79 @@
 <div id="profileSetup" class="profile-setup">
 
     <div class="profile-box">
+
         <h1>🌌 NEON RUN</h1>
         <h2>BIENVENUE RUNNER !</h2>
 
-        <p>Choisis ton pseudo pour commencer l'aventure.</p>
+        <div class="auth-tabs">
+            <button onclick="showAuthForm('register')">
+                CRÉER UN COMPTE
+            </button>
 
-        <input
-            type="text"
-            id="playerPseudo"
-            placeholder="Ton pseudo..."
-            maxlength="16"
-        >
+            <button onclick="showAuthForm('login')">
+                SE CONNECTER
+            </button>
+        </div>
+
+        <!-- INSCRIPTION -->
+        <div id="registerForm">
+
+            <p>Crée ton compte pour sauvegarder ta progression.</p>
+
+            <input
+                type="text"
+                id="registerPseudo"
+                placeholder="Choisis ton pseudo..."
+                maxlength="16"
+            >
+
+            <input
+                type="password"
+                id="registerPassword"
+                placeholder="Choisis ton mot de passe..."
+            >
+
+            <input
+                type="password"
+                id="confirmPassword"
+                placeholder="Confirme ton mot de passe..."
+            >
+
+            <button onclick="registerPlayer()">
+                🚀 CRÉER MON COMPTE
+            </button>
+
+        </div>
+
+        <!-- CONNEXION -->
+        <div id="loginForm" style="display:none;">
+
+            <p>Content de te revoir, Runner !</p>
+
+            <input
+                type="text"
+                id="loginPseudo"
+                placeholder="Ton pseudo..."
+                maxlength="16"
+            >
+
+            <input
+                type="password"
+                id="loginPassword"
+                placeholder="Ton mot de passe..."
+            >
+
+            <button onclick="loginPlayer()">
+                🔐 SE CONNECTER
+            </button>
+
+        </div>
 
         <p id="pseudoError"></p>
 
-        <button onclick="savePlayerPseudo()">
-            🚀 COMMENCER
-        </button>
     </div>
 
 </div>
-<!-- MENU PRINCIPAL -->
-
-<section id="menu">
-
-    <div class="brand">
-        <h1>RUN <span>NC</span></h1>
-        <p>Le défi sans pièce</p>
-    </div>
-
-    <div class="online-info">
-        <div class="online-badge">🟢 Joueurs en ligne : 3</div>
-        <div class="online-badge">🌐 Scores en ligne : 217</div>
-        <button class="chat-button">💬 Chat</button>
-    </div>
-
-    <div class="event-banner">
         ⚡ BIENVENUE DANS NEON RUN
     </div>
 
