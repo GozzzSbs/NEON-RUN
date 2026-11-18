@@ -2829,6 +2829,17 @@ document.addEventListener("DOMContentLoaded", initPlayerProfile);
 
 async function openLeaderboard() {
 
+    const screen = document.getElementById("leaderboardScreen");
+    const players = document.getElementById("leaderboardPlayers");
+    const podium = document.getElementById("leaderboardPodium");
+
+    document.getElementById("menu").classList.add("hidden");
+    document.getElementById("gameScreen").classList.add("hidden");
+
+    screen.classList.remove("hidden");
+
+    players.textContent = "Chargement...";
+
     const { data, error } = await supabaseClient
         .from("neon_scores")
         .select("player_pseudo, score")
@@ -2836,18 +2847,68 @@ async function openLeaderboard() {
         .limit(100);
 
     if (error) {
-        console.error("Erreur classement :", error);
-        alert("Impossible de charger le classement !");
+        players.textContent = "Erreur de chargement du classement.";
+        console.error(error);
         return;
     }
 
-    let classement = "🏆 CLASSEMENT MONDIAL\n\n";
+    podium.replaceChildren();
+    players.replaceChildren();
 
-    data.forEach((joueur, index) => {
-        classement += `${index + 1}. ${joueur.player_pseudo} — ${joueur.score} points\n`;
+    if (!data || data.length === 0) {
+        players.textContent = "Aucun joueur pour le moment.";
+        return;
+    }
+
+    // PODIUM
+    [1, 0, 2].forEach(index => {
+        const joueur = data[index];
+
+        const card = document.createElement("div");
+        card.className = "podium-player";
+
+        if (joueur) {
+            const rank = document.createElement("strong");
+            rank.textContent = ["🥇", "🥈", "🥉"][index];
+
+            const name = document.createElement("div");
+            name.textContent = joueur.player_pseudo;
+
+            const points = document.createElement("div");
+            points.textContent = joueur.score + " points";
+
+            card.append(rank, name, points);
+        } else {
+            card.textContent = "—";
+        }
+
+        podium.appendChild(card);
     });
 
-    alert(classement || "Aucun joueur pour le moment !");
+    // LISTE DES JOUEURS
+    data.forEach((joueur, index) => {
+
+        const row = document.createElement("div");
+        row.className = "leaderboard-row";
+
+        const rank = document.createElement("span");
+        rank.textContent = "#" + (index + 1);
+
+        const name = document.createElement("span");
+        name.textContent = joueur.player_pseudo;
+
+        const score = document.createElement("span");
+        score.textContent = joueur.score;
+
+        row.append(rank, name, score);
+        players.appendChild(row);
+    });
+}
+
+function closeLeaderboard() {
+    document.getElementById("leaderboardScreen").classList.add("hidden");
+    document.getElementById("menu").classList.remove("hidden");
 }
 
 window.openLeaderboard = openLeaderboard;
+window.closeLeaderboard = closeLeaderboard;
