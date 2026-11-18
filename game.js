@@ -2782,47 +2782,65 @@ shopButtonObserver.observe(document.body, {
 // ======================================================
 // FIN NEON RUN
 // ======================================================
-function savePlayerPseudo() {
+async function savePlayerPseudo() {
+
     const input = document.getElementById("playerPseudo");
     const error = document.getElementById("pseudoError");
+    const button = document.querySelector("#profileSetup button");
 
     const pseudo = input.value.trim();
 
-    if (pseudo.length < 3) {
-        error.textContent = "Ton pseudo doit contenir au moins 3 caractères.";
+    error.textContent = "";
+
+    if (pseudo.length < 3 || pseudo.length > 16) {
+        error.textContent = "Le pseudo doit contenir entre 3 et 16 caractères.";
         return;
     }
 
-    localStorage.setItem("neonPlayerPseudo", pseudo);
+    button.disabled = true;
+    button.textContent = "VÉRIFICATION...";
 
-    document.getElementById("profileSetup").style.display = "none";
+    try {
 
-    updatePlayerPseudo();
-}
+        const { data: existing } = await supabaseClient
+            .from("neon_players")
+            .select("id")
+            .ilike("pseudo", pseudo)
+            .limit(1);
 
-function updatePlayerPseudo() {
-    const pseudo = localStorage.getItem("neonPlayerPseudo");
-
-    if (pseudo) {
-        const playerCard = document.querySelector(".statistics .stat-card:last-child");
-
-        if (playerCard) {
-            playerCard.querySelector("strong").textContent = pseudo;
+        if (existing && existing.length > 0) {
+            error.textContent = "❌ Ce pseudo est déjà utilisé !";
+            return;
         }
-    }
-}
 
-function initPlayerProfile() {
-    const pseudo = localStorage.getItem("neonPlayerPseudo");
+        const { error: insertError } = await supabaseClient
+            .from("neon_players")
+            .insert([{ pseudo: pseudo }]);
 
-    if (!pseudo) {
-        document.getElementById("profileSetup").style.display = "flex";
-    } else {
+        if (insertError) {
+            if (insertError.code === "23505") {
+                error.textContent = "❌ Ce pseudo est déjà utilisé !";
+            } else {
+                error.textContent = "Erreur de création du profil.";
+                console.error(insertError);
+            }
+            return;
+        }
+
+        localStorage.setItem("neonPlayerPseudo", pseudo);
+
+        document.getElementById("profileSetup").style.display = "none";
+
         updatePlayerPseudo();
+
+    } catch (err) {
+        console.error(err);
+        error.textContent = "Impossible de vérifier le pseudo.";
+    } finally {
+        button.disabled = false;
+        button.textContent = "🚀 COMMENCER";
     }
 }
-
-document.addEventListener("DOMContentLoaded", initPlayerProfile);
 // ======================================================
 // CLASSEMENT MONDIAL
 // ======================================================
