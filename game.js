@@ -2139,15 +2139,21 @@ function applyShopSkin() {
 function createCape() {
     if (!player) return;
 
+    // Supprimer l'ancienne cape
     if (shopCapeObject) {
         player.remove(shopCapeObject);
 
         shopCapeObject.traverse(object => {
             if (object.geometry) object.geometry.dispose();
+
             if (object.material) {
                 if (Array.isArray(object.material)) {
-                    object.material.forEach(material => material.dispose());
+                    object.material.forEach(material => {
+                        if (material.map) material.map.dispose();
+                        material.dispose();
+                    });
                 } else {
+                    if (object.material.map) object.material.map.dispose();
                     object.material.dispose();
                 }
             }
@@ -2156,33 +2162,19 @@ function createCape() {
         shopCapeObject = null;
     }
 
+    // Vérifier que la cape NR est équipée
     if (equippedCape !== "nr") return;
 
     const cape = new THREE.Group();
 
     // Tissu noir
-    const capeMaterial = new THREE.MeshStandardMaterial({
-        color: 0x030303,
-        emissive: 0x000000,
-        roughness: 0.85,
-        metalness: 0.1,
-        side: THREE.DoubleSide
-    });
-
     const geometry = new THREE.BufferGeometry();
 
     const vertices = new Float32Array([
-        -0.42, 2.35, -0.28,
-         0.42, 2.35, -0.28,
-
-        -0.65, 0.35, -0.42,
-         0.65, 0.35, -0.42,
-
-        -0.42, 2.35, -0.28,
-        -0.65, 0.35, -0.42,
-
-         0.42, 2.35, -0.28,
-         0.65, 0.35, -0.42
+        -0.38, 2.25, 0.34,
+         0.38, 2.25, 0.34,
+        -0.62, 0.25, 0.48,
+         0.62, 0.25, 0.48
     ]);
 
     geometry.setAttribute(
@@ -2190,67 +2182,50 @@ function createCape() {
         new THREE.BufferAttribute(vertices, 3)
     );
 
-    geometry.setIndex([
-        0, 1, 2,
-        1, 3, 2,
-        4, 5, 6,
-        6, 5, 7
-    ]);
-
+    geometry.setIndex([0, 2, 1, 1, 2, 3]);
     geometry.computeVertexNormals();
+
+    const capeMaterial = new THREE.MeshStandardMaterial({
+        color: 0x030303,
+        roughness: 0.85,
+        metalness: 0.1,
+        side: THREE.DoubleSide
+    });
 
     const cloth = new THREE.Mesh(geometry, capeMaterial);
     cape.add(cloth);
 
-    // Col noir au niveau des épaules
-    const collar = new THREE.Mesh(
-        new THREE.BoxGeometry(0.85, 0.18, 0.16),
-        capeMaterial
-    );
+    // Logo NR blanc
+    const canvas = document.createElement("canvas");
+    canvas.width = 512;
+    canvas.height = 256;
 
-    collar.position.set(0, 2.35, -0.2);
-    cape.add(collar);
+    const ctx = canvas.getContext("2d");
 
-    // Logo NR blanc sur la cape
-    const logoCanvas = document.createElement("canvas");
-    logoCanvas.width = 512;
-    logoCanvas.height = 256;
-
-    const ctx = logoCanvas.getContext("2d");
-
-    ctx.clearRect(0, 0, 512, 256);
-
+    ctx.fillStyle = "#ffffff";
     ctx.font = "bold 150px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
+    ctx.fillText("NR", 256, 128);
 
-    ctx.shadowColor = "#ffffff";
-    ctx.shadowBlur = 22;
-    ctx.fillStyle = "#ffffff";
-
-    ctx.fillText("NR", 256, 130);
-
-    const logoTexture = new THREE.CanvasTexture(logoCanvas);
-    logoTexture.needsUpdate = true;
+    const texture = new THREE.CanvasTexture(canvas);
 
     const logoMaterial = new THREE.MeshBasicMaterial({
-        map: logoTexture,
+        map: texture,
         transparent: true,
         side: THREE.DoubleSide,
         depthWrite: false
     });
 
     const logo = new THREE.Mesh(
-        new THREE.PlaneGeometry(0.62, 0.31),
+        new THREE.PlaneGeometry(0.55, 0.28),
         logoMaterial
     );
 
-    logo.position.set(0, 1.38, -0.435);
-
+    logo.position.set(0, 1.35, 0.51);
     cape.add(logo);
 
-    cape.userData.cloth = cloth;
-
+    // Ajouter la cape au personnage
     player.add(cape);
 
     shopCapeObject = cape;
