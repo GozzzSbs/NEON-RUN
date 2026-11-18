@@ -2611,9 +2611,12 @@ function initNeonRun() {
 
     initShop();
 
+    createDeveloperTools();
+
     renderer.render(scene, camera);
 
     console.log("NEON RUN - SPACE GALAXY chargé !");
+}
 }
 
 if (document.readyState === "loading") {
