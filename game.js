@@ -1284,7 +1284,7 @@ function endGame(reason) {
     gameEnded = true;
     running = false;
     paused = false;
-
+saveScoreToSupabase();
     if (score > best) {
         best = score;
         localStorage.setItem("neonBest", best);
@@ -1306,7 +1306,40 @@ function endGame(reason) {
 
     updateHUD();
 }
+// ======================================================
+// SAUVEGARDE DU SCORE DANS SUPABASE
+// ======================================================
 
+async function saveScoreToSupabase() {
+
+    const pseudo = localStorage.getItem("neonPlayerPseudo");
+
+    if (!pseudo) {
+        console.warn("Aucun pseudo enregistré !");
+        return;
+    }
+
+    if (!supabaseClient) {
+        console.warn("Supabase n'est pas connecté !");
+        return;
+    }
+
+    const { data, error } = await supabaseClient
+        .from("neon_scores")
+        .insert([
+            {
+                player_pseudo: pseudo,
+                score: Math.floor(score),
+                coins: Math.floor(coins)
+            }
+        ]);
+
+    if (error) {
+        console.error("Erreur sauvegarde du score :", error);
+    } else {
+        console.log("🏆 Score envoyé au classement mondial !");
+    }
+}
 // ======================================================
 // BOUCLE PRINCIPALE
 // ======================================================
