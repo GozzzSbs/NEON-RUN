@@ -166,7 +166,42 @@
 
 </section>
 
+<!-- CLASSEMENT MONDIAL -->
 
+<section id="leaderboardScreen" class="hidden">
+
+    <div class="leaderboard-container">
+
+        <h1>🏆 CLASSEMENT MONDIAL</h1>
+        <p>LES MEILLEURS RUNNERS DE NEON RUN</p>
+
+        <div id="leaderboardPodium" class="leaderboard-podium"></div>
+
+        <div class="leaderboard-list">
+
+            <div class="leaderboard-heading">
+                <span>POSITION</span>
+                <span>JOUEUR</span>
+                <span>SCORE</span>
+            </div>
+
+            <div id="leaderboardPlayers">
+                Chargement du classement...
+            </div>
+
+        </div>
+
+        <button onclick="openLeaderboard()">
+            🔄 ACTUALISER
+        </button>
+
+        <button onclick="closeLeaderboard()">
+            ← RETOUR AU MENU
+        </button>
+
+    </div>
+
+</section>
 <!-- JEU 3D -->
 
 <section id="gameScreen" class="hidden">
