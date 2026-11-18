@@ -1,99 +1,187 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEON RUN</title>
+
+<title>NEON RUN 3D</title>
+
 <link rel="stylesheet" href="style.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
 </head>
 
 <body>
 
-<div class="background-grid"></div>
+<!-- JEU 3D EN ARRIÈRE-PLAN -->
 
-<header>
-    <div class="logo">NEON<span>RUN</span></div>
-    <div class="status">● ARCADE ONLINE</div>
-</header>
+<canvas id="game"></canvas>
 
-<main>
+<!-- MENU PRINCIPAL -->
 
 <section id="menu">
 
-    <div class="hero">
-        <p>⚡ THE CITY NEVER SLEEPS</p>
-        <h1>RUN YOUR<br><span>OWN RULES.</span></h1>
-        <p class="description">
-            Cours, esquive et bats ton record dans une ville futuriste.
+    <div class="brand">
+        <h1>RUN <span>NC</span></h1>
+        <p>Le défi sans pièce</p>
+    </div>
+
+    <div class="online-info">
+        <div class="online-badge">🟢 Joueurs en ligne : 3</div>
+        <div class="online-badge">🌐 Scores en ligne : 217</div>
+        <button class="chat-button">💬 Chat</button>
+    </div>
+
+    <div class="event-banner">
+        ⚡ BIENVENUE DANS NEON RUN
+    </div>
+
+    <!-- STATISTIQUES -->
+
+    <div class="statistics">
+
+        <div class="stat-card">
+            <strong id="menuBest">00m00s</strong>
+            <small>Record</small>
+        </div>
+
+        <div class="stat-card">
+            <strong>--</strong>
+            <small>Dernière partie</small>
+        </div>
+
+        <div class="stat-card">
+            <strong>⭐ 291</strong>
+            <small>Étoiles</small>
+        </div>
+
+        <div class="stat-card">
+            <strong>1</strong>
+            <small>Niveau</small>
+        </div>
+
+        <div class="stat-card">
+            <strong>Runner</strong>
+            <small>Joueur</small>
+        </div>
+
+    </div>
+
+    <!-- DIFFICULTÉ -->
+
+    <h3 class="section-title">DIFFICULTÉ</h3>
+
+    <div class="difficulty-buttons">
+
+        <button onclick="setDifficulty('facile',this)">
+            Facile
+        </button>
+
+        <button class="active" onclick="setDifficulty('normal',this)">
+            Normal
+        </button>
+
+        <button onclick="setDifficulty('difficile',this)">
+            Difficile
+        </button>
+
+        <button onclick="setDifficulty('extreme',this)">
+            Extrême
+        </button>
+
+    </div>
+
+    <!-- MODES -->
+
+    <h3 class="section-title">MODE DE JEU</h3>
+
+    <div class="mode-buttons">
+
+        <button class="active" onclick="selectGameMode('classic',this)">
+            Classique
+        </button>
+
+        <button onclick="selectGameMode('lava',this)">
+            Le sol est de la lave
+        </button>
+
+        <button onclick="selectGameMode('duel',this)">
+            Duel contre l'IA
+        </button>
+
+        <button onclick="selectGameMode('coins',this)">
+            Pièces en skate
+        </button>
+
+    </div>
+
+    <!-- DESCRIPTION -->
+
+    <div class="rules-panel">
+
+        <p id="modeDescription">
+            Évite les trains et les barrières.<br>
+            Saute par-dessus les obstacles.<br>
+            Glisse pour éviter les obstacles en hauteur.<br>
+            Ramasse les pièces et bats ton record !
         </p>
-    </div>
-
-    <div class="container">
-
-        <div class="panel">
-
-            <h2>GAME MODES</h2>
-
-            <button class="mode selected" onclick="selectMode('classic',this)">
-                🏙️ CLASSIC RUN
-                <small>Évite les obstacles et récupère les pièces.</small>
-            </button>
-
-            <button class="mode" onclick="selectMode('nocoin',this)">
-                🪙 NO COIN CHALLENGE
-                <small>Une pièce touchée = GAME OVER.</small>
-            </button>
-
-            <button class="mode" onclick="selectMode('lava',this)">
-                🔥 THE FLOOR IS LAVA
-                <small>Ne touche jamais le sol !</small>
-            </button>
-
-            <button class="play" onclick="startGame()">
-                PLAY NOW →
-            </button>
-
-            <p class="controls">
-                ESPACE / FLÈCHE HAUT POUR SAUTER
-            </p>
-
-        </div>
-
-        <div class="panel">
-
-            <h2>CHOOSE YOUR RUNNER</h2>
-
-            <div class="character" id="character">
-                ⚡
-            </div>
-
-            <h2 id="skinName">VOLT</h2>
-
-            <div class="skins">
-
-                <button onclick="chooseSkin(0)">⚡</button>
-                <button onclick="chooseSkin(1)">🔥</button>
-                <button onclick="chooseSkin(2)">👾</button>
-                <button onclick="chooseSkin(3)">🥷</button>
-                <button onclick="chooseSkin(4)">🍀</button>
-                <button onclick="chooseSkin(5)">💗</button>
-                <button onclick="chooseSkin(6)">❄️</button>
-                <button onclick="chooseSkin(7)">👑</button>
-
-            </div>
-
-            <p class="controls">8 SKINS DISPONIBLES</p>
-
-        </div>
 
     </div>
 
-    <div class="footer">
-        NEON RUN © 2026 — PLAY • SURVIVE • REPEAT
+    <!-- JOUER -->
+
+    <button class="play-button" onclick="startGame()">
+        JOUER
+    </button>
+
+    <!-- BOUTONS -->
+
+    <div class="small-buttons">
+
+        <button>Profil</button>
+        <button>Social</button>
+        <button>Réglages</button>
+
+    </div>
+
+    <div class="secondary-buttons">
+
+        <button>Amis</button>
+        <button>Chat</button>
+        <button>Classement</button>
+
+        <button>Passe</button>
+        <button>Quêtes</button>
+        <button>Persos</button>
+
+        <button>Boutique</button>
+        <button>Compte</button>
+        <button>Paramètres</button>
+
+    </div>
+
+    <!-- COMMANDES -->
+
+    <div class="controls-help">
+
+        <div>
+            <kbd>Q</kbd>
+            <kbd>D</kbd>
+            <kbd>Z</kbd>
+            <kbd>S</kbd>
+        </div>
+
+        <small>
+            Q/D : voies | Z : sauter | S : glisser | Échap : pause
+        </small>
+
     </div>
 
 </section>
 
+<!-- INTERFACE PENDANT LA PARTIE -->
 
 <section id="gameScreen" class="hidden">
 
@@ -105,51 +193,45 @@
         </div>
 
         <div class="stats">
+
             <div>SCORE <b id="score">0</b></div>
             <div>COINS <b id="coins">0</b></div>
             <div>BEST <b id="best">0</b></div>
+
         </div>
 
-        <button onclick="pauseGame()">Ⅱ</button>
+        <button onclick="pauseGame()">Ⅱ PAUSE</button>
 
-    </div>
+        <button onclick="backToMenu()">MENU</button>
 
-    <canvas id="game" width="900" height="450"></canvas>
-
-    <div class="gameFooter">
-        <span>ESPACE POUR SAUTER</span>
-        <button onclick="backToMenu()">← QUITTER</button>
     </div>
 
 </section>
 
-</main>
-
+<!-- GAME OVER -->
 
 <div id="gameOver" class="overlay hidden">
 
     <div class="result">
-
-        <p>RUN TERMINÉE</p>
 
         <h1 id="gameOverTitle">GAME OVER</h1>
 
         <p id="gameOverReason">Tu peux faire mieux !</p>
 
         <div class="resultStats">
+
             <div>SCORE <b id="finalScore">0</b></div>
-            <div>COINS <b id="finalCoins">0</b></div>
+
         </div>
 
-        <button class="play" onclick="startGame()">REJOUER →</button>
+        <button onclick="startGame()">REJOUER</button>
 
-        <button class="back" onclick="backToMenu()">MENU PRINCIPAL</button>
+        <button onclick="backToMenu()">MENU PRINCIPAL</button>
 
     </div>
 
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="game.js"></script>
 
 </body>
