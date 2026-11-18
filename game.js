@@ -915,16 +915,74 @@ function checkCollisions() {
 }
 
 // ======================================================
-// ANIMATION DU PERSONNAGE
+// ANIMATION DE COURSE
 // ======================================================
 
 function animateRunner() {
-    // Le personnage est un sprite : on conserve sa taille et son orientation.
-    // La course est simulée par un léger mouvement vertical.
-    if (jumping || sliding) return;
-    player.position.y = selectedMode === "lava"
-        ? LAVA_PLATFORM_TOP
-        : Math.abs(Math.sin(frame * 0.18)) * 0.08;
+
+    const movement = frame * 0.18;
+
+    // COURSE NORMALE
+
+    if (!jumping && !sliding) {
+
+        const swing = Math.sin(movement);
+
+        // Bras opposés
+        playerParts.arms[0].rotation.x = swing * 0.85;
+        playerParts.arms[1].rotation.x = -swing * 0.85;
+
+        // Coudes
+        playerParts.arms[0].userData.elbow.rotation.x = -0.25;
+        playerParts.arms[1].userData.elbow.rotation.x = -0.25;
+
+        // Jambes opposées
+        playerParts.legs[0].rotation.x = -swing * 0.75;
+        playerParts.legs[1].rotation.x = swing * 0.75;
+
+        // Genoux
+        playerParts.legs[0].userData.knee.rotation.x =
+            Math.max(0, swing) * 0.8;
+
+        playerParts.legs[1].userData.knee.rotation.x =
+            Math.max(0, -swing) * 0.8;
+
+        // Petit mouvement du corps
+        playerParts.body.position.y =
+            1.75 + Math.abs(Math.sin(movement * 2)) * 0.06;
+
+        // Mouvement de la tête
+        playerParts.head.rotation.z =
+            Math.sin(movement) * 0.035;
+
+    }
+
+    // POSITION DE SAUT
+
+    if (jumping) {
+
+        playerParts.arms[0].rotation.x = -0.9;
+        playerParts.arms[1].rotation.x = -0.9;
+
+        playerParts.legs[0].rotation.x = 0.45;
+        playerParts.legs[1].rotation.x = -0.45;
+
+        playerParts.body.position.y = 1.75;
+
+    }
+
+    // POSITION DE GLISSADE
+
+    if (sliding) {
+
+        playerParts.arms[0].rotation.x = 0.7;
+        playerParts.arms[1].rotation.x = 0.7;
+
+        playerParts.legs[0].rotation.x = -0.5;
+        playerParts.legs[1].rotation.x = -0.5;
+
+    }
+
 }
 
 // ======================================================
