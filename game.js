@@ -1,6 +1,5 @@
 // ======================================================
 // NEON RUN 3D - SPACE GALAXY
-// Galaxy, aliens, flying UFOs, trains coming towards player
 // Three.js r128 requis avant ce fichier
 // ======================================================
 
@@ -72,6 +71,9 @@ let animationStarted = false;
 let score = 0;
 let coins = 0;
 let best = Number(localStorage.getItem("neonBest") || 0);
+
+// Diamants gagnés pendant cette partie
+let diamondMilestones = 0;
 
 let lane = 1;
 let targetX = 0;
@@ -167,7 +169,6 @@ function box(w, h, d, color, x, y, z, parent = scene) {
 // FOND GALAXIE
 // ======================================================
 
-// Fond spatial étoilé
 const starMaterial = new THREE.MeshBasicMaterial({
     color: 0xffffff
 });
@@ -192,7 +193,6 @@ for (let i = 0; i < 900; i++) {
     movingStars.push(star);
 }
 
-// Grandes nébuleuses décoratives
 function createNebula(x, y, z, color, size) {
     const cloud = new THREE.Mesh(
         new THREE.SphereGeometry(size, 24, 24),
@@ -246,7 +246,6 @@ floor.rotation.x = -Math.PI / 2;
 floor.position.set(0, -0.48, -100);
 scene.add(floor);
 
-// Voie centrale
 const road = box(
     12, 0.3, 220,
     mat(0x25213b, 0x17103c, 0.3),
@@ -304,6 +303,7 @@ function createAlienShip(x, y, z) {
     const ship = new THREE.Group();
 
     const bodyMaterial = mat(0x4c4c65, 0x24244c, 0.5);
+
     const glassMaterial = new THREE.MeshStandardMaterial({
         color: 0x36eaff,
         emissive: 0x00bfff,
@@ -312,7 +312,6 @@ function createAlienShip(x, y, z) {
         roughness: 0.15
     });
 
-    // Corps du vaisseau
     const body = new THREE.Mesh(
         new THREE.SphereGeometry(1, 24, 16),
         bodyMaterial
@@ -321,7 +320,6 @@ function createAlienShip(x, y, z) {
     body.scale.set(1.8, 0.35, 1);
     ship.add(body);
 
-    // Cockpit
     const cockpit = new THREE.Mesh(
         new THREE.SphereGeometry(0.65, 20, 16),
         glassMaterial
@@ -331,7 +329,6 @@ function createAlienShip(x, y, z) {
     cockpit.scale.set(0.9, 0.75, 0.9);
     ship.add(cockpit);
 
-    // Lumières latérales
     for (let i = 0; i < 8; i++) {
         const angle = i / 8 * Math.PI * 2;
 
@@ -349,7 +346,6 @@ function createAlienShip(x, y, z) {
         ship.add(light);
     }
 
-    // Réacteur
     const engine = new THREE.Mesh(
         new THREE.ConeGeometry(0.35, 1.4, 12),
         new THREE.MeshBasicMaterial({
@@ -364,6 +360,7 @@ function createAlienShip(x, y, z) {
     ship.add(engine);
 
     ship.position.set(x, y, z);
+    ship.userData.direction = 0.08;
 
     scene.add(ship);
     movingAliens.push(ship);
@@ -461,8 +458,11 @@ function createPlayer() {
         arm.position.set(side * 0.51, 2.2, 0);
         player.add(arm);
 
-        limb(0.28, 0.48, 0.3, side === -1 ? purple : lime,
-            0, -0.24, 0, arm);
+        limb(
+            0.28, 0.48, 0.3,
+            side === -1 ? purple : lime,
+            0, -0.24, 0, arm
+        );
 
         const elbow = new THREE.Group();
         elbow.position.y = -0.48;
@@ -513,20 +513,16 @@ function createTrain(laneIndex, z) {
     const windowMaterial = mat(0x20dfff, 0x00aaff, 1.7);
     const neonMaterial = mat(0x9b31ff, 0x7800ff, 2);
 
-    // Corps principal du train
     box(2.55, 3.4, 13, bodyMaterial, 0, 2, 0, train);
 
-    // Face avant
     box(2.4, 1.1, 0.2, neonMaterial, 0, 3, 6.55, train);
     box(1.7, 0.85, 0.12, windowMaterial, 0, 2.8, 6.68, train);
 
-    // Fenêtres latérales
     for (let zPos = -5; zPos <= 4; zPos += 3) {
         box(0.08, 1, 1.5, windowMaterial, -1.3, 2.8, zPos, train);
         box(0.08, 1, 1.5, windowMaterial, 1.3, 2.8, zPos, train);
     }
 
-    // Bandes lumineuses
     for (const side of [-1, 1]) {
         box(0.12, 0.12, 12, neonMaterial, side * 1.3, 1.2, 0, train);
 
@@ -538,10 +534,8 @@ function createTrain(laneIndex, z) {
             side * 0.8, 0.8, 6.7, train);
     }
 
-    // Dessous du train
     box(2.3, 0.4, 11, 0x090914, 0, 0.2, 0, train);
 
-    // Roues
     for (const zPos of [-4, 4]) {
         for (const side of [-1, 1]) {
             const wheel = new THREE.Mesh(
@@ -588,7 +582,6 @@ function createBarrier(laneIndex, z) {
         box(0.2, 0.85, 0.32, white, i * 0.4, 1, 0, barrier);
     }
 
-    // Barre lumineuse
     const glow = new THREE.Mesh(
         new THREE.BoxGeometry(2.3, 0.08, 0.35),
         new THREE.MeshBasicMaterial({ color: 0xff2020 })
@@ -622,12 +615,12 @@ function createCoin(laneIndex, z) {
         emissiveIntensity: 0.8
     });
 
-    const ring = new THREE.Mesh(
+    const coinRing = new THREE.Mesh(
         new THREE.TorusGeometry(0.4, 0.12, 12, 24),
         goldMaterial
     );
 
-    coin.add(ring);
+    coin.add(coinRing);
 
     const center = new THREE.Mesh(
         new THREE.SphereGeometry(0.15, 12, 12),
@@ -809,7 +802,6 @@ function isPlayerAboveLavaPlatform() {
 function spawnObjects() {
     const laneIndex = Math.floor(Math.random() * 3);
 
-    // Les trains arrivent régulièrement !
     if (Math.random() < 0.55) {
         createTrain(laneIndex, -115);
     } else {
@@ -820,6 +812,7 @@ function spawnObjects() {
 
     if (Math.random() < 0.8) {
         const possibleLanes = [0, 1, 2].filter(l => l !== laneIndex);
+
         const coinLane =
             possibleLanes[Math.floor(Math.random() * possibleLanes.length)];
 
@@ -958,7 +951,6 @@ function checkCollisions() {
 
         if (!sameLane) continue;
 
-        // Collision avec le train
         if (
             obstacle.type === "train" &&
             distance > -8 &&
@@ -968,7 +960,6 @@ function checkCollisions() {
             return;
         }
 
-        // Collision avec une barrière
         if (
             obstacle.type === "barrier" &&
             distance > -1.3 &&
@@ -998,18 +989,54 @@ function checkCollisions() {
                 return;
             }
 
+            // Une pièce = une pièce dans le portefeuille.
+            // Elle ne donne PLUS de points.
             coins++;
-score += 100;
 
-let wallet = Number(localStorage.getItem("neonWallet") || 0);
-wallet++;
-localStorage.setItem("neonWallet", wallet);
+            shopWallet++;
+            localStorage.setItem("neonWallet", shopWallet);
 
-if (typeof updateShopWallet === "function") {
-    updateShopWallet();
-}
+            updateShopWallet();
         }
     }
+}
+
+// ======================================================
+// SYSTÈME DE DIAMANTS
+// ======================================================
+
+function checkDiamondMilestones() {
+    const reachedMilestones = Math.floor(score / 3000);
+
+    if (reachedMilestones <= diamondMilestones) return;
+
+    const newMilestones = reachedMilestones - diamondMilestones;
+    const earned = newMilestones * 2;
+
+    diamondMilestones = reachedMilestones;
+
+    shopDiamonds += earned;
+
+    localStorage.setItem("neonDiamonds", shopDiamonds);
+
+    updateShopWallet();
+
+    showDiamondMessage(earned);
+}
+
+function showDiamondMessage(amount) {
+    const message = document.getElementById("diamondRewardMessage");
+
+    if (!message) return;
+
+    message.textContent = "💎 +" + amount + " DIAMANTS !";
+    message.style.opacity = "1";
+
+    clearTimeout(window.neonDiamondMessageTimer);
+
+    window.neonDiamondMessageTimer = setTimeout(() => {
+        message.style.opacity = "0";
+    }, 2500);
 }
 
 // ======================================================
@@ -1051,6 +1078,8 @@ function animateRunner() {
         playerParts.legs[0].rotation.x = -0.5;
         playerParts.legs[1].rotation.x = -0.5;
     }
+
+    animateShopCape();
 }
 
 // ======================================================
@@ -1074,7 +1103,6 @@ function moveEnvironment() {
         }
     });
 
-    // Les vaisseaux aliens traversent le ciel
     movingAliens.forEach(ship => {
         ship.position.x += ship.userData.direction || 0.08;
         ship.position.y += Math.sin(frame * 0.025 + ship.position.z) * 0.015;
@@ -1093,7 +1121,6 @@ function moveEnvironment() {
 
 function moveObstacles() {
     obstacles.forEach(obstacle => {
-        // Les trains et barrières foncent vers le joueur
         const extraSpeed = obstacle.type === "train" ? 1.15 : 1;
 
         obstacle.object.position.z += speed * extraSpeed;
@@ -1183,7 +1210,12 @@ function animate() {
     if (!running || paused || gameEnded) return;
 
     frame++;
+
+    // Le score augmente avec le temps, pas avec les pièces.
     score++;
+
+    // Vérification des récompenses de diamants
+    checkDiamondMilestones();
 
     speedMultiplier = Math.min(
         maxSpeedMultiplier,
@@ -1273,6 +1305,9 @@ function startGame() {
     score = 0;
     coins = 0;
 
+    // Réinitialise les paliers de diamants pour cette partie.
+    diamondMilestones = 0;
+
     lane = 1;
     targetX = 0;
 
@@ -1317,6 +1352,10 @@ function startGame() {
 
     setLavaVisuals(selectedMode === "lava");
     resetLavaPlatforms();
+
+    // Réapplique les cosmétiques équipés.
+    applyShopSkin();
+    applyShopCape();
 
     camera.position.set(0, 5, 9);
     camera.lookAt(0, 1.5, -20);
@@ -1418,108 +1457,41 @@ window.addEventListener("resize", () => {
 });
 
 // ======================================================
-// INITIALISATION
+// BOUTIQUE NEON RUN
 // ======================================================
 
-applyDifficultySettings(true);
-updateHUD();
-
-renderer.render(scene, camera);
-
-console.log("NEON RUN - SPACE GALAXY chargé !");
 // ======================================================
-// NEON RUN - BOUTIQUE COSMÉTIQUE
-// SKINS + CAPES
+// CATALOGUE
 // ======================================================
 
 const SHOP_CATALOG = {
     skins: [
         {
             id: "default",
-            name: "NEON RUNNER",
+            name: "JACKO",
             price: 0,
+            currency: "coins",
             color: 0x7900b8,
-            description: "Le personnage original."
+            description: "Le runner original."
         },
         {
-            id: "fire",
-            name: "FIRE DEMON",
-            price: 100,
-            color: 0xff321c,
-            description: "Un guerrier enflammé."
-        },
-        {
-            id: "ice",
-            name: "ICE WARRIOR",
-            price: 150,
-            color: 0x25dfff,
-            description: "Un combattant glacé."
-        },
-        {
-            id: "gold",
-            name: "GOLD LEGEND",
-            price: 250,
-            color: 0xffc928,
-            description: "Un skin légendaire doré."
-        },
-        {
-            id: "toxic",
-            name: "TOXIC",
-            price: 300,
-            color: 0x7dff19,
-            description: "Un personnage radioactif."
-        },
-        {
-            id: "galaxy",
-            name: "GALAXY KING",
-            price: 500,
-            color: 0xa12cff,
-            description: "Le maître de la galaxie."
+            id: "el_blackito",
+            name: "EL BLACKITO",
+            price: 10,
+            currency: "diamonds",
+            color: 0x050505,
+            description: "Noir absolu avec des détails blancs."
         }
     ],
 
     capes: [
         {
-            id: "none",
-            name: "AUCUNE",
+            id: "nr",
+            name: "CAPE NR",
             price: 0,
-            color: 0x000000,
-            description: "Aucune cape."
-        },
-        {
-            id: "red",
-            name: "CAPE ROUGE",
-            price: 100,
-            color: 0xff2525,
-            description: "Une cape rouge flamboyante."
-        },
-        {
-            id: "blue",
-            name: "CAPE CYAN",
-            price: 150,
-            color: 0x00dfff,
-            description: "Une cape futuriste."
-        },
-        {
-            id: "purple",
-            name: "CAPE ROYALE",
-            price: 250,
-            color: 0x9b25ff,
-            description: "Une cape violette royale."
-        },
-        {
-            id: "gold",
-            name: "CAPE DORÉE",
-            price: 350,
-            color: 0xffd12e,
-            description: "Une cape digne d'une légende."
-        },
-        {
-            id: "rainbow",
-            name: "CAPE COSMIQUE",
-            price: 500,
-            color: 0xff45d9,
-            description: "Une cape aux couleurs cosmiques."
+            currency: "coins",
+            color: 0x050505,
+            description: "Cape noire avec le logo NR."
         }
     ]
 };
@@ -1529,22 +1501,53 @@ const SHOP_CATALOG = {
 // ======================================================
 
 let shopWallet = Number(localStorage.getItem("neonWallet") || 0);
+let shopDiamonds = Number(localStorage.getItem("neonDiamonds") || 0);
 
-let ownedSkins = JSON.parse(
-    localStorage.getItem("neonOwnedSkins") || '["default"]'
+function readSavedArray(key, fallback) {
+    try {
+        const value = JSON.parse(localStorage.getItem(key) || "null");
+        return Array.isArray(value) ? value : fallback;
+    } catch (error) {
+        return fallback;
+    }
+}
+
+let ownedSkins = readSavedArray(
+    "neonOwnedSkins",
+    ["default"]
 );
 
-let ownedCapes = JSON.parse(
-    localStorage.getItem("neonOwnedCapes") || '["none"]'
+let ownedCapes = readSavedArray(
+    "neonOwnedCapes",
+    ["nr"]
 );
+
+// Les nouveaux objets sont automatiquement disponibles
+// pour les anciens joueurs.
+if (!ownedSkins.includes("default")) {
+    ownedSkins.push("default");
+}
+
+if (!ownedCapes.includes("nr")) {
+    ownedCapes.push("nr");
+}
 
 let equippedSkin = localStorage.getItem("neonEquippedSkin") || "default";
-let equippedCape = localStorage.getItem("neonEquippedCape") || "none";
+let equippedCape = localStorage.getItem("neonEquippedCape") || "nr";
+
+if (!["default", "el_blackito"].includes(equippedSkin)) {
+    equippedSkin = "default";
+}
+
+equippedCape = "nr";
 
 let currentShopTab = "skins";
 
 let shopElement = null;
 let shopCapeObject = null;
+
+// Sauvegarde des couleurs originales des matériaux du joueur.
+const originalPlayerMaterials = new Map();
 
 // ======================================================
 // SAUVEGARDE DES ACHATS
@@ -1552,20 +1555,31 @@ let shopCapeObject = null;
 
 function saveShop() {
     localStorage.setItem("neonWallet", shopWallet);
-    localStorage.setItem("neonOwnedSkins", JSON.stringify(ownedSkins));
-    localStorage.setItem("neonOwnedCapes", JSON.stringify(ownedCapes));
+    localStorage.setItem("neonDiamonds", shopDiamonds);
+
+    localStorage.setItem(
+        "neonOwnedSkins",
+        JSON.stringify(ownedSkins)
+    );
+
+    localStorage.setItem(
+        "neonOwnedCapes",
+        JSON.stringify(ownedCapes)
+    );
+
     localStorage.setItem("neonEquippedSkin", equippedSkin);
     localStorage.setItem("neonEquippedCape", equippedCape);
 }
 
 function updateShopWallet() {
     shopWallet = Number(localStorage.getItem("neonWallet") || 0);
+    shopDiamonds = Number(localStorage.getItem("neonDiamonds") || 0);
 
     const wallet = document.getElementById("shopWallet");
+    const diamonds = document.getElementById("shopDiamonds");
 
-    if (wallet) {
-        wallet.textContent = shopWallet;
-    }
+    if (wallet) wallet.textContent = shopWallet;
+    if (diamonds) diamonds.textContent = shopDiamonds;
 }
 
 window.updateShopWallet = updateShopWallet;
@@ -1633,12 +1647,24 @@ function createShopStyles() {
         }
 
         .neon-shop-wallet {
-            text-align: center;
-            color: #ffd84a;
-            font-weight: bold;
-            font-size: 19px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 22px;
             margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .neon-shop-coins {
+            color: #ffd84a;
             text-shadow: 0 0 10px #ffae00;
+        }
+
+        .neon-shop-diamonds {
+            color: #53eaff;
+            text-shadow: 0 0 10px #00cfff;
         }
 
         .neon-shop-tabs {
@@ -1767,6 +1793,26 @@ function createShopStyles() {
             font-size: 13px;
         }
 
+        #diamondRewardMessage {
+            position: fixed;
+            z-index: 99998;
+            top: 18%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 13px 25px;
+            border: 1px solid #48eaff;
+            border-radius: 14px;
+            background: #071b2fee;
+            color: #68edff;
+            font-size: 20px;
+            font-weight: 900;
+            text-shadow: 0 0 12px #00dfff;
+            box-shadow: 0 0 25px #00cfff77;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
         @media(max-width: 500px) {
             .neon-shop-panel {
                 padding: 15px;
@@ -1806,7 +1852,13 @@ function createShop() {
             </div>
 
             <div class="neon-shop-wallet">
-                💰 <span id="shopWallet">0</span> PIÈCES
+                <span class="neon-shop-coins">
+                    🪙 <span id="shopWallet">0</span> PIÈCES
+                </span>
+
+                <span class="neon-shop-diamonds">
+                    💎 <span id="shopDiamonds">0</span> DIAMANTS
+                </span>
             </div>
 
             <div class="neon-shop-tabs">
@@ -1914,6 +1966,14 @@ function renderShop() {
 
         const icon = isSkin ? "🧑" : "🦸";
 
+        let priceText = "GRATUIT";
+
+        if (item.price > 0) {
+            priceText = item.currency === "diamonds"
+                ? "💎 " + item.price + " DIAMANTS"
+                : "🪙 " + item.price + " PIÈCES";
+        }
+
         card.innerHTML = `
             <div class="neon-shop-preview"
                 style="color:#${item.color.toString(16).padStart(6, "0")}">
@@ -1925,7 +1985,7 @@ function renderShop() {
             <p>${item.description}</p>
 
             <div class="neon-shop-price">
-                ${item.price === 0 ? "GRATUIT" : "💰 " + item.price}
+                ${priceText}
             </div>
 
             <button class="neon-shop-action ${buttonClass}">
@@ -1955,13 +2015,24 @@ function handleShopItem(item, isSkin) {
 
     // Achat
     if (!ownedList.includes(item.id)) {
-        if (shopWallet < item.price) {
-            message.textContent =
-                "❌ Tu n'as pas assez de pièces !";
-            return;
+        if (item.currency === "diamonds") {
+            if (shopDiamonds < item.price) {
+                message.textContent =
+                    "❌ Il te faut " + item.price + " diamants pour acheter ce skin !";
+                return;
+            }
+
+            shopDiamonds -= item.price;
+        } else {
+            if (shopWallet < item.price) {
+                message.textContent =
+                    "❌ Tu n'as pas assez de pièces !";
+                return;
+            }
+
+            shopWallet -= item.price;
         }
 
-        shopWallet -= item.price;
         ownedList.push(item.id);
 
         message.textContent =
@@ -1981,6 +2052,8 @@ function handleShopItem(item, isSkin) {
     renderShop();
 }
 
+window.handleShopItem = handleShopItem;
+
 // ======================================================
 // APPLIQUER LE SKIN
 // ======================================================
@@ -1988,14 +2061,7 @@ function handleShopItem(item, isSkin) {
 function applyShopSkin() {
     if (!player) return;
 
-    const skin = SHOP_CATALOG.skins.find(
-        item => item.id === equippedSkin
-    );
-
-    if (!skin) return;
-
-    const color = new THREE.Color(skin.color);
-
+    // On mémorise les couleurs d'origine une seule fois.
     player.traverse(object => {
         if (!object.isMesh || !object.material) return;
 
@@ -2006,27 +2072,68 @@ function applyShopSkin() {
         materials.forEach(material => {
             if (!material.color) return;
 
-            // On recolore les éléments violets/verts du personnage,
-            // sans toucher à la peau ni aux détails noirs.
-            const oldColor = material.color;
-
-            if (
-                oldColor.r > 0.25 ||
-                oldColor.g > 0.35 ||
-                oldColor.b > 0.25
-            ) {
-                material.color.copy(color);
-
-                if (material.emissive) {
-                    material.emissive.copy(color).multiplyScalar(0.15);
-                }
+            if (!originalPlayerMaterials.has(material)) {
+                originalPlayerMaterials.set(material, {
+                    color: material.color.clone(),
+                    emissive: material.emissive
+                        ? material.emissive.clone()
+                        : null,
+                    emissiveIntensity: material.emissiveIntensity
+                });
             }
         });
     });
+
+    // JACKO : restaure exactement les couleurs d'origine.
+    if (equippedSkin === "default") {
+        originalPlayerMaterials.forEach((original, material) => {
+            material.color.copy(original.color);
+
+            if (material.emissive && original.emissive) {
+                material.emissive.copy(original.emissive);
+            }
+
+            material.emissiveIntensity = original.emissiveIntensity;
+        });
+
+        return;
+    }
+
+    // EL BLACKITO : noir avec détails blancs.
+    if (equippedSkin === "el_blackito") {
+        originalPlayerMaterials.forEach((original, material) => {
+            const originalColor = original.color;
+
+            // Les parties violettes et vertes deviennent blanches.
+            const isDetail =
+                originalColor.r > 0.25 ||
+                originalColor.g > 0.35 ||
+                originalColor.b > 0.25;
+
+            if (isDetail) {
+                material.color.set(0xffffff);
+
+                if (material.emissive) {
+                    material.emissive.set(0xffffff);
+                }
+
+                material.emissiveIntensity = 0.35;
+            } else {
+                // Tout le reste devient noir.
+                material.color.set(0x050505);
+
+                if (material.emissive) {
+                    material.emissive.set(0x000000);
+                }
+
+                material.emissiveIntensity = 0;
+            }
+        });
+    }
 }
 
 // ======================================================
-// CRÉER UNE CAPE
+// CRÉER LA CAPE NR
 // ======================================================
 
 function createCape() {
@@ -2034,25 +2141,32 @@ function createCape() {
 
     if (shopCapeObject) {
         player.remove(shopCapeObject);
+
+        shopCapeObject.traverse(object => {
+            if (object.geometry) object.geometry.dispose();
+            if (object.material) {
+                if (Array.isArray(object.material)) {
+                    object.material.forEach(material => material.dispose());
+                } else {
+                    object.material.dispose();
+                }
+            }
+        });
+
         shopCapeObject = null;
     }
 
-    if (equippedCape === "none") return;
-
-    const capeData = SHOP_CATALOG.capes.find(
-        item => item.id === equippedCape
-    );
-
-    if (!capeData) return;
+    if (equippedCape !== "nr") return;
 
     const cape = new THREE.Group();
 
-    const material = new THREE.MeshStandardMaterial({
-        color: capeData.color,
-        emissive: capeData.color,
-        emissiveIntensity: 0.25,
-        side: THREE.DoubleSide,
-        roughness: 0.7
+    // Tissu noir
+    const capeMaterial = new THREE.MeshStandardMaterial({
+        color: 0x030303,
+        emissive: 0x000000,
+        roughness: 0.85,
+        metalness: 0.1,
+        side: THREE.DoubleSide
     });
 
     const geometry = new THREE.BufferGeometry();
@@ -2085,22 +2199,69 @@ function createCape() {
 
     geometry.computeVertexNormals();
 
-    const cloth = new THREE.Mesh(geometry, material);
+    const cloth = new THREE.Mesh(geometry, capeMaterial);
     cape.add(cloth);
 
+    // Col noir au niveau des épaules
     const collar = new THREE.Mesh(
         new THREE.BoxGeometry(0.85, 0.18, 0.16),
-        material
+        capeMaterial
     );
 
     collar.position.set(0, 2.35, -0.2);
     cape.add(collar);
+
+    // Logo NR blanc sur la cape
+    const logoCanvas = document.createElement("canvas");
+    logoCanvas.width = 512;
+    logoCanvas.height = 256;
+
+    const ctx = logoCanvas.getContext("2d");
+
+    ctx.clearRect(0, 0, 512, 256);
+
+    ctx.font = "bold 150px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    ctx.shadowColor = "#ffffff";
+    ctx.shadowBlur = 22;
+    ctx.fillStyle = "#ffffff";
+
+    ctx.fillText("NR", 256, 130);
+
+    const logoTexture = new THREE.CanvasTexture(logoCanvas);
+    logoTexture.needsUpdate = true;
+
+    const logoMaterial = new THREE.MeshBasicMaterial({
+        map: logoTexture,
+        transparent: true,
+        side: THREE.DoubleSide,
+        depthWrite: false
+    });
+
+    const logo = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.62, 0.31),
+        logoMaterial
+    );
+
+    logo.position.set(0, 1.38, -0.435);
+
+    cape.add(logo);
 
     cape.userData.cloth = cloth;
 
     player.add(cape);
 
     shopCapeObject = cape;
+}
+
+// ======================================================
+// APPLIQUER LA CAPE
+// ======================================================
+
+function applyShopCape() {
+    createCape();
 }
 
 // ======================================================
@@ -2126,6 +2287,7 @@ function openShop() {
     createShop();
 
     shopWallet = Number(localStorage.getItem("neonWallet") || 0);
+    shopDiamonds = Number(localStorage.getItem("neonDiamonds") || 0);
 
     shopElement.classList.add("open");
 
@@ -2181,22 +2343,42 @@ function connectShopButton() {
 // ======================================================
 
 function initShop() {
+    createShopStyles();
     createShop();
+
     connectShopButton();
 
     applyShopSkin();
     applyShopCape();
 
     updateShopWallet();
+
+    // Sauvegarde les nouveaux équipements gratuits.
+    saveShop();
+}
+
+// ======================================================
+// INITIALISATION
+// ======================================================
+
+function initNeonRun() {
+    applyDifficultySettings(true);
+    updateHUD();
+
+    initShop();
+
+    renderer.render(scene, camera);
+
+    console.log("NEON RUN - SPACE GALAXY chargé !");
 }
 
 if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initShop);
+    document.addEventListener("DOMContentLoaded", initNeonRun);
 } else {
-    initShop();
+    initNeonRun();
 }
 
-// Sécurité : si le bouton boutique est ajouté plus tard
+// Si le bouton boutique est ajouté plus tard.
 const shopButtonObserver = new MutationObserver(() => {
     connectShopButton();
 });
@@ -2207,5 +2389,5 @@ shopButtonObserver.observe(document.body, {
 });
 
 // ======================================================
-// FIN BOUTIQUE NEON RUN
+// FIN NEON RUN
 // ======================================================
