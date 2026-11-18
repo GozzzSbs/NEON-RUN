@@ -513,20 +513,26 @@ function createTrain(laneIndex, z) {
     const windowMaterial = mat(0x20dfff, 0x00aaff, 1.7);
     const neonMaterial = mat(0x9b31ff, 0x7800ff, 2);
 
+    // Corps du train
     box(2.55, 3.4, 13, bodyMaterial, 0, 2, 0, train);
 
+    // Avant lumineux
     box(2.4, 1.1, 0.2, neonMaterial, 0, 3, 6.55, train);
     box(1.7, 0.85, 0.12, windowMaterial, 0, 2.8, 6.68, train);
 
+    // Fenêtres
     for (let zPos = -5; zPos <= 4; zPos += 3) {
         box(0.08, 1, 1.5, windowMaterial, -1.3, 2.8, zPos, train);
         box(0.08, 1, 1.5, windowMaterial, 1.3, 2.8, zPos, train);
     }
 
+    const wheels = [];
+
+    // Lumières et roues
     for (const side of [-1, 1]) {
         box(0.12, 0.12, 12, neonMaterial, side * 1.3, 1.2, 0, train);
 
-        const headlight = new THREE.PointLight(0x22ddff, 3, 18);
+        const headlight = new THREE.PointLight(0x22ddff, 4, 25);
         headlight.position.set(side * 0.8, 0.8, 7);
         train.add(headlight);
 
@@ -539,27 +545,31 @@ function createTrain(laneIndex, z) {
     for (const zPos of [-4, 4]) {
         for (const side of [-1, 1]) {
             const wheel = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.38, 0.38, 0.25, 12),
+                new THREE.CylinderGeometry(0.38, 0.38, 0.25, 16),
                 mat(0x222233)
             );
 
             wheel.rotation.z = Math.PI / 2;
             wheel.position.set(side * 1.35, 0.45, zPos);
+
             train.add(wheel);
+            wheels.push(wheel);
         }
     }
 
     train.position.set(lanePositions[laneIndex], 0, z);
+
+    // Données d'animation
+    train.userData.wheels = wheels;
+    train.userData.shake = Math.random() * Math.PI * 2;
+
     scene.add(train);
 
-    const data = {
+    obstacles.push({
         object: train,
         type: "train",
         lane: laneIndex
-    };
-
-    obstacles.push(data);
-    movingTrains.push(data);
+    });
 }
 
 // ======================================================
@@ -569,37 +579,87 @@ function createTrain(laneIndex, z) {
 function createBarrier(laneIndex, z) {
     const barrier = new THREE.Group();
 
-    const red = mat(0xff263f, 0x990018, 0.8);
-    const white = mat(0xffffff, 0x555555, 0.3);
+    const red = mat(0xff263f, 0x990018, 1);
+    const blue = mat(0x00dfff, 0x0077ff, 2);
+    const purple = mat(0xb42cff, 0x7800ff, 2);
+    const yellow = mat(0xffd000, 0xff8800, 1.5);
+    const metal = mat(0x777788, 0x222233, 0.5);
 
-    box(2.1, 0.8, 0.3, red, 0, 1, 0, barrier);
+    // Choisir un modèle au hasard
+    const variant = Math.floor(Math.random() * 4);
 
-    for (const side of [-1, 1]) {
-        box(0.15, 1.3, 0.2, white, side * 0.8, 0.65, 0, barrier);
+    if (variant === 0) {
+        // BARRIÈRE CLASSIQUE ROUGE
+        box(2.1, 0.8, 0.3, red, 0, 1, 0, barrier);
+
+        for (const side of [-1, 1]) {
+            box(0.15, 1.3, 0.2, metal, side * 0.8, 0.65, 0, barrier);
+        }
+
+        for (let i = -2; i <= 2; i++) {
+            box(0.2, 0.85, 0.32, metal, i * 0.4, 1, 0, barrier);
+        }
     }
 
-    for (let i = -2; i <= 2; i++) {
-        box(0.2, 0.85, 0.32, white, i * 0.4, 1, 0, barrier);
+    else if (variant === 1) {
+        // BARRIÈRE LASER BLEUE
+        for (const side of [-1, 1]) {
+            box(0.25, 2.2, 0.3, blue, side * 1, 1.1, 0, barrier);
+        }
+
+        box(2.1, 0.12, 0.15, blue, 0, 2, 0, barrier);
+        box(2.1, 0.12, 0.15, blue, 0, 0.5, 0, barrier);
+
+        const laser = new THREE.Mesh(
+            new THREE.BoxGeometry(1.8, 0.15, 0.2),
+            new THREE.MeshBasicMaterial({
+                color: 0x00ffff,
+                transparent: true,
+                opacity: 0.9
+            })
+        );
+
+        laser.position.y = 1.2;
+        barrier.add(laser);
     }
 
-    const glow = new THREE.Mesh(
-        new THREE.BoxGeometry(2.3, 0.08, 0.35),
-        new THREE.MeshBasicMaterial({ color: 0xff2020 })
-    );
+    else if (variant === 2) {
+        // DOUBLE BARRIÈRE ÉLECTRIQUE
+        for (const side of [-1, 1]) {
+            box(0.5, 1.8, 0.5, purple, side * 0.75, 0.9, 0, barrier);
 
-    glow.position.y = 1.5;
-    barrier.add(glow);
+            box(0.65, 0.18, 0.6, yellow,
+                side * 0.75, 1.9, 0, barrier);
+        }
+
+        box(1.7, 0.18, 0.3, purple, 0, 1.1, 0, barrier);
+        box(1.7, 0.18, 0.3, yellow, 0, 0.65, 0, barrier);
+    }
+
+    else {
+        // BARRIÈRE MÉTALLIQUE FUTURISTE
+        box(2.2, 1.3, 0.5, metal, 0, 0.8, 0, barrier);
+
+        box(2.3, 0.15, 0.55, yellow, 0, 1.5, 0, barrier);
+
+        for (let i = -1; i <= 1; i++) {
+            box(0.15, 1.1, 0.58, red, i * 0.7, 0.85, 0, barrier);
+        }
+
+        box(2.3, 0.12, 0.55, purple, 0, 0.15, 0, barrier);
+    }
 
     barrier.position.set(lanePositions[laneIndex], 0, z);
+
     scene.add(barrier);
 
     obstacles.push({
         object: barrier,
         type: "barrier",
-        lane: laneIndex
+        lane: laneIndex,
+        variant: variant
     });
 }
-
 // ======================================================
 // PIÈCES COSMIQUES
 // ======================================================
