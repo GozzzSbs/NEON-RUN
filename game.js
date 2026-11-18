@@ -2617,7 +2617,6 @@ function initNeonRun() {
 
     console.log("NEON RUN - SPACE GALAXY chargé !");
 }
-}
 
 if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initNeonRun);
