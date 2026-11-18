@@ -826,7 +826,7 @@ function startGame() {
     spawnTimer = 0;
 
     player.position.set(0, selectedMode === "lava" ? LAVA_PLATFORM_TOP : 0, 0);
-    player.rotation.set(0, 0, 0);
+    player.rotation.set(0, Math.PI, 0);
     player.scale.set(1, 1, 1);
     playerParts.torso.position.set(0, 0, 0);
     playerParts.torso.rotation.set(0, 0, 0);
