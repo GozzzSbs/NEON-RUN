@@ -2946,6 +2946,7 @@ function closeLeaderboard() {
     document.getElementById("leaderboardScreen").classList.add("hidden");
     document.getElementById("menu").classList.remove("hidden");
 }
-
+window.startGame = startGame;
+window.backToMenu = backToMenu;
 window.openLeaderboard = openLeaderboard;
 window.closeLeaderboard = closeLeaderboard;
