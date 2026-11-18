@@ -128,6 +128,15 @@ const roadMaterial = material(0x45413d);
 const railMaterial = material(0xaaaaaa, 0.3, 0.8);
 const woodMaterial = material(0x59402d);
 
+const normalTrackMeshes = [];
+let roadMesh;
+let lavaGroup;
+let lavaPlatforms = [];
+let lavaPlatformTimer = 0;
+let lavaLastLane = 1;
+let lavaDistance = 0;
+const LAVA_PLATFORM_TOP = 0.42;
+
 const skinMaterial = material(0xd99b79);
 const shirtMaterial = material(0x13b9e5);
 const pantsMaterial = material(0x26334f);
@@ -159,7 +168,7 @@ function box(w, h, d, color, x, y, z, parent = scene) {
 // SOL ET RAILS
 // ======================================================
 
-box(
+roadMesh = box(
     12,
     0.3,
     200,
@@ -168,6 +177,7 @@ box(
     -0.25,
     -75
 );
+normalTrackMeshes.push(roadMesh);
 
 function createTrack() {
 
@@ -177,7 +187,7 @@ function createTrack() {
 
         // Rails métalliques
 
-        box(
+        normalTrackMeshes.push(box(
             0.12,
             0.16,
             200,
@@ -185,9 +195,9 @@ function createTrack() {
             x - 0.85,
             0,
             -75
-        );
+        ));
 
-        box(
+        normalTrackMeshes.push(box(
             0.12,
             0.16,
             200,
@@ -195,7 +205,7 @@ function createTrack() {
             x + 0.85,
             0,
             -75
-        );
+        ));
 
         // Traverses qui défileront
 
@@ -212,6 +222,7 @@ function createTrack() {
             );
 
             movingSleepers.push(sleeper);
+            normalTrackMeshes.push(sleeper);
 
         }
 
@@ -239,6 +250,7 @@ function createTrack() {
         scene.add(stone);
 
         movingStones.push(stone);
+        normalTrackMeshes.push(stone);
 
     }
 
@@ -740,6 +752,197 @@ function createCoin(laneIndex, z) {
 }
 
 // ======================================================
+// MODE THE FLOOR IS LAVA
+// ======================================================
+
+function createLavaEnvironment() {
+    if (lavaGroup) return;
+
+    lavaGroup = new THREE.Group();
+
+    const lava = new THREE.Mesh(
+        new THREE.PlaneGeometry(22, 230),
+        new THREE.MeshStandardMaterial({
+            color: 0xff3b08,
+            emissive: 0xff2600,
+            emissiveIntensity: 1.15,
+            roughness: 0.32,
+            metalness: 0.05
+        })
+    );
+    lava.rotation.x = -Math.PI / 2;
+    lava.position.set(0, -0.48, -78);
+    lavaGroup.add(lava);
+
+    const glowMaterial = new THREE.MeshBasicMaterial({
+        color: 0xffa01a,
+        transparent: true,
+        opacity: 0.8
+    });
+
+    // Fissures lumineuses sur la lave
+    for (let i = 0; i < 65; i++) {
+        const crack = new THREE.Mesh(
+            new THREE.BoxGeometry(0.08 + Math.random() * 0.18, 0.025, 1.2 + Math.random() * 3),
+            glowMaterial
+        );
+        crack.position.set(
+            (Math.random() - 0.5) * 18,
+            -0.445,
+            -180 + Math.random() * 210
+        );
+        crack.rotation.y = (Math.random() - 0.5) * 0.8;
+        lavaGroup.add(crack);
+        crack.userData.isLavaCrack = true;
+    }
+
+    scene.add(lavaGroup);
+
+    const lavaLight = new THREE.PointLight(0xff3b12, 2.2, 38);
+    lavaLight.position.set(0, 2.5, -8);
+    lavaGroup.add(lavaLight);
+}
+
+function setLavaVisuals(enabled) {
+    createLavaEnvironment();
+
+    normalTrackMeshes.forEach(mesh => {
+        mesh.visible = !enabled;
+    });
+
+    movingSleepers.forEach(mesh => mesh.visible = !enabled);
+    movingStones.forEach(mesh => mesh.visible = !enabled);
+
+    if (lavaGroup) lavaGroup.visible = enabled;
+
+    scene.background = new THREE.Color(enabled ? 0x260b12 : 0x101b42);
+    scene.fog.color.set(enabled ? 0x3b1010 : 0x101b42);
+    scene.fog.near = enabled ? 18 : 35;
+    scene.fog.far = enabled ? 115 : 155;
+}
+
+function createLavaPlatform(laneIndex, z) {
+    const platform = new THREE.Group();
+
+    const rock = new THREE.Mesh(
+        new THREE.BoxGeometry(2.55, 0.55, 5.2),
+        new THREE.MeshStandardMaterial({
+            color: 0x40332e,
+            roughness: 0.95
+        })
+    );
+    rock.position.y = -0.02;
+    rock.castShadow = true;
+    rock.receiveShadow = true;
+    platform.add(rock);
+
+    const top = new THREE.Mesh(
+        new THREE.BoxGeometry(2.35, 0.12, 4.95),
+        new THREE.MeshStandardMaterial({
+            color: 0x716052,
+            roughness: 1
+        })
+    );
+    top.position.y = 0.31;
+    top.receiveShadow = true;
+    platform.add(top);
+
+    const edgeMaterial = new THREE.MeshBasicMaterial({ color: 0xff5a12 });
+    for (const side of [-1, 1]) {
+        const edge = new THREE.Mesh(
+            new THREE.BoxGeometry(0.09, 0.08, 5.05),
+            edgeMaterial
+        );
+        edge.position.set(side * 1.2, 0.34, 0);
+        platform.add(edge);
+    }
+
+    platform.position.set(lanePositions[laneIndex], 0, z);
+    scene.add(platform);
+    lavaPlatforms.push({ object: platform, lane: laneIndex });
+}
+
+function spawnLavaSegment(z) {
+    // Le parcours change progressivement de voie, sans saut impossible de gauche à droite.
+    const choices = [lavaLastLane];
+    if (lavaLastLane > 0) choices.push(lavaLastLane - 1);
+    if (lavaLastLane < 2) choices.push(lavaLastLane + 1);
+
+    const nextLane = choices[Math.floor(Math.random() * choices.length)];
+    lavaLastLane = nextLane;
+    createLavaPlatform(nextLane, z);
+
+    // Une deuxième plateforme apparaît parfois pour offrir un autre chemin.
+    if (Math.random() < 0.38) {
+        const otherLanes = [0, 1, 2].filter(value => value !== nextLane);
+        const other = otherLanes[Math.floor(Math.random() * otherLanes.length)];
+        createLavaPlatform(other, z);
+    }
+}
+
+function resetLavaPlatforms() {
+    lavaPlatforms.forEach(item => scene.remove(item.object));
+    lavaPlatforms = [];
+    lavaPlatformTimer = 0;
+    lavaLastLane = 1;
+    lavaDistance = 0;
+
+    if (selectedMode !== "lava") return;
+
+    createLavaEnvironment();
+    // Plateforme de départ et plusieurs plateformes déjà visibles devant le joueur.
+    createLavaPlatform(1, 0);
+    for (let i = 1; i <= 9; i++) {
+        spawnLavaSegment(-i * 12);
+    }
+}
+
+function moveLavaPlatforms() {
+    if (selectedMode !== "lava") return;
+
+    lavaDistance += speed;
+    lavaPlatformTimer++;
+
+    lavaPlatforms.forEach(item => {
+        item.object.position.z += speed;
+    });
+
+    lavaPlatforms = lavaPlatforms.filter(item => {
+        if (item.object.position.z > 18) {
+            scene.remove(item.object);
+            return false;
+        }
+        return true;
+    });
+
+    // Garde toujours un parcours devant le personnage.
+    if (lavaPlatformTimer >= Math.max(10, Math.round(12 / Math.max(speed, 0.3)))) {
+        const furthestZ = lavaPlatforms.reduce(
+            (minimum, item) => Math.min(minimum, item.object.position.z),
+            0
+        );
+        spawnLavaSegment(furthestZ - 12);
+        lavaPlatformTimer = 0;
+    }
+
+    if (lavaGroup) {
+        lavaGroup.children.forEach(child => {
+            if (child.userData.isLavaCrack) {
+                child.position.z += speed * 0.7;
+                if (child.position.z > 18) child.position.z -= 210;
+            }
+        });
+    }
+}
+
+function isPlayerAboveLavaPlatform() {
+    return lavaPlatforms.some(item =>
+        Math.abs(item.object.position.x - player.position.x) < 1.18 &&
+        Math.abs(item.object.position.z) < 2.85
+    );
+}
+
+// ======================================================
 // GÉNÉRATION DES OBSTACLES
 // ======================================================
 
@@ -758,6 +961,9 @@ function spawnObjects() {
         createBarrier(laneIndex, -100);
 
     }
+
+    // Le mode lave est un mode NO COIN : aucune pièce n'est générée.
+    if (selectedMode === "lava") return;
 
     // Ligne de pièces dans une autre voie
 
@@ -893,7 +1099,7 @@ function jump() {
 
         jumping = true;
 
-        jumpVelocity = 0.22;
+        jumpVelocity = selectedMode === "lava" ? 0.32 : 0.22;
 
     }
 
@@ -956,6 +1162,11 @@ window.addEventListener("keydown", e => {
 
 function checkCollisions() {
 
+    if (selectedMode === "lava" && !jumping && !isPlayerAboveLavaPlatform()) {
+        endGame("Tombé dans la lave !");
+        return;
+    }
+
     for (const obstacle of obstacles) {
 
         const distance = obstacle.object.position.z;
@@ -992,7 +1203,9 @@ function checkCollisions() {
 
             if (!jumping && !sliding) {
 
-                endGame("Tu as heurté une barrière !");
+                endGame(selectedMode === "lava"
+                    ? "Tu te cognes aux murs !"
+                    : "Tu as heurté une barrière !");
 
                 return;
 
@@ -1323,14 +1536,18 @@ function animate() {
 
         player.position.y += jumpVelocity;
 
-        jumpVelocity -= 0.012;
+        jumpVelocity -= selectedMode === "lava" ? 0.035 : 0.012;
 
-        if (player.position.y <= 0) {
+        const landingHeight = selectedMode === "lava" ? LAVA_PLATFORM_TOP : 0;
 
-            player.position.y = 0;
+        if (player.position.y <= landingHeight) {
+            if (selectedMode === "lava" && !isPlayerAboveLavaPlatform()) {
+                endGame("Tombé dans la lave !");
+                return;
+            }
 
+            player.position.y = landingHeight;
             jumping = false;
-
         }
 
     }
@@ -1353,6 +1570,11 @@ function animate() {
 
     }
 
+    // En mode lave, le personnage court au niveau du dessus des plateformes.
+    if (selectedMode === "lava" && !jumping) {
+        player.position.y = LAVA_PLATFORM_TOP;
+    }
+
     // Animation de course
 
     animateRunner();
@@ -1360,6 +1582,7 @@ function animate() {
     // Décor qui défile
 
     moveEnvironment();
+    moveLavaPlatforms();
 
     // Trains et barrières
 
@@ -1416,7 +1639,7 @@ function startGame() {
     frame = 0;
     spawnTimer = 0;
 
-    player.position.set(0, 0, 0);
+    player.position.set(0, selectedMode === "lava" ? LAVA_PLATFORM_TOP : 0, 0);
 
     player.rotation.set(0, 0, 0);
 
@@ -1438,6 +1661,9 @@ function startGame() {
 
     obstacles = [];
     coinObjects = [];
+
+    setLavaVisuals(selectedMode === "lava");
+    resetLavaPlatforms();
 
     // Réinitialiser la caméra
 
@@ -1560,6 +1786,9 @@ function backToMenu() {
     running = false;
 
     paused = false;
+    setLavaVisuals(false);
+    lavaPlatforms.forEach(item => scene.remove(item.object));
+    lavaPlatforms = [];
 
     const menu =
         document.getElementById("menu");
