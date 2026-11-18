@@ -345,3 +345,20 @@ canvas {
         padding: 25px 12px;
     }
 }
+#gameScreen {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: #101b42;
+}
+
+#game {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+}
+
+.hidden {
+    display: none !important;
+}
