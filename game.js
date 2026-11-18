@@ -231,43 +231,298 @@ for (let i = 0; i < 18; i++) {
 }
 
 // ======================================================
-// PERSONNAGE : SPRITE DU SKIN (VUE DE DOS)
+// PERSONNAGE 3D AVEC SKIN VIOLET ET ANIMATION
 // ======================================================
 
 function createPlayer() {
+
     player = new THREE.Group();
 
-    const textureLoader = new THREE.TextureLoader();
-    const skinTexture = textureLoader.load(
-        "skin.webp",
-        () => console.log("Skin NEON RUN chargé !"),
-        undefined,
-        () => console.error("Erreur : impossible de charger skin.webp")
+    playerParts = {
+        arms: [],
+        legs: [],
+        head: null,
+        body: null
+    };
+
+    const purple = material(0x7900b8);
+    const darkPurple = material(0x35004e);
+    const black = material(0x211b28);
+    const lime = material(0xb6ff19);
+    const skin = material(0xd98a57);
+    const white = material(0xffe9d1);
+
+    // Fonction pour créer une sphère
+    function sphere(radius, mat, x, y, z, parent) {
+
+        const mesh = new THREE.Mesh(
+            new THREE.SphereGeometry(radius, 16, 16),
+            mat
+        );
+
+        mesh.position.set(x, y, z);
+        mesh.castShadow = true;
+
+        parent.add(mesh);
+
+        return mesh;
+    }
+
+    // Fonction pour créer un morceau de bras ou de jambe
+    function limb(w, h, d, mat, x, y, z, parent) {
+
+        const mesh = new THREE.Mesh(
+            new THREE.BoxGeometry(w, h, d),
+            mat
+        );
+
+        mesh.position.set(x, y, z);
+        mesh.castShadow = true;
+
+        parent.add(mesh);
+
+        return mesh;
+    }
+
+    // CORPS : SWEAT À CAPUCHE
+
+    const torso = new THREE.Group();
+
+    torso.position.y = 1.75;
+
+    player.add(torso);
+
+    playerParts.body = torso;
+
+    limb(
+        0.9, 1.1, 0.48,
+        black,
+        0, 0, 0,
+        torso
     );
 
-    // Three.js r128 utilise encoding (et non colorSpace).
-    skinTexture.encoding = THREE.sRGBEncoding;
-    skinTexture.magFilter = THREE.LinearFilter;
-    skinTexture.minFilter = THREE.LinearMipmapLinearFilter;
+    // Bas du sweat
+    limb(
+        0.94, 0.15, 0.5,
+        white,
+        0, -0.52, 0,
+        torso
+    );
 
-    const skinMaterial = new THREE.MeshBasicMaterial({
-        map: skinTexture,
-        transparent: true,
-        alphaTest: 0.04,
-        side: THREE.DoubleSide,
-        depthWrite: false
+    // Logo couronne dans le dos
+    const logoMaterial = new THREE.LineBasicMaterial({
+        color: 0xb6ff19
     });
 
-    playerSprite = new THREE.Mesh(
-        new THREE.PlaneGeometry(2.25, 3.25),
-        skinMaterial
+    const crownPoints = [
+        new THREE.Vector3(-0.23, -0.05, 0.251),
+        new THREE.Vector3(-0.18, 0.20, 0.251),
+        new THREE.Vector3(-0.04, 0.07, 0.251),
+        new THREE.Vector3(0.02, 0.23, 0.251),
+        new THREE.Vector3(0.12, 0.07, 0.251),
+        new THREE.Vector3(0.23, 0.20, 0.251),
+        new THREE.Vector3(0.25, -0.05, 0.251),
+        new THREE.Vector3(-0.23, -0.05, 0.251)
+    ];
+
+    const crownGeometry = new THREE.BufferGeometry()
+        .setFromPoints(crownPoints);
+
+    const crown = new THREE.Line(
+        crownGeometry,
+        logoMaterial
     );
-    playerSprite.position.set(0, 1.62, 0);
-    playerSprite.renderOrder = 2;
-    player.add(playerSprite);
+
+    torso.add(crown);
+
+    // TÊTE
+
+    const head = new THREE.Group();
+
+    head.position.set(0, 2.65, 0);
+
+    player.add(head);
+
+    playerParts.head = head;
+
+    sphere(0.34, skin, 0, 0, 0, head);
+
+    // Cheveux
+    sphere(0.35, black, 0, 0.13, 0, head);
+
+    // Bonnet violet
+    sphere(0.39, purple, 0, 0.30, 0, head);
+
+    limb(
+        0.74, 0.18, 0.72,
+        darkPurple,
+        0, 0.17, 0,
+        head
+    );
+
+    // Bande du bonnet
+    limb(
+        0.75, 0.12, 0.74,
+        purple,
+        0, 0.10, 0,
+        head
+    );
+
+    // Oreilles
+    sphere(0.10, skin, -0.34, -0.05, 0, head);
+    sphere(0.10, skin, 0.34, -0.05, 0, head);
+
+    // Casque audio
+    for (const side of [-1, 1]) {
+
+        const headphone = new THREE.Mesh(
+            new THREE.BoxGeometry(0.16, 0.38, 0.28),
+            black
+        );
+
+        headphone.position.set(side * 0.39, -0.12, 0);
+
+        head.add(headphone);
+
+        const headphoneLight = new THREE.Mesh(
+            new THREE.BoxGeometry(0.17, 0.15, 0.29),
+            lime
+        );
+
+        headphoneLight.position.set(side * 0.40, -0.12, 0);
+
+        head.add(headphoneLight);
+
+    }
+
+    // BRAS ARTICULÉS
+
+    for (const side of [-1, 1]) {
+
+        const arm = new THREE.Group();
+
+        arm.position.set(side * 0.51, 2.20, 0);
+
+        player.add(arm);
+
+        const sleeveMaterial =
+            side === -1 ? purple : lime;
+
+        // Haut du bras
+        limb(
+            0.28, 0.48, 0.30,
+            sleeveMaterial,
+            0, -0.24, 0,
+            arm
+        );
+
+        // Coude articulé
+        const elbow = new THREE.Group();
+
+        elbow.position.y = -0.48;
+
+        arm.add(elbow);
+
+        limb(
+            0.24, 0.43, 0.27,
+            darkPurple,
+            0, -0.21, 0,
+            elbow
+        );
+
+        // Main
+        sphere(
+            0.14,
+            skin,
+            0,
+            -0.46,
+            0,
+            elbow
+        );
+
+        arm.userData.elbow = elbow;
+
+        playerParts.arms.push(arm);
+
+    }
+
+    // JAMBES ARTICULÉES
+
+    for (const side of [-1, 1]) {
+
+        const leg = new THREE.Group();
+
+        leg.position.set(side * 0.24, 1.22, 0);
+
+        player.add(leg);
+
+        // Pantalon
+        limb(
+            0.34, 0.60, 0.38,
+            black,
+            0, -0.30, 0,
+            leg
+        );
+
+        // Genou articulé
+        const knee = new THREE.Group();
+
+        knee.position.y = -0.58;
+
+        leg.add(knee);
+
+        limb(
+            0.32, 0.45, 0.36,
+            black,
+            0, -0.20, 0,
+            knee
+        );
+
+        // Chaussure
+        limb(
+            0.43, 0.23, 0.60,
+            purple,
+            0, -0.48, -0.10,
+            knee
+        );
+
+        // Semelle
+        limb(
+            0.44, 0.08, 0.61,
+            white,
+            0, -0.60, -0.10,
+            knee
+        );
+
+        // Détails verts
+        limb(
+            0.35, 0.07, 0.12,
+            lime,
+            0, -0.47, -0.36,
+            knee
+        );
+
+        leg.userData.knee = knee;
+
+        playerParts.legs.push(leg);
+
+    }
+
+    // CAPUCHE DANS LE DOS
+
+    const hood = new THREE.Mesh(
+        new THREE.SphereGeometry(0.40, 16, 16),
+        darkPurple
+    );
+
+    hood.position.set(0, 2.35, 0.25);
+
+    player.add(hood);
 
     player.position.set(0, 0, 0);
+
     scene.add(player);
+
 }
 createPlayer();
 
