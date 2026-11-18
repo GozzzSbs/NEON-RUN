@@ -1077,7 +1077,7 @@ function animateRunner() {
         playerParts.legs[1].rotation.x = -0.5;
     }
 
-    animateShopCape();
+    animateCape();
 }
 
 // ======================================================
