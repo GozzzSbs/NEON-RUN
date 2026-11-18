@@ -1640,11 +1640,7 @@ if (!ownedSkins.includes("default")) {
     ownedSkins.push("default");
 }
 
-// La cape NR n'est plus offerte automatiquement.
-// On retire aussi la cape des anciennes sauvegardes gratuites.
-if (!IS_DEVELOPER) {
-    ownedCapes = ownedCapes.filter(id => id !== "nr");
-}
+
 
 let equippedSkin = localStorage.getItem("neonEquippedSkin") || "default";
 let equippedCape = localStorage.getItem("neonEquippedCape") || "";
