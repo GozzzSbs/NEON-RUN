@@ -1697,7 +1697,163 @@ function updateShopWallet() {
 }
 
 window.updateShopWallet = updateShopWallet;
+// ======================================================
+// 👑 ESPACE DÉVELOPPEUR
+// ======================================================
 
+function createDeveloperTools() {
+    if (!IS_DEVELOPER) return;
+
+    if (document.getElementById("neonDeveloperBadge")) return;
+
+    // STYLE
+    const style = document.createElement("style");
+
+    style.textContent = `
+        #neonDeveloperBadge {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 1000000;
+            padding: 10px 16px;
+            border: 1px solid #ffd700;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #402500, #a66b00);
+            color: #fff2a0;
+            font-weight: 900;
+            font-size: 13px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 0 18px #ffcc00aa;
+        }
+
+        #neonDeveloperMenu {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000001;
+            align-items: center;
+            justify-content: center;
+            background: #000d;
+            font-family: Arial, sans-serif;
+        }
+
+        #neonDeveloperMenu.open {
+            display: flex;
+        }
+
+        .neon-dev-panel {
+            width: min(420px, 90%);
+            padding: 25px;
+            text-align: center;
+            border: 2px solid #ffd700;
+            border-radius: 20px;
+            background: linear-gradient(145deg, #241700, #090716);
+            color: white;
+            box-shadow: 0 0 30px #ffcc0066;
+        }
+
+        .neon-dev-panel h2 {
+            color: #ffd700;
+            text-shadow: 0 0 12px #ffcc00;
+        }
+
+        .neon-dev-button {
+            display: block;
+            width: 100%;
+            margin-top: 13px;
+            padding: 13px;
+            border: 0;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #9b6500, #e6ad00);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .neon-dev-close {
+            background: #393342;
+        }
+    `;
+
+    document.head.appendChild(style);
+
+    // BADGE
+    const badge = document.createElement("button");
+    badge.id = "neonDeveloperBadge";
+    badge.textContent = "👑 DÉVELOPPEUR";
+
+    document.body.appendChild(badge);
+
+    // MENU
+    const menu = document.createElement("div");
+    menu.id = "neonDeveloperMenu";
+
+    menu.innerHTML = `
+        <div class="neon-dev-panel">
+
+            <h2>👑 ESPACE DÉVELOPPEUR</h2>
+
+            <p>Bienvenue dans ton espace secret !</p>
+
+            <button class="neon-dev-button" id="devUnlockAll">
+                🔓 DÉBLOQUER TOUS LES SKINS ET CAPES
+            </button>
+
+            <button class="neon-dev-button neon-dev-close" id="devClose">
+                ✕ FERMER
+            </button>
+
+        </div>
+    `;
+
+    document.body.appendChild(menu);
+
+    // OUVRIR LE MENU
+    function openDeveloperMenu() {
+        menu.classList.add("open");
+    }
+
+    function closeDeveloperMenu() {
+        menu.classList.remove("open");
+    }
+
+    badge.onclick = openDeveloperMenu;
+
+    document.getElementById("devClose").onclick =
+        closeDeveloperMenu;
+
+    menu.addEventListener("click", event => {
+        if (event.target === menu) {
+            closeDeveloperMenu();
+        }
+    });
+
+    // DÉBLOCAGE TOTAL
+    document.getElementById("devUnlockAll").onclick = () => {
+
+        ownedSkins = SHOP_CATALOG.skins.map(skin => skin.id);
+
+        ownedCapes = SHOP_CATALOG.capes.map(cape => cape.id);
+
+        saveShop();
+        renderShop();
+
+        alert("👑 Tous les skins et toutes les capes sont débloqués !");
+    };
+
+    // RACCOURCI SECRET : CTRL + MAJ + D
+    window.addEventListener("keydown", event => {
+        if (
+            event.ctrlKey &&
+            event.shiftKey &&
+            event.key.toLowerCase() === "d"
+        ) {
+            event.preventDefault();
+            openDeveloperMenu();
+        }
+    });
+}
 // ======================================================
 // STYLE DE LA BOUTIQUE
 // ======================================================
