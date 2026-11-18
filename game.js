@@ -2203,7 +2203,7 @@ function createCape() {
     const ctx = canvas.getContext("2d");
 
     ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 150px Arial";
+    ctx.font = "bold 230px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText("NR", 256, 128);
