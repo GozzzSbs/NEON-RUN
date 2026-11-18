@@ -1284,7 +1284,9 @@ function endGame(reason) {
     gameEnded = true;
     running = false;
     paused = false;
-saveScoreToSupabase();
+saveScoreToSupabase().catch(error => {
+    console.error("Erreur lors de la sauvegarde :", error);
+});
     if (score > best) {
         best = score;
         localStorage.setItem("neonBest", best);
