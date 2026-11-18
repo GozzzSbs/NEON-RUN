@@ -2953,13 +2953,17 @@ async function openLeaderboard() {
 
     // MODE DU CLASSEMENT
     const leaderboardMode = selectedLeaderboardMode || "classic";
+    const isNoCoin = leaderboardMode === "nocoin";
 
     // RÉCUPÉRATION DES SCORES
     const { data, error } = await supabaseClient
         .from("neon_scores")
-        .select("player_pseudo, score, game_mode")
+        .select("player_pseudo, score, game_mode, time_seconds")
         .eq("game_mode", leaderboardMode)
-        .order("score", { ascending: false })
+        .order(
+            isNoCoin ? "time_seconds" : "score",
+            { ascending: isNoCoin }
+        )
         .limit(100);
 
     if (error) {
@@ -2978,12 +2982,14 @@ async function openLeaderboard() {
 
     // PODIUM
     [1, 0, 2].forEach(index => {
+
         const joueur = data[index];
 
         const card = document.createElement("div");
         card.className = "podium-player";
 
         if (joueur) {
+
             const rank = document.createElement("strong");
             rank.textContent = ["🥇", "🥈", "🥉"][index];
 
@@ -2991,9 +2997,15 @@ async function openLeaderboard() {
             name.textContent = joueur.player_pseudo;
 
             const points = document.createElement("div");
-            points.textContent = joueur.score + " points";
+
+            points.textContent = isNoCoin
+                ? (joueur.time_seconds != null
+                    ? Number(joueur.time_seconds).toFixed(2) + " s"
+                    : "—")
+                : joueur.score + " points";
 
             card.append(rank, name, points);
+
         } else {
             card.textContent = "—";
         }
@@ -3014,19 +3026,14 @@ async function openLeaderboard() {
         name.textContent = joueur.player_pseudo;
 
         const score = document.createElement("span");
-        score.textContent = joueur.score;
+
+        score.textContent = isNoCoin
+            ? (joueur.time_seconds != null
+                ? Number(joueur.time_seconds).toFixed(2) + " s"
+                : "—")
+            : joueur.score;
 
         row.append(rank, name, score);
         players.appendChild(row);
     });
 }
-
-function closeLeaderboard() {
-    document.getElementById("leaderboardScreen").classList.add("hidden");
-    document.getElementById("menu").classList.remove("hidden");
-}
-window.startGame = startGame;
-window.backToMenu = backToMenu;
-window.openLeaderboard = openLeaderboard;
-window.closeLeaderboard = closeLeaderboard;
-window.setDifficulty = setDifficulty;
