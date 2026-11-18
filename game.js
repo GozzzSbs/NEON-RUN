@@ -86,6 +86,10 @@ let animationStarted = false;
 
 let score = 0;
 let coins = 0;
+// TIMER NO COIN
+let noCoinStartTime = 0;
+let noCoinTimerInterval = null;
+let noCoinElapsed = 0;
 let best = Number(localStorage.getItem("neonBest") || 0);
 let selectedLeaderboardMode = "classic";
 // Diamants gagnés pendant cette partie
