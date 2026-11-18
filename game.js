@@ -1630,6 +1630,11 @@ let ownedCapes = readSavedArray(
     []
 );
 
+// MODE DÉVELOPPEUR
+if (IS_DEVELOPER) {
+    ownedCapes = SHOP_CATALOG.capes.map(cape => cape.id);
+}
+
 // JACKO est le skin de départ.
 if (!ownedSkins.includes("default")) {
     ownedSkins.push("default");
