@@ -62,7 +62,7 @@ scene.add(purpleLight);
 // ======================================================
 // VARIABLES
 // ======================================================
-
+const IS_DEVELOPER = true;
 let running = false;
 let paused = false;
 let gameEnded = false;
