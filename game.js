@@ -2218,11 +2218,11 @@ function createCape() {
     });
 
     const logo = new THREE.Mesh(
-        new THREE.PlaneGeometry(0.55, 0.28),
+        new THREE.PlaneGeometry(0.95, 0.48)
         logoMaterial
     );
 
-    logo.position.set(0, 1.35, 0.51);
+    logo.position.set(0, 1.35, 0.52);
     cape.add(logo);
 
     // Ajouter la cape au personnage
@@ -2230,7 +2230,24 @@ function createCape() {
 
     shopCapeObject = cape;
 }
+let capePreviousY = 0;
 
+function animateCape() {
+    if (!shopCapeObject || !player) return;
+
+    const time = performance.now() * 0.001;
+
+    // Mouvement naturel de la cape
+    shopCapeObject.rotation.z = Math.sin(time * 4) * 0.045;
+    shopCapeObject.rotation.x = Math.sin(time * 3) * 0.035;
+
+    // Réaction aux mouvements verticaux du personnage
+    const currentY = player.position.y;
+    const movementY = currentY - capePreviousY;
+
+    shopCapeObject.rotation.x += movementY * 5;
+    capePreviousY = currentY;
+}
 // ======================================================
 // APPLIQUER LA CAPE
 // ======================================================
