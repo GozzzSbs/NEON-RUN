@@ -1288,9 +1288,12 @@ function updateHUD() {
 function endGame(reason) {
     if (gameEnded) return;
 
-    gameEnded = true;
-    running = false;
-    paused = false;
+   gameEnded = true;
+running = false;
+paused = false;
+
+stopNoCoinTimer();
+
 saveScoreToSupabase().catch(error => {
     console.error("Erreur lors de la sauvegarde :", error);
 });
