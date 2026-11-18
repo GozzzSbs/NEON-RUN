@@ -924,3 +924,227 @@ window.addEventListener("resize", () => {
 
 updateHUD();
 renderer.render(scene, camera);
+// ============================================
+// NEON RUN - BOUTONS DU LOBBY
+// ============================================
+
+// DIFFICULTÉ
+
+window.setDifficulty = function(level, button) {
+
+    difficulty = level;
+
+    document.querySelectorAll(".difficulty-buttons button")
+        .forEach(b => b.classList.remove("active"));
+
+    if (button) button.classList.add("active");
+
+    const speeds = {
+        facile: 0.45,
+        normal: 0.65,
+        difficile: 0.85,
+        extreme: 1.1
+    };
+
+    speed = speeds[level] || 0.65;
+
+    showLobbyMessage("Difficulté sélectionnée : " + level.toUpperCase());
+};
+
+
+// MODES DE JEU
+
+window.selectMode = function(mode, button) {
+
+    selectedMode = mode;
+
+    document.querySelectorAll(".mode-buttons button")
+        .forEach(b => b.classList.remove("active"));
+
+    if (button) button.classList.add("active");
+
+    const descriptions = {
+        classic: "Évite les trains et les barrières. Ramasse les pièces et bats ton record !",
+        nocoin: "Attention : ramasser une seule pièce provoque un GAME OVER !",
+        lava: "Le sol est de la lave ! Saute pour éviter de toucher le sol."
+    };
+
+    const description = document.getElementById("modeDescription");
+
+    if (description) {
+        description.textContent = descriptions[mode] || descriptions.classic;
+    }
+
+    showLobbyMessage("Mode sélectionné : " + mode.toUpperCase());
+};
+
+
+// MESSAGE DU LOBBY
+
+function showLobbyMessage(message) {
+
+    let notification = document.getElementById("lobbyNotification");
+
+    if (!notification) {
+
+        notification = document.createElement("div");
+
+        notification.id = "lobbyNotification";
+
+        document.body.appendChild(notification);
+    }
+
+    notification.textContent = message;
+    notification.classList.add("show");
+
+    clearTimeout(window.lobbyNotificationTimer);
+
+    window.lobbyNotificationTimer = setTimeout(() => {
+        notification.classList.remove("show");
+    }, 1800);
+}
+
+
+// FENÊTRE DES AUTRES BOUTONS
+
+function openLobbyPanel(title, description) {
+
+    let panel = document.getElementById("lobbyPanel");
+
+    if (!panel) {
+
+        panel = document.createElement("div");
+
+        panel.id = "lobbyPanel";
+
+        panel.innerHTML = `
+            <div class="lobby-panel-content">
+                <button id="closeLobbyPanel" class="close-panel">✕</button>
+                <h2 id="lobbyPanelTitle"></h2>
+                <p id="lobbyPanelDescription"></p>
+                <div id="lobbyPanelExtra"></div>
+            </div>
+        `;
+
+        document.body.appendChild(panel);
+
+        document.getElementById("closeLobbyPanel").onclick = () => {
+            panel.classList.remove("visible");
+        };
+
+        panel.addEventListener("click", event => {
+            if (event.target === panel) {
+                panel.classList.remove("visible");
+            }
+        });
+    }
+
+    document.getElementById("lobbyPanelTitle").textContent = title;
+    document.getElementById("lobbyPanelDescription").textContent = description;
+
+    panel.classList.add("visible");
+}
+
+
+// ACTIONS DES BOUTONS SECONDAIRES
+
+const lobbyActions = {
+
+    "profil": [
+        "PROFIL",
+        "Ton profil de runner. Les statistiques et la personnalisation du compte arriveront ici."
+    ],
+
+    "social": [
+        "SOCIAL",
+        "Retrouve les actualités et les nouveautés de NEON RUN."
+    ],
+
+    "réglages": [
+        "RÉGLAGES",
+        "Les réglages du jeu seront disponibles ici."
+    ],
+
+    "amis": [
+        "AMIS",
+        "La liste de tes amis apparaîtra ici. Le système multijoueur n'est pas encore connecté."
+    ],
+
+    "chat": [
+        "CHAT",
+        "Le chat en ligne sera disponible lorsque le système de connexion sera ajouté."
+    ],
+
+    "classement": [
+        "CLASSEMENT",
+        "Le classement en ligne sera disponible lorsque les scores seront connectés à un serveur."
+    ],
+
+    "passe": [
+        "PASSE DE RUNNER",
+        "Progresse dans les niveaux et débloque des récompenses."
+    ],
+
+    "quêtes": [
+        "QUÊTES",
+        "Tes missions et défis apparaîtront ici."
+    ],
+
+    "persos": [
+        "PERSONNAGES",
+        "Choisis ton runner préféré."
+    ],
+
+    "boutique": [
+        "BOUTIQUE",
+        "La boutique permettra bientôt de débloquer des personnages et des accessoires."
+    ],
+
+    "compte": [
+        "COMPTE",
+        "Les options de compte seront disponibles ici."
+    ],
+
+    "paramètres": [
+        "PARAMÈTRES",
+        "Les paramètres du jeu seront disponibles ici."
+    ]
+};
+
+
+// CONNECTER LES BOUTONS
+
+document.querySelectorAll(
+    ".small-buttons button, .secondary-buttons button"
+).forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const name = button.textContent.trim().toLowerCase();
+
+        const action = lobbyActions[name];
+
+        if (action) {
+            openLobbyPanel(action[0], action[1]);
+        }
+    });
+
+});
+
+
+// ============================================
+// CONFIRMATION DU MODE AU LANCEMENT
+// ============================================
+
+const originalStartGame = window.startGame;
+
+window.startGame = function() {
+
+    showLobbyMessage(
+        "Lancement : " + selectedMode.toUpperCase()
+    );
+
+    if (typeof originalStartGame === "function") {
+        originalStartGame();
+    }
+};
