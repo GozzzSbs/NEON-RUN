@@ -2749,3 +2749,44 @@ shopButtonObserver.observe(document.body, {
 // ======================================================
 // FIN NEON RUN
 // ======================================================
+function savePlayerPseudo() {
+    const input = document.getElementById("playerPseudo");
+    const error = document.getElementById("pseudoError");
+
+    const pseudo = input.value.trim();
+
+    if (pseudo.length < 3) {
+        error.textContent = "Ton pseudo doit contenir au moins 3 caractères.";
+        return;
+    }
+
+    localStorage.setItem("neonPlayerPseudo", pseudo);
+
+    document.getElementById("profileSetup").style.display = "none";
+
+    updatePlayerPseudo();
+}
+
+function updatePlayerPseudo() {
+    const pseudo = localStorage.getItem("neonPlayerPseudo");
+
+    if (pseudo) {
+        const playerCard = document.querySelector(".statistics .stat-card:last-child");
+
+        if (playerCard) {
+            playerCard.querySelector("strong").textContent = pseudo;
+        }
+    }
+}
+
+function initPlayerProfile() {
+    const pseudo = localStorage.getItem("neonPlayerPseudo");
+
+    if (!pseudo) {
+        document.getElementById("profileSetup").style.display = "flex";
+    } else {
+        updatePlayerPseudo();
+    }
+}
+
+document.addEventListener("DOMContentLoaded", initPlayerProfile);
