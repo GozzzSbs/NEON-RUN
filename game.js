@@ -1317,12 +1317,12 @@ saveScoreToSupabase().catch(error => {
 
 async function saveScoreToSupabase() {
 
-    const pseudo = localStorage.getItem("neonPlayerPseudo");
+   const pseudo = localStorage.getItem("neonPlayerPseudo");
 
-    if (!pseudo) {
-        console.warn("Aucun pseudo enregistré !");
-        return;
-    }
+if (!pseudo || pseudo.trim() === "" || pseudo === "TON_PSEUDO") {
+    console.warn("Pseudo invalide : score non enregistré.");
+    return;
+} 
 
     if (!supabaseClient) {
         console.warn("Supabase n'est pas connecté !");
