@@ -1,5 +1,5 @@
 // ======================================================
-// NEON RUN 3D - MOTEUR COMPLET
+// NEON RUN 3D - MOTEUR COMPLET AMÉLIORÉ
 // ======================================================
 
 const canvas = document.getElementById("game");
@@ -457,12 +457,16 @@ function createTrain(laneIndex, z) {
 
     const train = new THREE.Group();
 
+    // Corps du train
     box(2.5, 3.5, 13, 0x087f9c, 0, 2, 0, train);
 
+    // Partie supérieure avant
     box(2.3, 1.1, 0.15, 0x12c5e5, 0, 3, 6.55, train);
 
+    // Pare-brise
     box(1.6, 0.8, 0.1, 0x15213c, 0, 2.8, 6.65, train);
 
+    // Fenêtres latérales
     for (let zPos = -5; zPos <= 4; zPos += 3) {
 
         box(0.08, 1, 1.5, 0x9eeaff, -1.27, 2.8, zPos, train);
@@ -470,6 +474,7 @@ function createTrain(laneIndex, z) {
 
     }
 
+    // Lumières avant
     for (const side of [-1, 1]) {
 
         const light = new THREE.PointLight(0xffeeaa, 3, 10);
@@ -477,7 +482,12 @@ function createTrain(laneIndex, z) {
         light.position.set(side * 0.8, 0.8, 7);
         train.add(light);
 
-        box(0.35, 0.35, 0.15, 0xffee99, side * 0.8, 0.8, 6.7, train);
+        box(
+            0.35, 0.35, 0.15,
+            0xffee99,
+            side * 0.8, 0.8, 6.7,
+            train
+        );
 
     }
 
@@ -861,7 +871,7 @@ function isPlayerAboveLavaPlatform() {
 }
 
 // ======================================================
-// GÉNÉRATION DES OBSTACLES
+// GÉNÉRATION DES OBSTACLES ET DES PIÈCES
 // ======================================================
 
 function spawnObjects() {
@@ -869,25 +879,54 @@ function spawnObjects() {
     const laneIndex = Math.floor(Math.random() * 3);
     const random = Math.random();
 
-    if (random < 0.35) {
-        createTrain(laneIndex, -100);
+    // 55 % de chances de faire apparaître un train
+    if (random < 0.55) {
+
+        createTrain(laneIndex, -110);
+
     } else {
-        createBarrier(laneIndex, -100);
+
+        createBarrier(laneIndex, -110);
+
     }
 
+    // Pas de pièces en mode lave
     if (selectedMode === "lava") return;
 
-    if (Math.random() < 0.8) {
+    // Beaucoup plus de pièces !
+    if (Math.random() < 0.95) {
 
         const possibleLanes = [0, 1, 2].filter(
             l => l !== laneIndex
         );
 
         const coinLane =
-            possibleLanes[Math.floor(Math.random() * possibleLanes.length)];
+            possibleLanes[
+                Math.floor(Math.random() * possibleLanes.length)
+            ];
 
-        for (let i = 0; i < 5; i++) {
-            createCoin(coinLane, -75 - i * 3);
+        // Grande rangée de 9 pièces
+        for (let i = 0; i < 9; i++) {
+
+            createCoin(coinLane, -65 - i * 2.5);
+
+        }
+
+        // Deuxième rangée occasionnelle
+        if (Math.random() < 0.55) {
+
+            const otherLanes = [0, 1, 2].filter(
+                l => l !== laneIndex && l !== coinLane
+            );
+
+            const secondLane = otherLanes[0];
+
+            for (let i = 0; i < 6; i++) {
+
+                createCoin(secondLane, -75 - i * 3);
+
+            }
+
         }
 
     }
@@ -988,20 +1027,12 @@ function jump() {
 
     if (!running || paused) return;
 
-    // On peut sauter même si on est en train de glisser.
-
     if (!jumping) {
-
-        // Annuler immédiatement la glissade.
 
         sliding = false;
         slideTimer = 0;
 
-        // Remettre le personnage à sa taille normale.
-
         player.scale.y = 1;
-
-        // Lancer le saut.
 
         jumping = true;
 
@@ -1012,20 +1043,13 @@ function jump() {
 
 }
 
-// NOUVELLE GLISSADE :
-// Si on appuie pendant un saut, on plonge rapidement.
-
 function slide() {
 
     if (!running || paused) return;
 
     if (jumping) {
 
-        // Forte impulsion vers le bas.
-
         jumpVelocity = -0.38;
-
-        // La glissade commence à l'atterrissage.
 
         sliding = true;
         slideTimer = 50;
@@ -1033,8 +1057,6 @@ function slide() {
         return;
 
     }
-
-    // Glissade classique au sol.
 
     if (!sliding) {
 
@@ -1241,13 +1263,28 @@ function moveEnvironment() {
 }
 
 // ======================================================
-// DÉPLACEMENT DES OBSTACLES
+// DÉPLACEMENT DES OBSTACLES ET DES TRAINS
 // ======================================================
 
 function moveObstacles() {
 
     obstacles.forEach(obstacle => {
-        obstacle.object.position.z += speed;
+
+        // Les trains foncent vers le joueur
+        if (obstacle.type === "train") {
+
+            obstacle.object.position.z += speed * 1.35;
+
+            // Léger mouvement pour donner une impression de vibration
+            obstacle.object.position.y =
+                Math.sin(frame * 0.12) * 0.035;
+
+        } else {
+
+            obstacle.object.position.z += speed;
+
+        }
+
     });
 
     obstacles = obstacles.filter(obstacle => {
@@ -1274,6 +1311,7 @@ function moveCoins() {
     coinObjects.forEach(coin => {
 
         coin.position.z += speed;
+
         coin.rotation.y += 0.08;
         coin.rotation.z += 0.04;
 
@@ -1377,8 +1415,7 @@ function animate() {
 
     }
 
-    // Déplacement latéral.
-
+    // Déplacement latéral
     player.position.x +=
         (targetX - player.position.x) * 0.18;
 
@@ -1398,8 +1435,6 @@ function animate() {
                 ? LAVA_PLATFORM_TOP
                 : 0;
 
-        // Le personnage touche le sol.
-
         if (player.position.y <= landingHeight) {
 
             player.position.y = landingHeight;
@@ -1408,14 +1443,9 @@ function animate() {
 
             jumpVelocity = 0;
 
-            // S'il avait demandé une glissade en plein saut,
-            // elle continue automatiquement au sol.
-
             if (sliding) {
                 slideTimer = Math.max(slideTimer, 35);
             }
-
-            // Vérifier la plateforme à l'atterrissage en mode lave.
 
             if (
                 selectedMode === "lava" &&
@@ -1451,37 +1481,30 @@ function animate() {
 
     }
 
-    // En mode lave, garder le personnage sur le dessus
-    // des plateformes lorsqu'il ne saute pas.
-
+    // Mode lave : position sur les plateformes
     if (selectedMode === "lava" && !jumping) {
 
         player.position.y = LAVA_PLATFORM_TOP;
 
     }
 
-    // Animation de course.
-
+    // Animation du personnage
     animateRunner();
 
-    // Décor.
-
+    // Décor
     moveEnvironment();
     moveLavaPlatforms();
 
-    // Obstacles et pièces.
-
+    // Obstacles et pièces
     moveObstacles();
     moveCoins();
 
-    // Collisions.
-
+    // Collisions
     checkCollisions();
 
     if (!running) return;
 
-    // Caméra.
-
+    // Caméra
     camera.position.x +=
         (player.position.x * 0.35 - camera.position.x) * 0.08;
 
@@ -1680,4 +1703,4 @@ updateHUD();
 
 renderer.render(scene, camera);
 
-console.log("NEON RUN 3D chargé correctement !");
+console.log("NEON RUN 3D chargé correctement ! 🚆🪙");
