@@ -988,7 +988,20 @@ function jump() {
 
     if (!running || paused) return;
 
-    if (!jumping && !sliding) {
+    // On peut sauter même si on est en train de glisser.
+
+    if (!jumping) {
+
+        // Annuler immédiatement la glissade.
+
+        sliding = false;
+        slideTimer = 0;
+
+        // Remettre le personnage à sa taille normale.
+
+        player.scale.y = 1;
+
+        // Lancer le saut.
 
         jumping = true;
 
