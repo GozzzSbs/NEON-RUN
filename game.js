@@ -615,94 +615,250 @@ function drawRoad() {
 
 function drawObstacle(o) {
 
-    if(o.z < 0 || o.z > 1.08) return;
+    if (o.z < 0 || o.z > 1.08) return;
 
-    const t = Math.max(0,o.z);
+    const t = Math.max(0, o.z);
 
-    const x = laneX(o.lane,t);
+    const x = laneX(o.lane, t);
     const y = projectY(t);
 
-    const scale = 0.25 + t*1.1;
+    const scale = 0.25 + t * 1.1;
 
-    const w = 42*scale;
-    const h = 45*scale;
+    const w = 48 * scale;
+    const h = 65 * scale;
 
-    if(o.type === "gap") {
+    // =========================
+    // TROU DE LAVE
+    // =========================
 
-        ctx.fillStyle = "#ff421f";
+    if (o.type === "gap") {
+
+        ctx.fillStyle = "#ff351b";
+        ctx.fillRect(x - w, y - 4, w * 2, 15 * scale);
+
+        ctx.fillStyle = "#ffbd32";
+        ctx.fillRect(x - w * 0.7, y, w * 1.4, 5 * scale);
+
+        return;
+    }
+
+    // =========================
+    // BARRIÈRE ROUGE ET BLANCHE
+    // =========================
+
+    if (o.type === "barrier") {
+
+        const bw = 48 * scale;
+        const bh = 24 * scale;
+
+        // Pieds
+        ctx.fillStyle = "#343b4b";
+
+        ctx.fillRect(x - bw * 0.42, y - bh, 7 * scale, bh);
+        ctx.fillRect(x + bw * 0.28, y - bh, 7 * scale, bh);
+
+        // Corps de la barrière
+        ctx.fillStyle = "#ed334d";
 
         ctx.fillRect(
-            x-w*0.8,
-            y-3,
-            w*1.6,
-            12*scale
+            x - bw / 2,
+            y - bh * 1.65,
+            bw,
+            bh * 0.75
         );
 
-        ctx.fillStyle = "#ffb02e";
+        // Bandes blanches
+        ctx.save();
 
-        ctx.fillRect(
-            x-w*0.5,
-            y,
-            w,
-            5*scale
+        ctx.beginPath();
+        ctx.rect(
+            x - bw / 2,
+            y - bh * 1.65,
+            bw,
+            bh * 0.75
+        );
+
+        ctx.clip();
+
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 7 * scale;
+
+        for (let i = -3; i < 6; i++) {
+
+            ctx.beginPath();
+
+            ctx.moveTo(x - bw + i * 17 * scale, y - bh * 0.9);
+            ctx.lineTo(x - bw * 0.3 + i * 17 * scale, y - bh * 1.7);
+
+            ctx.stroke();
+        }
+
+        ctx.restore();
+
+        // Contour lumineux
+        ctx.strokeStyle = "#ff6178";
+        ctx.lineWidth = 2 * scale;
+
+        ctx.strokeRect(
+            x - bw / 2,
+            y - bh * 1.65,
+            bw,
+            bh * 0.75
         );
 
         return;
     }
 
-    if(o.type === "barrier") {
+    // =========================
+    // TRAIN
+    // =========================
 
-        ctx.fillStyle = "#d93859";
+    if (o.type === "train") {
+
+        const tw = 67 * scale;
+        const th = 125 * scale;
+
+        // Ombre du train
+        ctx.fillStyle = "#05071388";
+
+        ctx.beginPath();
+        ctx.ellipse(x, y, tw * 0.8, 9 * scale, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Côté du train
+        ctx.fillStyle = "#126b83";
+
+        ctx.beginPath();
+
+        ctx.moveTo(x + tw / 2, y - th);
+        ctx.lineTo(x + tw / 2 + 13 * scale, y - th + 12 * scale);
+        ctx.lineTo(x + tw / 2 + 13 * scale, y - 5 * scale);
+        ctx.lineTo(x + tw / 2, y);
+
+        ctx.closePath();
+        ctx.fill();
+
+        // Corps principal
+        ctx.fillStyle = "#087e9b";
+
+        ctx.beginPath();
+
+        ctx.moveTo(x - tw / 2, y - th + 12 * scale);
+        ctx.lineTo(x + tw / 2, y - th + 12 * scale);
+        ctx.lineTo(x + tw / 2, y);
+        ctx.lineTo(x - tw / 2, y);
+
+        ctx.closePath();
+        ctx.fill();
+
+        // Face avant
+        ctx.fillStyle = "#12b5ce";
+
+        ctx.beginPath();
+
+        ctx.moveTo(x - tw / 2, y - th + 12 * scale);
+        ctx.lineTo(x - tw / 2 + 9 * scale, y - th);
+        ctx.lineTo(x + tw / 2 - 9 * scale, y - th);
+        ctx.lineTo(x + tw / 2, y - th + 12 * scale);
+
+        ctx.closePath();
+        ctx.fill();
+
+        // Pare-brise
+        ctx.fillStyle = "#101d36";
 
         ctx.fillRect(
-            x-w/2,
-            y-h,
-            w,
-            h
+            x - tw * 0.35,
+            y - th + 19 * scale,
+            tw * 0.7,
+            27 * scale
         );
 
-        ctx.fillStyle = "#ff8ca3";
+        // Reflets des fenêtres
+        ctx.strokeStyle = "#8defff";
+        ctx.lineWidth = 2 * scale;
+
+        ctx.beginPath();
+        ctx.moveTo(x, y - th + 20 * scale);
+        ctx.lineTo(x, y - th + 44 * scale);
+        ctx.stroke();
+
+        // Bande décorative
+        ctx.fillStyle = "#ffce55";
 
         ctx.fillRect(
-            x-w/2,
-            y-h,
-            w,
-            7*scale
+            x - tw / 2,
+            y - th * 0.38,
+            tw,
+            7 * scale
         );
 
-        ctx.strokeStyle = "#ffffff";
-        ctx.lineWidth = 2*scale;
+        // Phares
+        ctx.fillStyle = "#fff2a1";
+        ctx.shadowColor = "#fff2a1";
+        ctx.shadowBlur = 15 * scale;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x - tw * 0.32,
+            y - 19 * scale,
+            5 * scale,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.arc(
+            x + tw * 0.32,
+            y - 19 * scale,
+            5 * scale,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+
+        ctx.shadowBlur = 0;
+
+        // Contour
+        ctx.strokeStyle = "#70edff";
+        ctx.lineWidth = 2 * scale;
 
         ctx.strokeRect(
-            x-w/2,
-            y-h,
-            w,
-            h
+            x - tw / 2,
+            y - th + 12 * scale,
+            tw,
+            th - 12 * scale
         );
+
+        return;
     }
 
-    if(o.type === "overhead") {
+    // =========================
+    // OBSTACLE EN HAUTEUR
+    // =========================
 
-        ctx.fillStyle = "#7b52d9";
+    if (o.type === "overhead") {
+
+        ctx.fillStyle = "#7041c7";
 
         ctx.fillRect(
-            x-w/2,
-            y-h*1.5,
+            x - w / 2,
+            y - h * 1.5,
             w,
-            h*0.45
+            h * 0.45
         );
 
-        ctx.fillStyle = "#bba0ff";
+        ctx.fillStyle = "#c7aaff";
 
         ctx.fillRect(
-            x-w/2,
-            y-h*1.5,
+            x - w / 2,
+            y - h * 1.5,
             w,
-            5*scale
+            5 * scale
         );
     }
 }
-
 // ============================================
 // PIÈCES
 // ============================================
