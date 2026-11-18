@@ -88,7 +88,7 @@ let baseSpeed = 0.65;
 let speedMultiplier = 1.5;
 let maxSpeedMultiplier = 2;
 
-const SPEED_INCREASE = 0.00015;
+const SPEED_INCREASE = 0.00008;
 
 let difficulty = "normal";
 let selectedMode = "classic";
@@ -119,10 +119,10 @@ const LAVA_PLATFORM_TOP = 0.42;
 const normalTrackMeshes = [];
 
 const DIFFICULTY_SETTINGS = {
-    facile: { base: 0.45, start: 1, max: 1.5 },
-    normal: { base: 0.65, start: 1.5, max: 2 },
-    difficile: { base: 0.85, start: 2, max: 2.5 },
-    extreme: { base: 1.1, start: 2.5, max: 3 }
+    facile: { base: 0.45, start: 1, max: 1.4 },
+    normal: { base: 0.55, start: 1.2, max: 1.8 },
+    difficile: { base: 0.65, start: 1.5, max: 2.1 },
+    extreme: { base: 0.75, start: 1.6, max: 2.4 }
 };
 
 function applyDifficultySettings(reset = true) {
