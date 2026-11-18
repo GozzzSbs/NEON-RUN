@@ -1,3 +1,6 @@
+
+
+
 // ======================================================
 // NEON RUN 3D - MOTEUR COMPLET
 // Three.js
@@ -1011,15 +1014,8 @@ function resetLavaPlatforms() {
 
     createLavaEnvironment();
 
-    // GRANDE PLATEFORME DE DÉPART
-    // Elle couvre les trois voies.
-    //
-    // Largeur : 9.2
-    // Profondeur : 60
-    // Position : centre des trois voies.
-    //
-    // Le joueur commence à z=0 et se trouve donc
-    // au milieu de cette immense plateforme.
+    // 1. GRANDE PLATEFORME DE DÉPART
+    // Couvre les trois voies.
 
     createLavaPlatform(
         1,
@@ -1028,13 +1024,24 @@ function resetLavaPlatforms() {
         60
     );
 
-    // Les petites plateformes commencent après
-    // la grande plateforme de départ.
+    // 2. PLATEFORME DE TRANSITION
+    // Elle couvre également les trois voies.
+    // Elle évite de tomber au moment du changement.
+
+    createLavaPlatform(
+        1,
+        -59,
+        9.2,
+        12
+    );
+
+    // 3. PARCOURS NORMAL
+    // Les petites plateformes commencent ensuite.
 
     for (let i = 0; i < 9; i++) {
 
         spawnLavaSegment(
-            -57 - i * 12
+            -77 - i * 12
         );
 
     }
