@@ -2823,3 +2823,31 @@ function initPlayerProfile() {
 }
 
 document.addEventListener("DOMContentLoaded", initPlayerProfile);
+// ======================================================
+// CLASSEMENT MONDIAL
+// ======================================================
+
+async function openLeaderboard() {
+
+    const { data, error } = await supabaseClient
+        .from("neon_scores")
+        .select("player_pseudo, score")
+        .order("score", { ascending: false })
+        .limit(100);
+
+    if (error) {
+        console.error("Erreur classement :", error);
+        alert("Impossible de charger le classement !");
+        return;
+    }
+
+    let classement = "🏆 CLASSEMENT MONDIAL\n\n";
+
+    data.forEach((joueur, index) => {
+        classement += `${index + 1}. ${joueur.player_pseudo} — ${joueur.score} points\n`;
+    });
+
+    alert(classement || "Aucun joueur pour le moment !");
+}
+
+window.openLeaderboard = openLeaderboard;
