@@ -1339,14 +1339,16 @@ if (!pseudo || pseudo.trim() === "" || pseudo === "TON_PSEUDO") {
     const { data, error } = await supabaseClient
         .from("neon_scores")
         .insert([
-            {
-    player_pseudo: pseudo.trim(),
-    score: Math.floor(score),
-    coins: Math.floor(coins),
-    game_mode: selectedMode || "classic"
-    time_seconds: selectedMode === "nocoin" ? noCoinElapsed : null,            
-}
-        ]);
+    {
+        player_pseudo: pseudo,
+        score: Math.floor(score),
+        coins: Math.floor(coins),
+        game_mode: selectedMode || "classic",
+        time_seconds: selectedMode === "nocoin"
+            ? Number(noCoinElapsed.toFixed(2))
+            : null
+    }
+]);
 
     if (error) {
         console.error("Erreur sauvegarde du score :", error);
