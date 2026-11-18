@@ -2610,7 +2610,90 @@ function initShop() {
     // Sauvegarde les équipements et achats.
     saveShop();
 }
+// ======================================================
+// AUTHENTIFICATION DÉVELOPPEUR SUPABASE
+// ======================================================
 
+async function verifyDeveloper(user) {
+    if (!user) return false;
+
+    const { data, error } = await supabaseClient
+        .from("developer_access")
+        .select("user_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+    if (error) {
+        console.error("Erreur de vérification :", error);
+        return false;
+    }
+
+    return !!data;
+}
+
+async function loginDeveloper() {
+    const email = prompt("Adresse e-mail développeur :");
+
+    if (!email) return;
+
+    const password = prompt("Mot de passe développeur :");
+
+    if (!password) return;
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+    });
+
+    if (error) {
+        alert("❌ Connexion refusée : " + error.message);
+        return;
+    }
+
+    const authorized = await verifyDeveloper(data.user);
+
+    if (!authorized) {
+        await supabaseClient.auth.signOut();
+        alert("⛔ Tu n'es pas autorisé à accéder à cet espace !");
+        return;
+    }
+
+    isDeveloper = true;
+
+    createDeveloperTools();
+
+    alert("👑 Bienvenue, développeur !");
+}
+
+async function restoreDeveloperSession() {
+    const { data } = await supabaseClient.auth.getSession();
+
+    if (!data.session) return;
+
+    const authorized = await verifyDeveloper(data.session.user);
+
+    if (authorized) {
+        isDeveloper = true;
+        createDeveloperTools();
+    }
+}
+
+// Raccourci CTRL + MAJ + D pour se connecter
+window.addEventListener("keydown", event => {
+    if (
+        event.ctrlKey &&
+        event.shiftKey &&
+        event.key.toLowerCase() === "d"
+    ) {
+        event.preventDefault();
+
+        if (isDeveloper) {
+            document.getElementById("neonDeveloperBadge")?.click();
+        } else {
+            loginDeveloper();
+        }
+    }
+});
 // ======================================================
 // INITIALISATION
 // ======================================================
