@@ -586,7 +586,7 @@ function createBarrier(laneIndex, z) {
     const metal = mat(0x777788, 0x222233, 0.5);
 
     // Choisir un modèle au hasard
-    const variant = Math.floor(Math.random() * 4);
+    const variant = Math.floor(Math.random() * 5);
 
     if (variant === 0) {
         // BARRIÈRE CLASSIQUE ROUGE
@@ -635,7 +635,23 @@ function createBarrier(laneIndex, z) {
         box(1.7, 0.18, 0.3, purple, 0, 1.1, 0, barrier);
         box(1.7, 0.18, 0.3, yellow, 0, 0.65, 0, barrier);
     }
+        
+else if (variant === 3) {
+    // BARRIÈRE HAUTE : OBLIGE À GLISSER
+    const metal = mat(0x555577, 0x222244, 0.8);
+    const red = mat(0xff1744, 0xaa0022, 2);
 
+    // Deux piliers latéraux
+    for (const side of [-1, 1]) {
+        box(0.25, 2.8, 0.35, metal, side * 1.05, 1.4, 0, barrier);
+    }
+
+    // Grande barre horizontale placée en hauteur
+    box(2.3, 0.45, 0.4, red, 0, 2.45, 0, barrier);
+
+    // Bande lumineuse
+    box(2.2, 0.08, 0.43, 0xffaaaa, 0, 2.45, 0, barrier);
+}
     else {
         // BARRIÈRE MÉTALLIQUE FUTURISTE
         box(2.2, 1.3, 0.5, metal, 0, 0.8, 0, barrier);
