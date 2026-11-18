@@ -1445,7 +1445,73 @@ function animate() {
 // ======================================================
 // DÉMARRER
 // ======================================================
+// ======================================================
+// TIMER NO COIN
+// ======================================================
 
+function startNoCoinTimer() {
+    clearInterval(noCoinTimerInterval);
+
+    const timer = document.getElementById("noCoinTimer");
+
+    if (selectedMode !== "nocoin") {
+        if (timer) timer.style.display = "none";
+        return;
+    }
+
+    let display = timer;
+
+    if (!display) {
+        display = document.createElement("div");
+        display.id = "noCoinTimer";
+        document.body.appendChild(display);
+    }
+
+    display.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #00ffff;
+        font-size: 32px;
+        font-weight: bold;
+        font-family: Arial, sans-serif;
+        text-shadow: 0 0 15px #00ffff;
+        z-index: 99999;
+        pointer-events: none;
+    `;
+
+    display.style.display = "block";
+
+    noCoinStartTime = performance.now();
+    noCoinElapsed = 0;
+
+    display.textContent = "NO COIN : 0.00 s";
+
+    noCoinTimerInterval = setInterval(() => {
+        noCoinElapsed = (performance.now() - noCoinStartTime) / 1000;
+
+        display.textContent =
+            "NO COIN : " + noCoinElapsed.toFixed(2) + " s";
+
+    }, 30);
+}
+
+function stopNoCoinTimer() {
+    clearInterval(noCoinTimerInterval);
+    noCoinTimerInterval = null;
+
+    if (selectedMode === "nocoin") {
+        noCoinElapsed = (performance.now() - noCoinStartTime) / 1000;
+
+        const timer = document.getElementById("noCoinTimer");
+
+        if (timer) {
+            timer.textContent =
+                "NO COIN : " + noCoinElapsed.toFixed(2) + " s";
+        }
+    }
+}
 function startGame() {
 
     // THE FLOOR IS LAVA : ÉCRAN SOON
