@@ -397,22 +397,28 @@ function update() {
 
         if(o.z > 0.88 && o.z < 1.02) {
 
-            if(o.lane === player.lane) {
+            if (o.lane === player.lane) {
 
-                if(o.type === "gap" && !player.jumping) {
-                    endGame("lava");
-                }
+    // Un train ne peut pas être sauté ou évité en glissant
+    if (o.type === "train") {
+        endGame("obstacle");
+    }
 
-                if(o.type === "barrier" && !player.jumping) {
-                    endGame("obstacle");
-                }
+    // Barrière : il faut sauter
+    if (o.type === "barrier" && !player.jumping) {
+        endGame("obstacle");
+    }
 
-                if(o.type === "overhead" && !player.sliding) {
-                    endGame("obstacle");
-                }
-            }
-        }
-    });
+    // Obstacle en hauteur : il faut glisser
+    if (o.type === "overhead" && !player.sliding) {
+        endGame("obstacle");
+    }
+
+    // Lave : il faut sauter
+    if (o.type === "gap" && !player.jumping) {
+        endGame("lava");
+    }
+}
 
     obstacles = obstacles.filter(o => o.z < 1.12);
 
