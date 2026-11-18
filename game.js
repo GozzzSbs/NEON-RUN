@@ -1350,7 +1350,24 @@ function startGame() {
 
     camera.position.set(0, 5, 9);
     camera.lookAt(0, 1.5, -20);
+// Réinitialisation des animations de la cape
+capeVelocityX = 0;
+capeVelocityY = 0;
+capeJumpOffset = 0;
 
+previousPlayerX = player.position.x;
+previousPlayerY = player.position.y;
+
+if (shopCapeObject) {
+    shopCapeObject.rotation.set(0, 0, 0);
+
+    const cloth = shopCapeObject.userData.cloth;
+
+    if (cloth) {
+        cloth.rotation.set(0, 0, 0);
+        cloth.position.set(0, 0, 0);
+    }
+}
     running = true;
     paused = false;
     gameEnded = false;
