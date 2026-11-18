@@ -3087,3 +3087,162 @@ async function openLeaderboard() {
         players.appendChild(row);
     });
 }
+// ==========================================
+// SYSTÈME DE COMPTES NEON RUN
+// ==========================================
+
+function showAuthForm(type) {
+    document.getElementById("registerForm").style.display =
+        type === "register" ? "block" : "none";
+
+    document.getElementById("loginForm").style.display =
+        type === "login" ? "block" : "none";
+
+    document.getElementById("pseudoError").textContent = "";
+}
+
+
+// INSCRIPTION
+async function registerPlayer() {
+
+    const pseudo = document.getElementById("registerPseudo").value.trim();
+    const password = document.getElementById("registerPassword").value;
+    const confirmation = document.getElementById("confirmPassword").value;
+    const error = document.getElementById("pseudoError");
+
+    error.textContent = "";
+
+    if (pseudo.length < 3 || pseudo.length > 16) {
+        error.textContent = "Le pseudo doit contenir entre 3 et 16 caractères.";
+        return;
+    }
+
+    if (password.length < 10) {
+        error.textContent = "Le mot de passe doit contenir au moins 10 caractères.";
+        return;
+    }
+
+    if (password !== confirmation) {
+        error.textContent = "Les mots de passe ne correspondent pas.";
+        return;
+    }
+
+    if (!supabaseClient) {
+        error.textContent = "Connexion au serveur impossible.";
+        return;
+    }
+
+    try {
+
+        const { data: existing } = await supabaseClient
+            .from("neon_players")
+            .select("id")
+            .ilike("pseudo", pseudo)
+            .limit(1);
+
+        if (existing && existing.length > 0) {
+            error.textContent = "Ce pseudo est déjà utilisé !";
+            return;
+        }
+
+        const email = pseudo.toLowerCase() + "@accounts.neonrun.invalid";
+
+        const { data, error: authError } =
+            await supabaseClient.auth.signUp({
+                email: email,
+                password: password,
+                options: {
+                    data: { pseudo: pseudo }
+                }
+            });
+
+        if (authError) {
+            error.textContent = authError.message;
+            return;
+        }
+
+        if (!data.user) {
+            error.textContent = "Impossible de créer le compte.";
+            return;
+        }
+
+        const { error: insertError } = await supabaseClient
+            .from("neon_players")
+            .insert([{
+                pseudo: pseudo,
+                auth_user_id: data.user.id
+            }]);
+
+        if (insertError) {
+            console.error(insertError);
+            error.textContent = "Compte créé, mais erreur lors de la création du profil.";
+            return;
+        }
+
+        localStorage.setItem("neonPlayerPseudo", pseudo);
+
+        document.getElementById("profileSetup").style.display = "none";
+        document.getElementById("menu").classList.remove("hidden");
+
+        updatePlayerPseudo();
+
+    } catch (err) {
+        console.error(err);
+        error.textContent = "Une erreur est survenue.";
+    }
+}
+
+
+// CONNEXION
+async function loginPlayer() {
+
+    const pseudo = document.getElementById("loginPseudo").value.trim();
+    const password = document.getElementById("loginPassword").value;
+    const error = document.getElementById("pseudoError");
+
+    error.textContent = "";
+
+    if (!pseudo || !password) {
+        error.textContent = "Remplis tous les champs.";
+        return;
+    }
+
+    try {
+
+        const email = pseudo.toLowerCase() + "@accounts.neonrun.invalid";
+
+        const { data, error: loginError } =
+            await supabaseClient.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+
+        if (loginError) {
+            error.textContent = "Pseudo ou mot de passe incorrect.";
+            return;
+        }
+
+        const { data: player, error: playerError } =
+            await supabaseClient
+                .from("neon_players")
+                .select("id, pseudo")
+                .eq("auth_user_id", data.user.id)
+                .single();
+
+        if (playerError || !player) {
+            error.textContent = "Profil joueur introuvable.";
+            return;
+        }
+
+        localStorage.setItem("neonPlayerPseudo", player.pseudo);
+
+        document.getElementById("profileSetup").style.display = "none";
+        document.getElementById("menu").classList.remove("hidden");
+
+        updatePlayerPseudo();
+
+    } catch (err) {
+        console.error(err);
+        error.textContent = "Erreur de connexion.";
+    }
+}
