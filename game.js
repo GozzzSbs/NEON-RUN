@@ -1544,10 +1544,10 @@ window.pauseGame = pauseGame;
 // ======================================================
 // RETOUR MENU
 // ======================================================
-
 function backToMenu() {
     running = false;
     paused = false;
+    gameEnded = false;
 
     setLavaVisuals(false);
 
@@ -1558,9 +1558,18 @@ function backToMenu() {
     const gameScreen = document.getElementById("gameScreen");
     const gameOver = document.getElementById("gameOver");
 
-    if (menu) menu.classList.remove("hidden");
-    if (gameScreen) gameScreen.classList.add("hidden");
-    if (gameOver) gameOver.classList.add("hidden");
+    if (menu) {
+        menu.classList.remove("hidden");
+        menu.style.pointerEvents = "auto";
+    }
+
+    if (gameScreen) {
+        gameScreen.classList.add("hidden");
+    }
+
+    if (gameOver) {
+        gameOver.classList.add("hidden");
+    }
 }
 
 window.backToMenu = backToMenu;
