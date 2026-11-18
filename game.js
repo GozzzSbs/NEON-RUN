@@ -106,7 +106,11 @@ let movingBuildings = [];
 let movingTrees = [];
 let movingSleepers = [];
 let movingStones = [];
-
+// NEIGE DE NOËL
+let snowParticles;
+let snowPositions;
+let snowVelocities = [];
+const SNOW_COUNT = 1800;
 let player;
 let playerParts = {};
 
