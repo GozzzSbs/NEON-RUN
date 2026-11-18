@@ -62,7 +62,20 @@ scene.add(purpleLight);
 // ======================================================
 // VARIABLES
 // ======================================================
-const IS_DEVELOPER = true;
+// ======================================================
+// SÉCURITÉ SUPABASE
+// ======================================================
+
+let isDeveloper = false;
+
+const SUPABASE_URL = "https://xumhnzfrvyjiiwftarje.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable_oJUFcIernBcgfNZqw9vBbA_TeNIJwHc";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
 let running = false;
 let paused = false;
 let gameEnded = false;
