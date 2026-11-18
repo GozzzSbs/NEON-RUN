@@ -1570,7 +1570,14 @@ function backToMenu() {
     if (gameOver) {
         gameOver.classList.add("hidden");
     }
+
+    const soonScreen = document.getElementById("soonScreen");
+    if (soonScreen) {
+        soonScreen.style.display = "none";
+    }
 }
+
+window.backToMenu = backToMenu;
 
 window.backToMenu = backToMenu;
 
