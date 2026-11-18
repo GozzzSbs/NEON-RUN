@@ -1344,6 +1344,7 @@ if (!pseudo || pseudo.trim() === "" || pseudo === "TON_PSEUDO") {
     score: Math.floor(score),
     coins: Math.floor(coins),
     game_mode: selectedMode || "classic"
+    time_seconds: selectedMode === "nocoin" ? noCoinElapsed : null,            
 }
         ]);
 
