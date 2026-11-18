@@ -3246,3 +3246,20 @@ async function loginPlayer() {
         error.textContent = "Erreur de connexion.";
     }
 }
+async function logoutPlayer() {
+    const { error } = await supabaseClient.auth.signOut();
+
+    if (error) {
+        alert("Erreur lors de la déconnexion : " + error.message);
+        return;
+    }
+
+    localStorage.removeItem("neonPlayerPseudo");
+
+    document.getElementById("profileSetup").style.display = "block";
+    document.getElementById("menu").style.display = "none";
+
+    updatePlayerPseudo();
+
+    console.log("Déconnexion réussie !");
+}
