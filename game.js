@@ -2698,13 +2698,13 @@ window.addEventListener("keydown", event => {
 // INITIALISATION
 // ======================================================
 
-function initNeonRun() {
+async function initNeonRun() {
     applyDifficultySettings(true);
     updateHUD();
 
     initShop();
 
-    createDeveloperTools();
+    await restoreDeveloperSession();
 
     renderer.render(scene, camera);
 
