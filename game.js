@@ -1294,27 +1294,39 @@ function animate() {
 // DÉMARRER
 // ======================================================
 
-function startGame()// MODE THE FLOOR IS LAVA : MODE BIENTÔT DISPONIBLE
-if (selectedMode === "lava") {
-    document.body.innerHTML = `
-        <div style="
-            position: fixed;
-            inset: 0;
-            background: black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-family: Arial, sans-serif;
-            font-size: 60px;
-            font-weight: bold;
-            z-index: 999999;
-        ">
-            SOON...
-        </div>
-    `;
-    return;
-}{
+function startGame() {
+
+    // THE FLOOR IS LAVA : ÉCRAN SOON
+    if (selectedMode === "lava") {
+
+        let soonScreen = document.getElementById("soonScreen");
+
+        if (!soonScreen) {
+            soonScreen = document.createElement("div");
+            soonScreen.id = "soonScreen";
+
+            soonScreen.style.cssText = `
+                position: fixed;
+                inset: 0;
+                background: #000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: white;
+                font-family: Arial, sans-serif;
+                font-size: clamp(40px, 8vw, 80px);
+                font-weight: bold;
+                z-index: 999999;
+            `;
+
+            soonScreen.textContent = "SOON...";
+            document.body.appendChild(soonScreen);
+        }
+
+        soonScreen.style.display = "flex";
+        return;
+    }
+
     score = 0;
     coins = 0;
 
@@ -1334,12 +1346,7 @@ if (selectedMode === "lava") {
 
     applyDifficultySettings(true);
 
-    player.position.set(
-        0,
-        selectedMode === "lava" ? LAVA_PLATFORM_TOP : 0,
-        0
-    );
-
+    player.position.set(0, 0, 0);
     player.scale.set(1, 1, 1);
 
     playerParts.body.position.y = 1.75;
@@ -1362,7 +1369,7 @@ if (selectedMode === "lava") {
     obstacles = [];
     coinObjects = [];
 
-    setLavaVisuals(selectedMode === "lava");
+    setLavaVisuals(false);
     resetLavaPlatforms();
 
     applyShopSkin();
@@ -1370,24 +1377,11 @@ if (selectedMode === "lava") {
 
     camera.position.set(0, 5, 9);
     camera.lookAt(0, 1.5, -20);
-// Réinitialisation des animations de la cape
-capeVelocityX = 0;
-capeVelocityY = 0;
-capeJumpOffset = 0;
 
-previousPlayerX = player.position.x;
-previousPlayerY = player.position.y;
-
-if (shopCapeObject) {
-    shopCapeObject.rotation.set(0, 0, 0);
-
-    const cloth = shopCapeObject.userData.cloth;
-
-    if (cloth) {
-        cloth.rotation.set(0, 0, 0);
-        cloth.position.set(0, 0, 0);
+    if (shopCapeObject) {
+        shopCapeObject.rotation.set(0, 0, 0);
     }
-}
+
     running = true;
     paused = false;
     gameEnded = false;
@@ -1403,13 +1397,8 @@ if (shopCapeObject) {
     const modeName = document.getElementById("modeName");
 
     if (modeName) {
-        if (selectedMode === "nocoin") {
-            modeName.textContent = "NO COIN";
-        } else if (selectedMode === "lava") {
-            modeName.textContent = "THE FLOOR IS LAVA";
-        } else {
-            modeName.textContent = "SPACE GALAXY";
-        }
+        modeName.textContent =
+            selectedMode === "nocoin" ? "NO COIN" : "SPACE GALAXY";
     }
 
     updateHUD();
