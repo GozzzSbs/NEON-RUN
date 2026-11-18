@@ -1,29 +1,33 @@
 // ======================================================
-// NEON RUN 3D - VERSION BEACH SUMMER
-// Décor plage : sable, mer, palmiers, lampadaires et feux verts
-// Luminosité corrigée : sable beige, pièces dorées, barrières visibles
-// Three.js r128 requis avant ce fichier.
+// NEON RUN 3D - SPACE GALAXY
+// Galaxy, aliens, flying UFOs, trains coming towards player
+// Three.js r128 requis avant ce fichier
 // ======================================================
 
 const canvas = document.getElementById("game");
 
 if (!window.THREE) {
-    alert("Erreur : Three.js n'est pas chargé.");
+    alert("Three.js n'est pas chargé !");
     throw new Error("Three.js missing");
 }
+
 if (!canvas) throw new Error("Canvas #game introuvable");
 
 // ======================================================
-// SCÈNE ET CAMÉRA
+// SCÈNE
 // ======================================================
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x75d9ff);
-scene.fog = new THREE.Fog(0x75d9ff, 65, 190);
+scene.background = new THREE.Color(0x050313);
+scene.fog = new THREE.Fog(0x09051e, 65, 190);
 
 const camera = new THREE.PerspectiveCamera(
-    65, (canvas.clientWidth / canvas.clientHeight) || 1, 0.1, 350
+    65,
+    (canvas.clientWidth / canvas.clientHeight) || 1,
+    0.1,
+    400
 );
+
 camera.position.set(0, 5, 9);
 camera.lookAt(0, 1.5, -20);
 
@@ -41,38 +45,20 @@ renderer.setSize(
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-// CORRECTION DE LA LUMINOSITÉ
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 0.8;
-renderer.outputEncoding = THREE.sRGBEncoding;
-
 // ======================================================
-// LUMIÈRES - VERSION ÉTÉ MOINS ÉCLATANTE
+// LUMIÈRES
 // ======================================================
 
-scene.add(
-    new THREE.HemisphereLight(
-        0xb9e5ff,
-        0x9b8058,
-        0.65
-    )
-);
+scene.add(new THREE.HemisphereLight(0x7777bb, 0x171020, 1.1));
 
-const sunLight = new THREE.DirectionalLight(0xfff0ce, 0.8);
-sunLight.position.set(-15, 30, 10);
-sunLight.castShadow = true;
-sunLight.shadow.mapSize.width = 1024;
-sunLight.shadow.mapSize.height = 1024;
-scene.add(sunLight);
+const mainLight = new THREE.DirectionalLight(0xaaaaff, 1.2);
+mainLight.position.set(-10, 25, 10);
+mainLight.castShadow = true;
+scene.add(mainLight);
 
-// Soleil décoratif
-const sunBall = new THREE.Mesh(
-    new THREE.SphereGeometry(7, 32, 32),
-    new THREE.MeshBasicMaterial({ color: 0xffdf83 })
-);
-
-sunBall.position.set(-45, 35, -120);
-scene.add(sunBall);
+const purpleLight = new THREE.PointLight(0x7c25ff, 2, 55);
+purpleLight.position.set(0, 8, -25);
+scene.add(purpleLight);
 
 // ======================================================
 // VARIABLES
@@ -81,6 +67,7 @@ scene.add(sunBall);
 let running = false;
 let paused = false;
 let gameEnded = false;
+let animationStarted = false;
 
 let score = 0;
 let coins = 0;
@@ -106,7 +93,6 @@ let selectedMode = "classic";
 
 let frame = 0;
 let spawnTimer = 0;
-let animationStarted = false;
 
 const lanePositions = [-3, 0, 3];
 
@@ -114,174 +100,191 @@ let obstacles = [];
 let coinObjects = [];
 
 let movingSleepers = [];
-let movingStones = [];
-let movingPalms = [];
-let movingLampPosts = [];
-let movingTrafficLights = [];
+let movingStars = [];
+let movingAliens = [];
+let movingTrains = [];
 
 let player;
 let playerParts;
 
-let roadMesh;
 let lavaGroup;
 let lavaPlatforms = [];
 let lavaPlatformTimer = 0;
 let lavaLastLane = 1;
 
 const LAVA_PLATFORM_TOP = 0.42;
+
 const normalTrackMeshes = [];
 
 const DIFFICULTY_SETTINGS = {
-    facile:    { base: 0.45, start: 1,   max: 1.5 },
-    normal:    { base: 0.65, start: 1.5, max: 2 },
-    difficile: { base: 0.85, start: 2,   max: 2.5 },
-    extreme:   { base: 1.1,  start: 2.5, max: 3 }
+    facile: { base: 0.45, start: 1, max: 1.5 },
+    normal: { base: 0.65, start: 1.5, max: 2 },
+    difficile: { base: 0.85, start: 2, max: 2.5 },
+    extreme: { base: 1.1, start: 2.5, max: 3 }
 };
 
-function applyDifficultySettings(resetProgress = true) {
+function applyDifficultySettings(reset = true) {
     const settings =
         DIFFICULTY_SETTINGS[difficulty] || DIFFICULTY_SETTINGS.normal;
 
     baseSpeed = settings.base;
     maxSpeedMultiplier = settings.max;
 
-    if (resetProgress) {
-        speedMultiplier = settings.start;
-    }
+    if (reset) speedMultiplier = settings.start;
 
     speed = baseSpeed * speedMultiplier;
 }
 
 // ======================================================
-// MATÉRIAUX ET OUTILS
+// MATÉRIAUX
 // ======================================================
 
-function material(color, roughness = 0.8, metalness = 0) {
+function mat(color, emissive = 0x000000, intensity = 0) {
     return new THREE.MeshStandardMaterial({
         color,
-        roughness,
-        metalness
+        roughness: 0.65,
+        metalness: 0.25,
+        emissive,
+        emissiveIntensity: intensity
     });
 }
-
-const roadMaterial = material(0xe6c78e);
-const railMaterial = material(0xaaaaaa, 0.3, 0.8);
-const woodMaterial = material(0x9b7048);
 
 function box(w, h, d, color, x, y, z, parent = scene) {
     const mesh = new THREE.Mesh(
         new THREE.BoxGeometry(w, h, d),
-        typeof color === "number" ? material(color) : color
+        typeof color === "number" ? mat(color) : color
     );
 
     mesh.position.set(x, y, z);
     mesh.castShadow = true;
     mesh.receiveShadow = true;
-
     parent.add(mesh);
 
     return mesh;
 }
 
 // ======================================================
-// DÉCOR DE PLAGE : SABLE ET MER
+// FOND GALAXIE
 // ======================================================
 
-// Grand sol de sable - couleur beige corrigée
-const sand = new THREE.Mesh(
-    new THREE.PlaneGeometry(300, 350),
-    new THREE.MeshStandardMaterial({
-        color: 0xd8bd87,
-        roughness: 1,
-        metalness: 0
-    })
-);
-
-sand.rotation.x = -Math.PI / 2;
-sand.position.set(0, -0.48, -100);
-sand.receiveShadow = true;
-scene.add(sand);
-
-// Mer à gauche
-const seaMaterial = new THREE.MeshStandardMaterial({
-    color: 0x16c9df,
-    roughness: 0.28,
-    metalness: 0.05,
-    emissive: 0x087caa,
-    emissiveIntensity: 0.18
+// Fond spatial étoilé
+const starMaterial = new THREE.MeshBasicMaterial({
+    color: 0xffffff
 });
 
-const seaLeft = new THREE.Mesh(
-    new THREE.PlaneGeometry(130, 350),
-    seaMaterial
-);
+for (let i = 0; i < 900; i++) {
+    const star = new THREE.Mesh(
+        new THREE.SphereGeometry(
+            0.035 + Math.random() * 0.045,
+            5,
+            5
+        ),
+        starMaterial
+    );
 
-seaLeft.rotation.x = -Math.PI / 2;
-seaLeft.position.set(-85, -0.43, -100);
-scene.add(seaLeft);
+    star.position.set(
+        (Math.random() - 0.5) * 250,
+        5 + Math.random() * 100,
+        -Math.random() * 250
+    );
 
-// Mer à droite
-const seaRight = new THREE.Mesh(
-    new THREE.PlaneGeometry(130, 350),
-    seaMaterial
-);
-
-seaRight.rotation.x = -Math.PI / 2;
-seaRight.position.set(85, -0.43, -100);
-scene.add(seaRight);
-
-// Petites vagues décoratives
-const waveMaterial = new THREE.MeshBasicMaterial({
-    color: 0xb5faff,
-    transparent: true,
-    opacity: 0.65
-});
-
-for (let i = 0; i < 45; i++) {
-    for (const side of [-1, 1]) {
-        const wave = new THREE.Mesh(
-            new THREE.BoxGeometry(
-                2 + Math.random() * 4,
-                0.025,
-                0.15
-            ),
-            waveMaterial
-        );
-
-        wave.position.set(
-            side * (35 + Math.random() * 90),
-            -0.38,
-            -Math.random() * 230
-        );
-
-        scene.add(wave);
-        movingStones.push(wave);
-    }
+    scene.add(star);
+    movingStars.push(star);
 }
 
+// Grandes nébuleuses décoratives
+function createNebula(x, y, z, color, size) {
+    const cloud = new THREE.Mesh(
+        new THREE.SphereGeometry(size, 24, 24),
+        new THREE.MeshBasicMaterial({
+            color,
+            transparent: true,
+            opacity: 0.12,
+            depthWrite: false
+        })
+    );
+
+    cloud.position.set(x, y, z);
+    cloud.scale.set(1.8, 0.7, 0.3);
+    scene.add(cloud);
+}
+
+createNebula(-45, 35, -100, 0x8b22ff, 24);
+createNebula(45, 45, -130, 0x163cff, 30);
+createNebula(0, 55, -190, 0xff2299, 35);
+createNebula(-70, 25, -210, 0x13cfff, 28);
+
+// Planète géante
+const planet = new THREE.Mesh(
+    new THREE.SphereGeometry(15, 32, 32),
+    mat(0x402080, 0x210044, 0.4)
+);
+
+planet.position.set(48, 28, -115);
+scene.add(planet);
+
+// Anneau de planète
+const ring = new THREE.Mesh(
+    new THREE.TorusGeometry(20, 0.7, 8, 100),
+    mat(0x9b65ff, 0x6020ff, 1)
+);
+
+ring.position.copy(planet.position);
+ring.rotation.x = 1.2;
+scene.add(ring);
+
 // ======================================================
-// SOL ET VOIE DE COURSE
+// SOL SPATIAL
 // ======================================================
 
-roadMesh = box(12, 0.3, 200, roadMaterial, 0, -0.25, -75);
-normalTrackMeshes.push(roadMesh);
+const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(300, 350),
+    mat(0x100d24)
+);
 
+floor.rotation.x = -Math.PI / 2;
+floor.position.set(0, -0.48, -100);
+scene.add(floor);
+
+// Voie centrale
+const road = box(
+    12, 0.3, 220,
+    mat(0x25213b, 0x17103c, 0.3),
+    0, -0.25, -80
+);
+
+normalTrackMeshes.push(road);
+
+// Bords lumineux
+for (const x of [-5.8, 5.8]) {
+    const edge = box(
+        0.12, 0.12, 220,
+        mat(0x9c25ff, 0x8b00ff, 1.5),
+        x, -0.05, -80
+    );
+
+    normalTrackMeshes.push(edge);
+}
+
+// Rails
 function createTrack() {
     for (let i = 0; i < 3; i++) {
         const x = lanePositions[i];
 
-        normalTrackMeshes.push(
-            box(0.12, 0.16, 200, railMaterial, x - 0.85, 0, -75)
-        );
+        for (const side of [-0.85, 0.85]) {
+            const rail = box(
+                0.12, 0.16, 220,
+                mat(0x777799, 0x2828aa, 0.4),
+                x + side, 0, -80
+            );
 
-        normalTrackMeshes.push(
-            box(0.12, 0.16, 200, railMaterial, x + 0.85, 0, -75)
-        );
+            normalTrackMeshes.push(rail);
+        }
 
-        for (let j = 0; j < 50; j++) {
+        for (let j = 0; j < 55; j++) {
             const sleeper = box(
-                2.05, 0.18, 0.45,
-                woodMaterial,
+                2.1, 0.18, 0.45,
+                mat(0x34304d),
                 x, -0.05, 15 - j * 4
             );
 
@@ -289,218 +292,93 @@ function createTrack() {
             normalTrackMeshes.push(sleeper);
         }
     }
-
-    for (let i = 0; i < 250; i++) {
-        const stone = new THREE.Mesh(
-            new THREE.BoxGeometry(
-                0.1 + Math.random() * 0.2,
-                0.08,
-                0.1 + Math.random() * 0.2
-            ),
-            material(0xc4a878)
-        );
-
-        stone.position.set(
-            (Math.random() - 0.5) * 11,
-            -0.02,
-            Math.random() * -180
-        );
-
-        scene.add(stone);
-        movingStones.push(stone);
-        normalTrackMeshes.push(stone);
-    }
 }
 
 createTrack();
 
 // ======================================================
-// PALMIERS
+// VAISSEAUX ALIENS
 // ======================================================
 
-function createPalm(x, z) {
-    const palm = new THREE.Group();
+function createAlienShip(x, y, z) {
+    const ship = new THREE.Group();
 
-    // Tronc
-    const trunk = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.22, 0.38, 6, 10),
-        material(0x946039)
-    );
-
-    trunk.position.y = 3;
-    trunk.rotation.z = 0.08;
-    trunk.castShadow = true;
-    palm.add(trunk);
-
-    // Feuilles
-    const leafMaterial = material(0x168b43);
-
-    for (let i = 0; i < 8; i++) {
-        const angle = (i / 8) * Math.PI * 2;
-
-        const leaf = new THREE.Mesh(
-            new THREE.ConeGeometry(0.45, 4.5, 6),
-            leafMaterial
-        );
-
-        leaf.position.set(
-            Math.cos(angle) * 1.4,
-            6,
-            Math.sin(angle) * 1.4
-        );
-
-        leaf.rotation.z = -Math.cos(angle) * 0.8;
-        leaf.rotation.x = Math.sin(angle) * 0.8;
-
-        palm.add(leaf);
-    }
-
-    // Noix de coco
-    for (let i = 0; i < 3; i++) {
-        const coconut = new THREE.Mesh(
-            new THREE.SphereGeometry(0.25, 10, 10),
-            material(0x654024)
-        );
-
-        coconut.position.set(
-            Math.cos(i * 2.1) * 0.3,
-            5.8,
-            Math.sin(i * 2.1) * 0.3
-        );
-
-        palm.add(coconut);
-    }
-
-    palm.position.set(x, 0, z);
-    scene.add(palm);
-    movingPalms.push(palm);
-}
-
-for (let i = 0; i < 22; i++) {
-    createPalm(-9, -i * 10);
-    createPalm(9, -i * 10);
-}
-
-// ======================================================
-// LAMPADAIRES
-// ======================================================
-
-function createLampPost(x, z) {
-    const lamp = new THREE.Group();
-
-    const poleMaterial = material(0x343d4b, 0.4, 0.7);
-    const lightMaterial = new THREE.MeshStandardMaterial({
-        color: 0xfff1c2,
-        emissive: 0xffd77a,
-        emissiveIntensity: 1.5
+    const bodyMaterial = mat(0x4c4c65, 0x24244c, 0.5);
+    const glassMaterial = new THREE.MeshStandardMaterial({
+        color: 0x36eaff,
+        emissive: 0x00bfff,
+        emissiveIntensity: 1.8,
+        metalness: 0.5,
+        roughness: 0.15
     });
 
-    // Poteau
-    const pole = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.12, 0.16, 7, 10),
-        poleMaterial
+    // Corps du vaisseau
+    const body = new THREE.Mesh(
+        new THREE.SphereGeometry(1, 24, 16),
+        bodyMaterial
     );
 
-    pole.position.y = 3.5;
-    lamp.add(pole);
+    body.scale.set(1.8, 0.35, 1);
+    ship.add(body);
 
-    // Bras du lampadaire
-    box(
-        1.5, 0.12, 0.12,
-        poleMaterial,
-        0.65, 6.8, 0,
-        lamp
+    // Cockpit
+    const cockpit = new THREE.Mesh(
+        new THREE.SphereGeometry(0.65, 20, 16),
+        glassMaterial
     );
 
-    // Lampe
-    const bulb = new THREE.Mesh(
-        new THREE.SphereGeometry(0.35, 12, 12),
-        lightMaterial
-    );
+    cockpit.position.y = 0.35;
+    cockpit.scale.set(0.9, 0.75, 0.9);
+    ship.add(cockpit);
 
-    bulb.position.set(1.35, 6.65, 0);
-    lamp.add(bulb);
+    // Lumières latérales
+    for (let i = 0; i < 8; i++) {
+        const angle = i / 8 * Math.PI * 2;
 
-    const light = new THREE.PointLight(0xffe4a1, 1.2, 13);
-    light.position.set(1.35, 6.4, 0);
-    lamp.add(light);
-
-    lamp.position.set(x, 0, z);
-    scene.add(lamp);
-
-    movingLampPosts.push(lamp);
-}
-
-for (let i = 0; i < 18; i++) {
-    createLampPost(-7.5, -i * 13);
-    createLampPost(7.5, -i * 13);
-}
-
-// ======================================================
-// FEUX DE CIRCULATION VERTS
-// ======================================================
-
-function createTrafficLight(x, z) {
-    const traffic = new THREE.Group();
-
-    const poleMaterial = material(0x303943);
-    const housingMaterial = material(0x20252c);
-
-    // Poteau
-    const pole = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.1, 0.14, 4.5, 8),
-        poleMaterial
-    );
-
-    pole.position.y = 2.25;
-    traffic.add(pole);
-
-    // Boîtier du feu
-    const housing = new THREE.Mesh(
-        new THREE.BoxGeometry(0.75, 1.8, 0.5),
-        housingMaterial
-    );
-
-    housing.position.set(0, 4.2, 0);
-    traffic.add(housing);
-
-    // Lumières rouge, orange et verte
-    const colors = [0xff3333, 0xffb52e, 0x32ff68];
-
-    for (let i = 0; i < 3; i++) {
-        const bulbMaterial = new THREE.MeshStandardMaterial({
-            color: colors[i],
-            emissive: colors[i],
-            emissiveIntensity: i === 2 ? 1.8 : 0.15
-        });
-
-        const bulb = new THREE.Mesh(
-            new THREE.SphereGeometry(0.19, 12, 12),
-            bulbMaterial
+        const light = new THREE.Mesh(
+            new THREE.SphereGeometry(0.12, 8, 8),
+            mat(0x35ffb2, 0x00ff88, 2)
         );
 
-        bulb.position.set(0, 4.8 - i * 0.6, 0.28);
-        traffic.add(bulb);
+        light.position.set(
+            Math.cos(angle) * 1.35,
+            -0.1,
+            Math.sin(angle) * 0.7
+        );
 
-        if (i === 2) {
-            const greenLight = new THREE.PointLight(0x22ff55, 1.3, 7);
-            greenLight.position.set(0, 3.6, 0.5);
-            traffic.add(greenLight);
-        }
+        ship.add(light);
     }
 
-    traffic.position.set(x, 0, z);
-    scene.add(traffic);
-    movingTrafficLights.push(traffic);
+    // Réacteur
+    const engine = new THREE.Mesh(
+        new THREE.ConeGeometry(0.35, 1.4, 12),
+        new THREE.MeshBasicMaterial({
+            color: 0x9a35ff,
+            transparent: true,
+            opacity: 0.75
+        })
+    );
+
+    engine.position.z = -1.2;
+    engine.rotation.x = Math.PI / 2;
+    ship.add(engine);
+
+    ship.position.set(x, y, z);
+
+    scene.add(ship);
+    movingAliens.push(ship);
 }
 
-for (let i = 0; i < 12; i++) {
-    createTrafficLight(-8, -i * 19 - 8);
-    createTrafficLight(8, -i * 19 - 8);
+for (let i = 0; i < 14; i++) {
+    createAlienShip(
+        (Math.random() - 0.5) * 100,
+        12 + Math.random() * 35,
+        -30 - i * 18
+    );
 }
 
 // ======================================================
-// PERSONNAGE 3D AVEC SKIN VIOLET ET ANIMATION
+// PERSONNAGE
 // ======================================================
 
 function createPlayer() {
@@ -509,44 +387,40 @@ function createPlayer() {
     playerParts = {
         arms: [],
         legs: [],
-        head: null,
-        body: null
+        body: null,
+        head: null
     };
 
-    const purple = material(0x7900b8);
-    const darkPurple = material(0x35004e);
-    const black = material(0x211b28);
-    const lime = material(0xb6ff19);
-    const skin = material(0xd98a57);
-    const white = material(0xffe9d1);
+    const purple = mat(0x7900b8, 0x39005c, 0.3);
+    const black = mat(0x211b28);
+    const lime = mat(0xb6ff19, 0x4cff00, 0.5);
+    const skin = mat(0xd98a57);
+    const white = mat(0xffe9d1);
 
-    function sphere(radius, mat, x, y, z, parent) {
-        const mesh = new THREE.Mesh(
-            new THREE.SphereGeometry(radius, 16, 16),
-            mat
-        );
-
-        mesh.position.set(x, y, z);
-        mesh.castShadow = true;
-        parent.add(mesh);
-
-        return mesh;
-    }
-
-    function limb(w, h, d, mat, x, y, z, parent) {
+    function limb(w, h, d, material, x, y, z, parent) {
         const mesh = new THREE.Mesh(
             new THREE.BoxGeometry(w, h, d),
-            mat
+            material
         );
 
         mesh.position.set(x, y, z);
         mesh.castShadow = true;
         parent.add(mesh);
-
         return mesh;
     }
 
-    // CORPS
+    function sphere(radius, material, x, y, z, parent) {
+        const mesh = new THREE.Mesh(
+            new THREE.SphereGeometry(radius, 16, 16),
+            material
+        );
+
+        mesh.position.set(x, y, z);
+        parent.add(mesh);
+        return mesh;
+    }
+
+    // Corps
     const torso = new THREE.Group();
     torso.position.y = 1.75;
     player.add(torso);
@@ -555,28 +429,16 @@ function createPlayer() {
     limb(0.9, 1.1, 0.48, black, 0, 0, 0, torso);
     limb(0.94, 0.15, 0.5, white, 0, -0.52, 0, torso);
 
-    // Logo couronne
-    const logoMaterial = new THREE.LineBasicMaterial({
-        color: 0xb6ff19
-    });
+    // Logo
+    const logo = new THREE.Mesh(
+        new THREE.BoxGeometry(0.38, 0.28, 0.03),
+        lime
+    );
 
-    const crownPoints = [
-        new THREE.Vector3(-0.23, -0.05, 0.251),
-        new THREE.Vector3(-0.18, 0.20, 0.251),
-        new THREE.Vector3(-0.04, 0.07, 0.251),
-        new THREE.Vector3(0.02, 0.23, 0.251),
-        new THREE.Vector3(0.12, 0.07, 0.251),
-        new THREE.Vector3(0.23, 0.20, 0.251),
-        new THREE.Vector3(0.25, -0.05, 0.251),
-        new THREE.Vector3(-0.23, -0.05, 0.251)
-    ];
+    logo.position.set(0, 0.1, 0.25);
+    torso.add(logo);
 
-    const crownGeometry = new THREE.BufferGeometry()
-        .setFromPoints(crownPoints);
-
-    torso.add(new THREE.Line(crownGeometry, logoMaterial));
-
-    // TÊTE
+    // Tête
     const head = new THREE.Group();
     head.position.set(0, 2.65, 0);
     player.add(head);
@@ -584,83 +446,55 @@ function createPlayer() {
 
     sphere(0.34, skin, 0, 0, 0, head);
     sphere(0.35, black, 0, 0.13, 0, head);
-    sphere(0.39, purple, 0, 0.30, 0, head);
+    sphere(0.39, purple, 0, 0.3, 0, head);
 
-    limb(0.74, 0.18, 0.72, darkPurple, 0, 0.17, 0, head);
-    limb(0.75, 0.12, 0.74, purple, 0, 0.10, 0, head);
+    limb(0.74, 0.18, 0.72, purple, 0, 0.17, 0, head);
 
-    sphere(0.10, skin, -0.34, -0.05, 0, head);
-    sphere(0.10, skin, 0.34, -0.05, 0, head);
-
-    // Casque audio
     for (const side of [-1, 1]) {
-        const headphone = new THREE.Mesh(
-            new THREE.BoxGeometry(0.16, 0.38, 0.28),
-            black
-        );
-
-        headphone.position.set(side * 0.39, -0.12, 0);
-        head.add(headphone);
-
-        const headphoneLight = new THREE.Mesh(
-            new THREE.BoxGeometry(0.17, 0.15, 0.29),
-            lime
-        );
-
-        headphoneLight.position.set(side * 0.40, -0.12, 0);
-        head.add(headphoneLight);
+        limb(0.16, 0.38, 0.28, black, side * 0.39, -0.12, 0, head);
+        limb(0.17, 0.15, 0.29, lime, side * 0.4, -0.12, 0, head);
     }
 
-    // BRAS ARTICULÉS
+    // Bras
     for (const side of [-1, 1]) {
         const arm = new THREE.Group();
-        arm.position.set(side * 0.51, 2.20, 0);
+        arm.position.set(side * 0.51, 2.2, 0);
         player.add(arm);
 
-        const sleeveMaterial = side === -1 ? purple : lime;
-
-        limb(0.28, 0.48, 0.30, sleeveMaterial, 0, -0.24, 0, arm);
+        limb(0.28, 0.48, 0.3, side === -1 ? purple : lime,
+            0, -0.24, 0, arm);
 
         const elbow = new THREE.Group();
         elbow.position.y = -0.48;
         arm.add(elbow);
 
-        limb(0.24, 0.43, 0.27, darkPurple, 0, -0.21, 0, elbow);
+        limb(0.24, 0.43, 0.27, black, 0, -0.21, 0, elbow);
         sphere(0.14, skin, 0, -0.46, 0, elbow);
 
         arm.userData.elbow = elbow;
         playerParts.arms.push(arm);
     }
 
-    // JAMBES ARTICULÉES
+    // Jambes
     for (const side of [-1, 1]) {
         const leg = new THREE.Group();
         leg.position.set(side * 0.24, 1.22, 0);
         player.add(leg);
 
-        limb(0.34, 0.60, 0.38, black, 0, -0.30, 0, leg);
+        limb(0.34, 0.6, 0.38, black, 0, -0.3, 0, leg);
 
         const knee = new THREE.Group();
         knee.position.y = -0.58;
         leg.add(knee);
 
-        limb(0.32, 0.45, 0.36, black, 0, -0.20, 0, knee);
-        limb(0.43, 0.23, 0.60, purple, 0, -0.48, -0.10, knee);
-        limb(0.44, 0.08, 0.61, white, 0, -0.60, -0.10, knee);
+        limb(0.32, 0.45, 0.36, black, 0, -0.2, 0, knee);
+        limb(0.43, 0.23, 0.6, purple, 0, -0.48, -0.1, knee);
+        limb(0.44, 0.08, 0.61, white, 0, -0.6, -0.1, knee);
         limb(0.35, 0.07, 0.12, lime, 0, -0.47, -0.36, knee);
 
         leg.userData.knee = knee;
         playerParts.legs.push(leg);
     }
-
-    // CAPUCHE
-    const hood = new THREE.Mesh(
-        new THREE.SphereGeometry(0.40, 16, 16),
-        darkPurple
-    );
-
-    hood.position.set(0, 2.35, 0.25);
-    player.add(hood);
 
     player.position.set(0, 0, 0);
     scene.add(player);
@@ -669,83 +503,99 @@ function createPlayer() {
 createPlayer();
 
 // ======================================================
-// TRAINS
+// TRAINS SPATIAUX
 // ======================================================
 
 function createTrain(laneIndex, z) {
     const train = new THREE.Group();
 
-    box(2.5, 3.5, 13, 0x087f9c, 0, 2, 0, train);
-    box(2.3, 1.1, 0.15, 0x12c5e5, 0, 3, 6.55, train);
-    box(1.6, 0.8, 0.1, 0x15213c, 0, 2.8, 6.65, train);
+    const bodyMaterial = mat(0x183e80, 0x102b66, 0.7);
+    const windowMaterial = mat(0x20dfff, 0x00aaff, 1.7);
+    const neonMaterial = mat(0x9b31ff, 0x7800ff, 2);
 
+    // Corps principal du train
+    box(2.55, 3.4, 13, bodyMaterial, 0, 2, 0, train);
+
+    // Face avant
+    box(2.4, 1.1, 0.2, neonMaterial, 0, 3, 6.55, train);
+    box(1.7, 0.85, 0.12, windowMaterial, 0, 2.8, 6.68, train);
+
+    // Fenêtres latérales
     for (let zPos = -5; zPos <= 4; zPos += 3) {
-        box(0.08, 1, 1.5, 0x9eeaff, -1.27, 2.8, zPos, train);
-        box(0.08, 1, 1.5, 0x9eeaff, 1.27, 2.8, zPos, train);
+        box(0.08, 1, 1.5, windowMaterial, -1.3, 2.8, zPos, train);
+        box(0.08, 1, 1.5, windowMaterial, 1.3, 2.8, zPos, train);
     }
 
+    // Bandes lumineuses
     for (const side of [-1, 1]) {
-        const light = new THREE.PointLight(0xffeeaa, 3, 10);
-        light.position.set(side * 0.8, 0.8, 7);
-        train.add(light);
+        box(0.12, 0.12, 12, neonMaterial, side * 1.3, 1.2, 0, train);
 
-        box(0.35, 0.35, 0.15, 0xffee99, side * 0.8, 0.8, 6.7, train);
+        const headlight = new THREE.PointLight(0x22ddff, 3, 18);
+        headlight.position.set(side * 0.8, 0.8, 7);
+        train.add(headlight);
+
+        box(0.4, 0.4, 0.15, 0x9fffff,
+            side * 0.8, 0.8, 6.7, train);
+    }
+
+    // Dessous du train
+    box(2.3, 0.4, 11, 0x090914, 0, 0.2, 0, train);
+
+    // Roues
+    for (const zPos of [-4, 4]) {
+        for (const side of [-1, 1]) {
+            const wheel = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.38, 0.38, 0.25, 12),
+                mat(0x222233)
+            );
+
+            wheel.rotation.z = Math.PI / 2;
+            wheel.position.set(side * 1.35, 0.45, zPos);
+            train.add(wheel);
+        }
     }
 
     train.position.set(lanePositions[laneIndex], 0, z);
     scene.add(train);
 
-    obstacles.push({
+    const data = {
         object: train,
         type: "train",
         lane: laneIndex
-    });
+    };
+
+    obstacles.push(data);
+    movingTrains.push(data);
 }
 
 // ======================================================
-// BARRIÈRES - CONTRASTE AMÉLIORÉ
+// BARRIÈRES FUTURISTES
 // ======================================================
 
 function createBarrier(laneIndex, z) {
     const barrier = new THREE.Group();
 
-    const redMaterial = new THREE.MeshStandardMaterial({
-        color: 0xe51f35,
-        roughness: 0.65
-    });
+    const red = mat(0xff263f, 0x990018, 0.8);
+    const white = mat(0xffffff, 0x555555, 0.3);
 
-    const whiteMaterial = new THREE.MeshStandardMaterial({
-        color: 0xf5f0e5,
-        roughness: 0.8
-    });
+    box(2.1, 0.8, 0.3, red, 0, 1, 0, barrier);
 
-    const darkMaterial = new THREE.MeshStandardMaterial({
-        color: 0x34343b,
-        roughness: 0.8
-    });
-
-    // Barre principale rouge
-    box(2.1, 0.8, 0.3, redMaterial, 0, 1, 0, barrier);
-
-    // Pieds sombres
     for (const side of [-1, 1]) {
-        box(
-            0.18, 1.3, 0.25,
-            darkMaterial,
-            side * 0.85, 0.65, 0,
-            barrier
-        );
+        box(0.15, 1.3, 0.2, white, side * 0.8, 0.65, 0, barrier);
     }
 
-    // Bandes blanches bien visibles
     for (let i = -2; i <= 2; i++) {
-        box(
-            0.2, 0.85, 0.34,
-            whiteMaterial,
-            i * 0.4, 1, 0,
-            barrier
-        );
+        box(0.2, 0.85, 0.32, white, i * 0.4, 1, 0, barrier);
     }
+
+    // Barre lumineuse
+    const glow = new THREE.Mesh(
+        new THREE.BoxGeometry(2.3, 0.08, 0.35),
+        new THREE.MeshBasicMaterial({ color: 0xff2020 })
+    );
+
+    glow.position.y = 1.5;
+    barrier.add(glow);
 
     barrier.position.set(lanePositions[laneIndex], 0, z);
     scene.add(barrier);
@@ -758,32 +608,41 @@ function createBarrier(laneIndex, z) {
 }
 
 // ======================================================
-// PIÈCES - DORÉ PLUS VISIBLE
+// PIÈCES COSMIQUES
 // ======================================================
 
 function createCoin(laneIndex, z) {
-    const coinMaterial = new THREE.MeshStandardMaterial({
-        color: 0xffb800,
-        metalness: 0.45,
-        roughness: 0.3,
-        emissive: 0x704000,
-        emissiveIntensity: 0.25
+    const coin = new THREE.Group();
+
+    const goldMaterial = new THREE.MeshStandardMaterial({
+        color: 0xffd52a,
+        metalness: 0.8,
+        roughness: 0.2,
+        emissive: 0xff9900,
+        emissiveIntensity: 0.8
     });
 
-    const coin = new THREE.Mesh(
+    const ring = new THREE.Mesh(
         new THREE.TorusGeometry(0.4, 0.12, 12, 24),
-        coinMaterial
+        goldMaterial
     );
 
-    coin.position.set(lanePositions[laneIndex], 1.3, z);
-    coin.castShadow = true;
+    coin.add(ring);
 
+    const center = new THREE.Mesh(
+        new THREE.SphereGeometry(0.15, 12, 12),
+        mat(0xffffff, 0xffcc00, 1.5)
+    );
+
+    coin.add(center);
+
+    coin.position.set(lanePositions[laneIndex], 1.3, z);
     scene.add(coin);
     coinObjects.push(coin);
 }
 
 // ======================================================
-// ENVIRONNEMENT LAVE
+// LAVE
 // ======================================================
 
 function createLavaEnvironment() {
@@ -796,47 +655,13 @@ function createLavaEnvironment() {
         new THREE.MeshStandardMaterial({
             color: 0xff3b08,
             emissive: 0xff2600,
-            emissiveIntensity: 1.15,
-            roughness: 0.32,
-            metalness: 0.05
+            emissiveIntensity: 1.15
         })
     );
 
     lava.rotation.x = -Math.PI / 2;
     lava.position.set(0, -0.48, -78);
     lavaGroup.add(lava);
-
-    const glowMaterial = new THREE.MeshBasicMaterial({
-        color: 0xffa01a,
-        transparent: true,
-        opacity: 0.8
-    });
-
-    for (let i = 0; i < 65; i++) {
-        const crack = new THREE.Mesh(
-            new THREE.BoxGeometry(
-                0.08 + Math.random() * 0.18,
-                0.025,
-                1.2 + Math.random() * 3
-            ),
-            glowMaterial
-        );
-
-        crack.position.set(
-            (Math.random() - 0.5) * 18,
-            -0.445,
-            -180 + Math.random() * 210
-        );
-
-        crack.rotation.y = (Math.random() - 0.5) * 0.8;
-        crack.userData.isLavaCrack = true;
-
-        lavaGroup.add(crack);
-    }
-
-    const lavaLight = new THREE.PointLight(0xff3b12, 2.2, 38);
-    lavaLight.position.set(0, 2.5, -8);
-    lavaGroup.add(lavaLight);
 
     scene.add(lavaGroup);
 }
@@ -851,15 +676,12 @@ function setLavaVisuals(enabled) {
     lavaGroup.visible = enabled;
 
     scene.background = new THREE.Color(
-        enabled ? 0x260b12 : 0x75d9ff
+        enabled ? 0x260b12 : 0x050313
     );
 
     scene.fog.color.set(
-        enabled ? 0x3b1010 : 0x75d9ff
+        enabled ? 0x3b1010 : 0x09051e
     );
-
-    scene.fog.near = enabled ? 18 : 65;
-    scene.fog.far = enabled ? 115 : 190;
 }
 
 // ======================================================
@@ -871,31 +693,18 @@ function createLavaPlatform(laneIndex, z, width = 2.55, depth = 5.2) {
 
     const rock = new THREE.Mesh(
         new THREE.BoxGeometry(width, 0.55, depth),
-        new THREE.MeshStandardMaterial({
-            color: 0x40332e,
-            roughness: 0.95
-        })
+        mat(0x40332e)
     );
 
     rock.position.y = -0.02;
-    rock.castShadow = true;
-    rock.receiveShadow = true;
     platform.add(rock);
 
     const top = new THREE.Mesh(
-        new THREE.BoxGeometry(
-            Math.max(0.5, width - 0.2),
-            0.12,
-            Math.max(0.5, depth - 0.2)
-        ),
-        new THREE.MeshStandardMaterial({
-            color: 0x716052,
-            roughness: 1
-        })
+        new THREE.BoxGeometry(width - 0.2, 0.12, depth - 0.2),
+        mat(0x716052)
     );
 
     top.position.y = 0.31;
-    top.receiveShadow = true;
     platform.add(top);
 
     const edgeMaterial = new THREE.MeshBasicMaterial({
@@ -933,13 +742,6 @@ function spawnLavaSegment(z) {
 
     lavaLastLane = nextLane;
     createLavaPlatform(nextLane, z);
-
-    if (Math.random() < 0.38) {
-        const otherLanes = [0, 1, 2].filter(value => value !== nextLane);
-        const other = otherLanes[Math.floor(Math.random() * otherLanes.length)];
-
-        createLavaPlatform(other, z);
-    }
 }
 
 function resetLavaPlatforms() {
@@ -951,13 +753,10 @@ function resetLavaPlatforms() {
 
     if (selectedMode !== "lava") return;
 
-    createLavaEnvironment();
-
     createLavaPlatform(1, -25, 9.2, 60);
-    createLavaPlatform(1, -59, 9.2, 12);
 
-    for (let i = 0; i < 9; i++) {
-        spawnLavaSegment(-77 - i * 12);
+    for (let i = 0; i < 12; i++) {
+        spawnLavaSegment(-65 - i * 12);
     }
 }
 
@@ -979,68 +778,48 @@ function moveLavaPlatforms() {
         return true;
     });
 
-    if (
-        lavaPlatformTimer >=
-        Math.max(10, Math.round(12 / Math.max(speed, 0.3)))
-    ) {
+    if (lavaPlatformTimer > 12) {
         const furthestZ = lavaPlatforms.reduce(
-            (minimum, item) => Math.min(minimum, item.object.position.z),
+            (min, item) => Math.min(min, item.object.position.z),
             0
         );
 
         spawnLavaSegment(furthestZ - 12);
         lavaPlatformTimer = 0;
     }
-
-    if (lavaGroup) {
-        lavaGroup.children.forEach(child => {
-            if (child.userData.isLavaCrack) {
-                child.position.z += speed * 0.7;
-
-                if (child.position.z > 18) {
-                    child.position.z -= 210;
-                }
-            }
-        });
-    }
 }
 
 function isPlayerAboveLavaPlatform() {
     return lavaPlatforms.some(item => {
-        const platform = item.object;
-        const width = platform.userData.width || 2.55;
-        const depth = platform.userData.depth || 5.2;
+        const p = item.object;
 
-        const insideX =
-            Math.abs(platform.position.x - player.position.x) <
-            width / 2 - 0.15;
-
-        const insideZ =
-            Math.abs(platform.position.z) <
-            depth / 2 - 0.15;
-
-        return insideX && insideZ;
+        return (
+            Math.abs(p.position.x - player.position.x) <
+                (p.userData.width / 2 - 0.15) &&
+            Math.abs(p.position.z) <
+                (p.userData.depth / 2 - 0.15)
+        );
     });
 }
 
 // ======================================================
-// GÉNÉRATION DES OBSTACLES ET PIÈCES
+// GÉNÉRATION
 // ======================================================
 
 function spawnObjects() {
     const laneIndex = Math.floor(Math.random() * 3);
 
-    if (Math.random() < 0.35) {
-        createTrain(laneIndex, -100);
+    // Les trains arrivent régulièrement !
+    if (Math.random() < 0.55) {
+        createTrain(laneIndex, -115);
     } else {
-        createBarrier(laneIndex, -100);
+        createBarrier(laneIndex, -105);
     }
 
     if (selectedMode === "lava") return;
 
     if (Math.random() < 0.8) {
         const possibleLanes = [0, 1, 2].filter(l => l !== laneIndex);
-
         const coinLane =
             possibleLanes[Math.floor(Math.random() * possibleLanes.length)];
 
@@ -1051,7 +830,7 @@ function spawnObjects() {
 }
 
 // ======================================================
-// SÉLECTION DU MODE
+// MODES
 // ======================================================
 
 function selectMode(mode, button) {
@@ -1064,9 +843,9 @@ function selectMode(mode, button) {
     if (button) button.classList.add("active");
 
     const descriptions = {
-        classic: "Évite les trains et les barrières. Ramasse les pièces et bats ton record !",
-        nocoin: "Attention : toucher une seule pièce provoque immédiatement un GAME OVER !",
-        lava: "Le sol est de la lave ! Saute de plateforme en plateforme pour survivre."
+        classic: "Évite les trains et les barrières spatiales. Ramasse les pièces !",
+        nocoin: "Ne touche aucune pièce !",
+        lava: "La voie est devenue de la lave ! Saute de plateforme en plateforme."
     };
 
     const description = document.getElementById("modeDescription");
@@ -1144,9 +923,9 @@ function slide() {
 window.addEventListener("keydown", e => {
     const key = e.key.toLowerCase();
 
-    if (
-        ["arrowleft", "arrowright", "arrowup", "arrowdown", " "].includes(key)
-    ) {
+    if ([
+        "arrowleft", "arrowright", "arrowup", "arrowdown", " "
+    ].includes(key)) {
         e.preventDefault();
     }
 
@@ -1167,7 +946,7 @@ function checkCollisions() {
         !jumping &&
         !isPlayerAboveLavaPlatform()
     ) {
-        endGame("Tombé dans la lave !");
+        endGame("Tu es tombé dans la lave !");
         return;
     }
 
@@ -1179,24 +958,30 @@ function checkCollisions() {
 
         if (!sameLane) continue;
 
-        if (obstacle.type === "train" && distance > -7 && distance < 2) {
-            endGame("Tu as percuté un train !");
+        // Collision avec le train
+        if (
+            obstacle.type === "train" &&
+            distance > -8 &&
+            distance < 2
+        ) {
+            endGame("Un train spatial t'a percuté !");
             return;
         }
 
-        if (obstacle.type === "barrier" && distance > -1.3 && distance < 1.3) {
+        // Collision avec une barrière
+        if (
+            obstacle.type === "barrier" &&
+            distance > -1.3 &&
+            distance < 1.3
+        ) {
             if (!jumping && !sliding) {
-                endGame(
-                    selectedMode === "lava"
-                        ? "Tu te cognes aux murs !"
-                        : "Tu as heurté une barrière !"
-                );
-
+                endGame("Tu as heurté une barrière !");
                 return;
             }
         }
     }
 
+    // Ramassage des pièces
     for (let i = coinObjects.length - 1; i >= 0; i--) {
         const coin = coinObjects[i];
 
@@ -1209,7 +994,7 @@ function checkCollisions() {
             coinObjects.splice(i, 1);
 
             if (selectedMode === "nocoin") {
-                endGame("Tu as ramassé une pièce : interdit en mode No Coin !");
+                endGame("Tu as ramassé une pièce !");
                 return;
             }
 
@@ -1220,7 +1005,7 @@ function checkCollisions() {
 }
 
 // ======================================================
-// ANIMATION DE COURSE
+// ANIMATION DU PERSONNAGE
 // ======================================================
 
 function animateRunner() {
@@ -1231,9 +1016,6 @@ function animateRunner() {
 
         playerParts.arms[0].rotation.x = swing * 0.85;
         playerParts.arms[1].rotation.x = -swing * 0.85;
-
-        playerParts.arms[0].userData.elbow.rotation.x = -0.25;
-        playerParts.arms[1].userData.elbow.rotation.x = -0.25;
 
         playerParts.legs[0].rotation.x = -swing * 0.75;
         playerParts.legs[1].rotation.x = swing * 0.75;
@@ -1246,25 +1028,18 @@ function animateRunner() {
 
         playerParts.body.position.y =
             1.75 + Math.abs(Math.sin(movement * 2)) * 0.06;
-
-        playerParts.head.rotation.z =
-            Math.sin(movement) * 0.035;
     }
 
     if (jumping) {
         playerParts.arms[0].rotation.x = -0.9;
         playerParts.arms[1].rotation.x = -0.9;
-
         playerParts.legs[0].rotation.x = 0.45;
         playerParts.legs[1].rotation.x = -0.45;
-
-        playerParts.body.position.y = 1.75;
     }
 
     if (sliding) {
         playerParts.arms[0].rotation.x = 0.7;
         playerParts.arms[1].rotation.x = 0.7;
-
         playerParts.legs[0].rotation.x = -0.5;
         playerParts.legs[1].rotation.x = -0.5;
     }
@@ -1279,50 +1054,45 @@ function moveEnvironment() {
         sleeper.position.z += speed;
 
         if (sleeper.position.z > 20) {
-            sleeper.position.z -= 200;
+            sleeper.position.z -= 220;
         }
     });
 
-    movingStones.forEach(stone => {
-        stone.position.z += speed;
+    movingStars.forEach(star => {
+        star.position.z += speed * 0.3;
 
-        if (stone.position.z > 20) {
-            stone.position.z -= 200;
+        if (star.position.z > 20) {
+            star.position.z -= 260;
         }
     });
 
-    movingPalms.forEach(palm => {
-        palm.position.z += speed;
+    // Les vaisseaux aliens traversent le ciel
+    movingAliens.forEach(ship => {
+        ship.position.x += ship.userData.direction || 0.08;
+        ship.position.y += Math.sin(frame * 0.025 + ship.position.z) * 0.015;
+        ship.rotation.z = Math.sin(frame * 0.02 + ship.position.z) * 0.04;
 
-        if (palm.position.z > 25) {
-            palm.position.z -= 220;
-        }
-    });
-
-    movingLampPosts.forEach(lamp => {
-        lamp.position.z += speed;
-
-        if (lamp.position.z > 25) {
-            lamp.position.z -= 234;
-        }
-    });
-
-    movingTrafficLights.forEach(traffic => {
-        traffic.position.z += speed;
-
-        if (traffic.position.z > 25) {
-            traffic.position.z -= 228;
+        if (ship.position.x > 75) {
+            ship.position.x = -75;
+            ship.position.z = -40 - Math.random() * 180;
         }
     });
 }
 
+// ======================================================
+// OBSTACLES ET TRAINS
+// ======================================================
+
 function moveObstacles() {
     obstacles.forEach(obstacle => {
-        obstacle.object.position.z += speed;
+        // Les trains et barrières foncent vers le joueur
+        const extraSpeed = obstacle.type === "train" ? 1.15 : 1;
+
+        obstacle.object.position.z += speed * extraSpeed;
     });
 
     obstacles = obstacles.filter(obstacle => {
-        if (obstacle.object.position.z > 18) {
+        if (obstacle.object.position.z > 20) {
             scene.remove(obstacle.object);
             return false;
         }
@@ -1379,15 +1149,17 @@ function endGame(reason) {
     }
 
     const gameOver = document.getElementById("gameOver");
+
     const title = document.getElementById("gameOverTitle");
     const reasonElement = document.getElementById("gameOverReason");
     const finalScore = document.getElementById("finalScore");
     const finalCoins = document.getElementById("finalCoins");
 
     if (title) title.textContent = "GAME OVER";
-    if (reasonElement) reasonElement.textContent = reason || "Fin de la partie !";
+    if (reasonElement) reasonElement.textContent = reason;
     if (finalScore) finalScore.textContent = score;
     if (finalCoins) finalCoins.textContent = coins;
+
     if (gameOver) gameOver.classList.remove("hidden");
 
     updateHUD();
@@ -1405,7 +1177,6 @@ function animate() {
     frame++;
     score++;
 
-    // ACCÉLÉRATION PROGRESSIVE
     speedMultiplier = Math.min(
         maxSpeedMultiplier,
         speedMultiplier + SPEED_INCREASE
@@ -1415,16 +1186,17 @@ function animate() {
 
     spawnTimer++;
 
-    const spawnDelay = Math.max(55, 100 - speed * 25);
+    const spawnDelay = Math.max(48, 100 - speed * 25);
 
     if (spawnTimer >= spawnDelay) {
         spawnObjects();
         spawnTimer = 0;
     }
 
+    // Déplacement du joueur
     player.position.x += (targetX - player.position.x) * 0.18;
 
-    // SAUT
+    // Saut
     if (jumping) {
         player.position.y += jumpVelocity;
 
@@ -1438,21 +1210,17 @@ function animate() {
             jumping = false;
             jumpVelocity = 0;
 
-            if (sliding) {
-                slideTimer = Math.max(slideTimer, 35);
-            }
-
             if (
                 selectedMode === "lava" &&
                 !isPlayerAboveLavaPlatform()
             ) {
-                endGame("Tombé dans la lave !");
+                endGame("Tu es tombé dans la lave !");
                 return;
             }
         }
     }
 
-    // GLISSADE
+    // Glissade
     if (sliding) {
         slideTimer--;
         player.scale.y = 0.65;
@@ -1483,18 +1251,14 @@ function animate() {
 
     camera.position.y = 5 + player.position.y * 0.3;
 
-    camera.lookAt(
-        player.position.x * 0.25,
-        1.5,
-        -20
-    );
+    camera.lookAt(player.position.x * 0.25, 1.5, -20);
 
     updateHUD();
     renderer.render(scene, camera);
 }
 
 // ======================================================
-// DÉMARRER UNE PARTIE
+// DÉMARRER
 // ======================================================
 
 function startGame() {
@@ -1537,13 +1301,8 @@ function startGame() {
 
     playerParts.head.rotation.set(0, 0, 0);
 
-    obstacles.forEach(obstacle => {
-        scene.remove(obstacle.object);
-    });
-
-    coinObjects.forEach(coin => {
-        scene.remove(coin);
-    });
+    obstacles.forEach(obstacle => scene.remove(obstacle.object));
+    coinObjects.forEach(coin => scene.remove(coin));
 
     obstacles = [];
     coinObjects = [];
@@ -1574,7 +1333,7 @@ function startGame() {
         } else if (selectedMode === "lava") {
             modeName.textContent = "THE FLOOR IS LAVA";
         } else {
-            modeName.textContent = "CLASSIC RUN";
+            modeName.textContent = "SPACE GALAXY";
         }
     }
 
@@ -1613,7 +1372,7 @@ function pauseGame() {
 window.pauseGame = pauseGame;
 
 // ======================================================
-// RETOUR AU MENU
+// RETOUR MENU
 // ======================================================
 
 function backToMenu() {
@@ -1622,10 +1381,7 @@ function backToMenu() {
 
     setLavaVisuals(false);
 
-    lavaPlatforms.forEach(item => {
-        scene.remove(item.object);
-    });
-
+    lavaPlatforms.forEach(item => scene.remove(item.object));
     lavaPlatforms = [];
 
     const menu = document.getElementById("menu");
@@ -1654,7 +1410,7 @@ window.addEventListener("resize", () => {
 });
 
 // ======================================================
-// PREMIER AFFICHAGE
+// INITIALISATION
 // ======================================================
 
 applyDifficultySettings(true);
@@ -1662,4 +1418,4 @@ updateHUD();
 
 renderer.render(scene, camera);
 
-console.log("NEON RUN 3D - BEACH SUMMER chargé correctement !");
+console.log("NEON RUN - SPACE GALAXY chargé !");
