@@ -1,8 +1,8 @@
 // ======================================================
 // NEON RUN 3D - VERSION BEACH SUMMER
 // Décor plage : sable, mer, palmiers, lampadaires et feux verts
+// Luminosité corrigée : sable beige, pièces dorées, barrières visibles
 // Three.js r128 requis avant ce fichier.
-// Placer skin.webp dans le même dossier que game.js si nécessaire.
 // ======================================================
 
 const canvas = document.getElementById("game");
@@ -27,31 +27,50 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0, 5, 9);
 camera.lookAt(0, 1.5, -20);
 
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+const renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: true
+});
+
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(
     canvas.clientWidth || window.innerWidth,
     canvas.clientHeight || window.innerHeight
 );
+
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
+// CORRECTION DE LA LUMINOSITÉ
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 0.8;
+renderer.outputEncoding = THREE.sRGBEncoding;
+
 // ======================================================
-// LUMIÈRES
+// LUMIÈRES - VERSION ÉTÉ MOINS ÉCLATANTE
 // ======================================================
 
-scene.add(new THREE.HemisphereLight(0xdaf5ff, 0x9c784b, 2.2));
+scene.add(
+    new THREE.HemisphereLight(
+        0xb9e5ff,
+        0x9b8058,
+        0.65
+    )
+);
 
-const sunLight = new THREE.DirectionalLight(0xfff0ce, 2.2);
+const sunLight = new THREE.DirectionalLight(0xfff0ce, 0.8);
 sunLight.position.set(-15, 30, 10);
 sunLight.castShadow = true;
+sunLight.shadow.mapSize.width = 1024;
+sunLight.shadow.mapSize.height = 1024;
 scene.add(sunLight);
 
 // Soleil décoratif
 const sunBall = new THREE.Mesh(
     new THREE.SphereGeometry(7, 32, 32),
-    new THREE.MeshBasicMaterial({ color: 0xffe17a })
+    new THREE.MeshBasicMaterial({ color: 0xffdf83 })
 );
+
 sunBall.position.set(-45, 35, -120);
 scene.add(sunBall);
 
@@ -168,10 +187,14 @@ function box(w, h, d, color, x, y, z, parent = scene) {
 // DÉCOR DE PLAGE : SABLE ET MER
 // ======================================================
 
-// Grand sol de sable
+// Grand sol de sable - couleur beige corrigée
 const sand = new THREE.Mesh(
     new THREE.PlaneGeometry(300, 350),
-    material(0xf2d39b)
+    new THREE.MeshStandardMaterial({
+        color: 0xd8bd87,
+        roughness: 1,
+        metalness: 0
+    })
 );
 
 sand.rotation.x = -Math.PI / 2;
@@ -382,7 +405,7 @@ function createLampPost(x, z) {
     lamp.add(pole);
 
     // Bras du lampadaire
-    const arm = box(
+    box(
         1.5, 0.12, 0.12,
         poleMaterial,
         0.65, 6.8, 0,
@@ -680,20 +703,48 @@ function createTrain(laneIndex, z) {
 }
 
 // ======================================================
-// BARRIÈRES
+// BARRIÈRES - CONTRASTE AMÉLIORÉ
 // ======================================================
 
 function createBarrier(laneIndex, z) {
     const barrier = new THREE.Group();
 
-    box(2.1, 0.8, 0.3, 0xe52e3d, 0, 1, 0, barrier);
+    const redMaterial = new THREE.MeshStandardMaterial({
+        color: 0xe51f35,
+        roughness: 0.65
+    });
 
+    const whiteMaterial = new THREE.MeshStandardMaterial({
+        color: 0xf5f0e5,
+        roughness: 0.8
+    });
+
+    const darkMaterial = new THREE.MeshStandardMaterial({
+        color: 0x34343b,
+        roughness: 0.8
+    });
+
+    // Barre principale rouge
+    box(2.1, 0.8, 0.3, redMaterial, 0, 1, 0, barrier);
+
+    // Pieds sombres
     for (const side of [-1, 1]) {
-        box(0.15, 1.3, 0.2, 0xdddddd, side * 0.8, 0.65, 0, barrier);
+        box(
+            0.18, 1.3, 0.25,
+            darkMaterial,
+            side * 0.85, 0.65, 0,
+            barrier
+        );
     }
 
+    // Bandes blanches bien visibles
     for (let i = -2; i <= 2; i++) {
-        box(0.2, 0.85, 0.32, 0xffffff, i * 0.4, 1, 0, barrier);
+        box(
+            0.2, 0.85, 0.34,
+            whiteMaterial,
+            i * 0.4, 1, 0,
+            barrier
+        );
     }
 
     barrier.position.set(lanePositions[laneIndex], 0, z);
@@ -707,21 +758,26 @@ function createBarrier(laneIndex, z) {
 }
 
 // ======================================================
-// PIÈCES
+// PIÈCES - DORÉ PLUS VISIBLE
 // ======================================================
 
 function createCoin(laneIndex, z) {
+    const coinMaterial = new THREE.MeshStandardMaterial({
+        color: 0xffb800,
+        metalness: 0.45,
+        roughness: 0.3,
+        emissive: 0x704000,
+        emissiveIntensity: 0.25
+    });
+
     const coin = new THREE.Mesh(
         new THREE.TorusGeometry(0.4, 0.12, 12, 24),
-        new THREE.MeshStandardMaterial({
-            color: 0xffbd32,
-            metalness: 0.8,
-            roughness: 0.2,
-            emissive: 0x995500
-        })
+        coinMaterial
     );
 
     coin.position.set(lanePositions[laneIndex], 1.3, z);
+    coin.castShadow = true;
+
     scene.add(coin);
     coinObjects.push(coin);
 }
