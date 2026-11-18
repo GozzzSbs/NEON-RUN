@@ -737,3 +737,28 @@ canvas {
         transform: scale(1);
     }
 }
+/* CORRECTION DES CLICS DES MENUS */
+
+#menu {
+    z-index: 20 !important;
+    pointer-events: auto !important;
+}
+
+#gameScreen {
+    z-index: 15 !important;
+    pointer-events: none;
+}
+
+#gameScreen button {
+    pointer-events: auto !important;
+}
+
+#gameOver {
+    z-index: 999999 !important;
+    pointer-events: auto;
+}
+
+#gameOver.hidden {
+    pointer-events: none !important;
+    display: none !important;
+}
