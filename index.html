@@ -15,9 +15,7 @@
 
 <body>
 
-<!-- JEU 3D EN ARRIÈRE-PLAN -->
-
-<canvas id="game"></canvas>
+<div class="background-grid"></div>
 
 <!-- MENU PRINCIPAL -->
 
@@ -38,12 +36,10 @@
         ⚡ BIENVENUE DANS NEON RUN
     </div>
 
-    <!-- STATISTIQUES -->
-
     <div class="statistics">
 
         <div class="stat-card">
-            <strong id="menuBest">00m00s</strong>
+            <strong>00m00s</strong>
             <small>Record</small>
         </div>
 
@@ -69,119 +65,82 @@
 
     </div>
 
-    <!-- DIFFICULTÉ -->
-
     <h3 class="section-title">DIFFICULTÉ</h3>
 
     <div class="difficulty-buttons">
 
-        <button onclick="setDifficulty('facile',this)">
-            Facile
-        </button>
-
-        <button class="active" onclick="setDifficulty('normal',this)">
-            Normal
-        </button>
-
-        <button onclick="setDifficulty('difficile',this)">
-            Difficile
-        </button>
-
-        <button onclick="setDifficulty('extreme',this)">
-            Extrême
-        </button>
+        <button onclick="setDifficulty('facile',this)">Facile</button>
+        <button class="active" onclick="setDifficulty('normal',this)">Normal</button>
+        <button onclick="setDifficulty('difficile',this)">Difficile</button>
+        <button onclick="setDifficulty('extreme',this)">Extrême</button>
 
     </div>
-
-    <!-- MODES -->
 
     <h3 class="section-title">MODE DE JEU</h3>
 
     <div class="mode-buttons">
 
-        <button class="active" onclick="selectGameMode('classic',this)">
+        <button class="active" onclick="selectMode('classic',this)">
             Classique
         </button>
 
-        <button onclick="selectGameMode('lava',this)">
+        <button onclick="selectMode('nocoin',this)">
+            Sans pièces
+        </button>
+
+        <button onclick="selectMode('lava',this)">
             Le sol est de la lave
-        </button>
-
-        <button onclick="selectGameMode('duel',this)">
-            Duel contre l'IA
-        </button>
-
-        <button onclick="selectGameMode('coins',this)">
-            Pièces en skate
         </button>
 
     </div>
 
-    <!-- DESCRIPTION -->
-
     <div class="rules-panel">
-
         <p id="modeDescription">
             Évite les trains et les barrières.<br>
             Saute par-dessus les obstacles.<br>
             Glisse pour éviter les obstacles en hauteur.<br>
             Ramasse les pièces et bats ton record !
         </p>
-
     </div>
-
-    <!-- JOUER -->
 
     <button class="play-button" onclick="startGame()">
         JOUER
     </button>
 
-    <!-- BOUTONS -->
-
     <div class="small-buttons">
-
         <button>Profil</button>
         <button>Social</button>
         <button>Réglages</button>
-
     </div>
 
     <div class="secondary-buttons">
-
         <button>Amis</button>
         <button>Chat</button>
         <button>Classement</button>
-
         <button>Passe</button>
         <button>Quêtes</button>
         <button>Persos</button>
-
         <button>Boutique</button>
         <button>Compte</button>
         <button>Paramètres</button>
-
     </div>
 
-    <!-- COMMANDES -->
-
     <div class="controls-help">
-
-        <div>
-            <kbd>Q</kbd>
-            <kbd>D</kbd>
-            <kbd>Z</kbd>
-            <kbd>S</kbd>
-        </div>
+        <kbd>Q</kbd>
+        <kbd>D</kbd>
+        <kbd>Z</kbd>
+        <kbd>S</kbd>
+        <kbd>ESPACE</kbd>
 
         <small>
-            Q/D : voies | Z : sauter | S : glisser | Échap : pause
+            Q/D : changer de voie · Z : sauter · S : glisser
         </small>
-
     </div>
 
 </section>
 
-<!-- INTERFACE PENDANT LA PARTIE -->
+
+<!-- JEU 3D -->
 
 <section id="gameScreen" class="hidden">
 
@@ -193,11 +152,9 @@
         </div>
 
         <div class="stats">
-
             <div>SCORE <b id="score">0</b></div>
             <div>COINS <b id="coins">0</b></div>
             <div>BEST <b id="best">0</b></div>
-
         </div>
 
         <button onclick="pauseGame()">Ⅱ PAUSE</button>
@@ -206,7 +163,17 @@
 
     </div>
 
+    <!-- IMPORTANT : LE CANVAS RESTE ICI -->
+
+    <canvas id="game" width="900" height="450"></canvas>
+
+    <div class="gameFooter">
+        <span>Q/D : VOIES · Z : SAUTER · S : GLISSER</span>
+        <button onclick="backToMenu()">← QUITTER</button>
+    </div>
+
 </section>
+
 
 <!-- GAME OVER -->
 
@@ -219,18 +186,22 @@
         <p id="gameOverReason">Tu peux faire mieux !</p>
 
         <div class="resultStats">
-
             <div>SCORE <b id="finalScore">0</b></div>
-
+            <div>COINS <b id="finalCoins">0</b></div>
         </div>
 
-        <button onclick="startGame()">REJOUER</button>
+        <button class="play-button" onclick="startGame()">
+            REJOUER
+        </button>
 
-        <button onclick="backToMenu()">MENU PRINCIPAL</button>
+        <button onclick="backToMenu()">
+            MENU PRINCIPAL
+        </button>
 
     </div>
 
 </div>
+
 
 <script src="game.js"></script>
 
