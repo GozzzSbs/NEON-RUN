@@ -2953,7 +2953,6 @@ async function openLeaderboard() {
 
     players.textContent = "Chargement...";
 
-    // MODE DU CLASSEMENT
     const leaderboardMode = selectedLeaderboardMode || "classic";
     const isNoCoin = leaderboardMode === "nocoin";
 
@@ -2982,6 +2981,57 @@ async function openLeaderboard() {
         return;
     }
 
+    // RÉCUPÉRATION DES JOUEURS CERTIFIÉS
+    const pseudos = [...new Set(data.map(j => j.player_pseudo))];
+
+    const { data: verifiedPlayers, error: verifiedError } = await supabaseClient
+        .from("neon_players")
+        .select("pseudo, verified")
+        .in("pseudo", pseudos)
+        .eq("verified", true);
+
+    if (verifiedError) {
+        console.error("Erreur badges :", verifiedError);
+    }
+
+    const verifiedPseudos = new Set(
+        (verifiedPlayers || []).map(j => j.pseudo)
+    );
+
+    // CRÉATION DU NOM AVEC BADGE
+    function createPlayerName(pseudo) {
+
+        const name = document.createElement("span");
+        name.textContent = pseudo;
+
+        if (verifiedPseudos.has(pseudo)) {
+
+            const badge = document.createElement("span");
+
+            badge.textContent = "✓";
+            badge.title = "Joueur certifié";
+
+            badge.style.cssText = `
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 17px;
+                height: 17px;
+                margin-left: 6px;
+                border-radius: 50%;
+                background: #1DA1F2;
+                color: white;
+                font-size: 12px;
+                font-weight: bold;
+                vertical-align: middle;
+            `;
+
+            name.appendChild(badge);
+        }
+
+        return name;
+    }
+
     // PODIUM
     [1, 0, 2].forEach(index => {
 
@@ -2995,8 +3045,7 @@ async function openLeaderboard() {
             const rank = document.createElement("strong");
             rank.textContent = ["🥇", "🥈", "🥉"][index];
 
-            const name = document.createElement("div");
-            name.textContent = joueur.player_pseudo;
+            const name = createPlayerName(joueur.player_pseudo);
 
             const points = document.createElement("div");
 
@@ -3024,8 +3073,7 @@ async function openLeaderboard() {
         const rank = document.createElement("span");
         rank.textContent = "#" + (index + 1);
 
-        const name = document.createElement("span");
-        name.textContent = joueur.player_pseudo;
+        const name = createPlayerName(joueur.player_pseudo);
 
         const score = document.createElement("span");
 
