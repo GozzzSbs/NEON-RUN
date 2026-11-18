@@ -810,3 +810,83 @@ canvas {
     font-weight: bold;
     cursor: pointer;
 }
+#leaderboardScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    overflow-y: auto;
+    background: #070018;
+    color: white;
+    text-align: center;
+    padding: 30px 15px;
+}
+
+.leaderboard-container {
+    max-width: 750px;
+    margin: auto;
+}
+
+.leaderboard-container h1 {
+    color: #00f7ff;
+    text-shadow: 0 0 15px #00f7ff;
+}
+
+.leaderboard-podium {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 35px 0;
+}
+
+.podium-player {
+    flex: 1;
+    padding: 20px 5px;
+    border: 1px solid #00f7ff;
+    border-radius: 12px;
+    background: #110b30;
+}
+
+.podium-player strong {
+    display: block;
+    color: #00f7ff;
+    font-size: 23px;
+}
+
+.leaderboard-list {
+    margin: 20px 0;
+    border: 1px solid #00f7ff;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.leaderboard-heading,
+.leaderboard-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 8px;
+    padding: 14px 8px;
+}
+
+.leaderboard-heading {
+    background: #14204b;
+    color: #00f7ff;
+    font-weight: bold;
+}
+
+.leaderboard-row {
+    border-top: 1px solid #29204b;
+}
+
+.leaderboard-row:nth-child(even) {
+    background: #110b30;
+}
+
+#leaderboardScreen button {
+    padding: 13px 20px;
+    margin: 8px;
+    border: 1px solid #00f7ff;
+    border-radius: 10px;
+    background: #100b30;
+    color: white;
+    cursor: pointer;
+}
