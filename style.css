@@ -562,3 +562,90 @@ canvas {
         min-width: 55px;
     }
 }
+/* NOTIFICATION DU LOBBY */
+
+#lobbyNotification {
+    position: fixed;
+    z-index: 1000;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+
+    background: #172b50;
+    color: white;
+
+    padding: 13px 22px;
+    border-radius: 14px;
+    border: 1px solid #4d8cff;
+
+    font-weight: bold;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.25s;
+}
+
+#lobbyNotification.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+
+/* FENÊTRES DES BOUTONS */
+
+#lobbyPanel {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+}
+
+#lobbyPanel.visible {
+    display: flex;
+}
+
+.lobby-panel-content {
+    position: relative;
+
+    width: min(420px, 85%);
+    padding: 30px;
+
+    background: #172544;
+    border: 1px solid #5285ff;
+    border-radius: 20px;
+
+    color: white;
+    text-align: center;
+
+    box-shadow: 0 0 35px #245bff55;
+}
+
+.lobby-panel-content h2 {
+    color: #ffcf00;
+    font-size: 26px;
+}
+
+.lobby-panel-content p {
+    line-height: 1.6;
+    color: #d8e4ff;
+}
+
+.close-panel {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+
+    background: #d83248;
+    border: none;
+    border-radius: 8px;
+
+    color: white;
+    padding: 8px 12px;
+
+    cursor: pointer;
+}
