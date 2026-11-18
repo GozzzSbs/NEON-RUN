@@ -2898,7 +2898,6 @@ async function openLeaderboard() {
         players.textContent = "Aucun joueur pour le moment.";
         return;
     }
-}
 
     // PODIUM
     [1, 0, 2].forEach(index => {
