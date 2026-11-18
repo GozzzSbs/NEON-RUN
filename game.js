@@ -1179,9 +1179,27 @@ function moveEnvironment() {
 
 function moveObstacles() {
     obstacles.forEach(obstacle => {
-        const extraSpeed = obstacle.type === "train" ? 1.15 : 1;
 
-        obstacle.object.position.z += speed * extraSpeed;
+        if (obstacle.type === "train") {
+
+            // Le train fonce vers le joueur
+            obstacle.object.position.z += speed * 1.8;
+
+            // Rotation des roues
+            const wheels = obstacle.object.userData.wheels || [];
+
+            wheels.forEach(wheel => {
+                wheel.rotation.x += speed * 0.15;
+            });
+
+            // Légères vibrations du train
+            obstacle.object.position.y =
+                Math.sin(frame * 0.25 + obstacle.object.userData.shake) * 0.025;
+
+        } else {
+
+            obstacle.object.position.z += speed;
+        }
     });
 
     obstacles = obstacles.filter(obstacle => {
@@ -1193,7 +1211,6 @@ function moveObstacles() {
         return true;
     });
 }
-
 function moveCoins() {
     coinObjects.forEach(coin => {
         coin.position.z += speed;
