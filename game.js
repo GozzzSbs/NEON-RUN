@@ -1,3 +1,4 @@
+
 // ============================================
 // NEON RUN 3D - VERSION CORRIGEE
 // ============================================
@@ -65,6 +66,11 @@ let selectedMode = "classic";
 let obstacles = [];
 let coinObjects = [];
 
+let movingBuildings = [];
+let movingTrees = [];
+let movingSleepers = [];
+
+let animationStarted = false;
 let player;
 let playerParts = {};
 
