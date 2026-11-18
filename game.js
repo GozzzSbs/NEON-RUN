@@ -140,7 +140,10 @@ const DIFFICULTY_SETTINGS = {
     difficile: { base: 0.65, start: 1.5, max: 2.1 },
     extreme: { base: 0.75, start: 1.6, max: 2.4 }
 };
-
+function setDifficulty(difficulty) {
+    selectedDifficulty = difficulty;
+    applyDifficultySettings();
+}
 function applyDifficultySettings(reset = true) {
     const settings =
         DIFFICULTY_SETTINGS[difficulty] || DIFFICULTY_SETTINGS.normal;
@@ -2950,3 +2953,4 @@ window.startGame = startGame;
 window.backToMenu = backToMenu;
 window.openLeaderboard = openLeaderboard;
 window.closeLeaderboard = closeLeaderboard;
+window.setDifficulty = setDifficulty;
