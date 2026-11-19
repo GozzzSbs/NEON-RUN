@@ -1045,7 +1045,8 @@ function spawnObjects() {
     const laneA = possibleLanes[0];
     const laneB = possibleLanes[1];
 
-    const pattern = Math.floor(Math.random() * 4);
+    const patterns = [0, 1, 1, 1, 1, 1, 2, 3, 3, 3];
+const pattern = patterns[Math.floor(Math.random() * patterns.length)];
 
     // 1. DOUBLE RANGÉE
     if (pattern === 0) {
