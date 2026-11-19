@@ -3573,3 +3573,26 @@ function getDailyChallenges() {
 
     return challenges;
 }
+function openDailyChallenges() {
+    document.getElementById("menu").classList.add("hidden");
+    document.getElementById("dailyChallengesScreen").classList.remove("hidden");
+
+    const challenges = getDailyChallenges();
+
+    document.getElementById("dailyChallengesList").innerHTML =
+        challenges.map(challenge => `
+            <div class="account-card">
+                <h3>${challenge.name}</h3>
+                <p>Récompense : ${challenge.reward} pièces</p>
+                <p>Objectif : ${challenge.target}</p>
+            </div>
+        `).join("");
+}
+
+function closeDailyChallenges() {
+    document.getElementById("dailyChallengesScreen").classList.add("hidden");
+    document.getElementById("menu").classList.remove("hidden");
+}
+
+window.openDailyChallenges = openDailyChallenges;
+window.closeDailyChallenges = closeDailyChallenges;
