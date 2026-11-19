@@ -1575,7 +1575,34 @@ if (score % 100 === 0) {
         player.position.y += jumpVelocity;
 
         jumpVelocity -= selectedMode === "lava" ? 0.035 : 0.012;
+// DÉTECTION DE L'ATTERRISSAGE SUR UN TRAIN
+if (jumpVelocity < 0) {
+    for (const obstacle of obstacles) {
+        if (obstacle.type !== "train") continue;
 
+        const train = obstacle.object;
+        const roofHeight = 3.78 + train.position.y;
+
+        const sameLane =
+            Math.abs(train.position.x - player.position.x) < 1.2;
+
+        const aboveTrain =
+            Math.abs(train.position.z) < 6.2;
+
+        if (
+            sameLane &&
+            aboveTrain &&
+            previousY >= roofHeight &&
+            player.position.y <= roofHeight
+        ) {
+            player.position.y = roofHeight;
+            jumping = false;
+            jumpVelocity = 0;
+            ridingTrain = train;
+            break;
+        }
+    }
+}
         const landingHeight =
             selectedMode === "lava" ? LAVA_PLATFORM_TOP : 0;
 
