@@ -3541,3 +3541,53 @@ function changeLeaderboardDifficulty(level, button) {
 }
 
 window.changeLeaderboardDifficulty = changeLeaderboardDifficulty;
+// ===============================
+// DÉFIS QUOTIDIENS
+// ===============================
+
+const dailyChallenges = [
+    {
+        id: "score5000",
+        name: "🏃 Atteindre 5000 points",
+        reward: 100,
+        target: 5000
+    },
+    {
+        id: "coins100",
+        name: "🪙 Récolter 100 pièces",
+        reward: 75,
+        target: 100
+    },
+    {
+        id: "runs5",
+        name: "🎮 Jouer 5 parties",
+        reward: 50,
+        target: 5
+    }
+];
+
+function openDailyChallenges() {
+    document.getElementById("menu").classList.add("hidden");
+    document.getElementById("dailyChallengesScreen").classList.remove("hidden");
+    renderDailyChallenges();
+}
+
+function closeDailyChallenges() {
+    document.getElementById("dailyChallengesScreen").classList.add("hidden");
+    document.getElementById("menu").classList.remove("hidden");
+}
+
+window.openDailyChallenges = openDailyChallenges;
+window.closeDailyChallenges = closeDailyChallenges;
+
+function renderDailyChallenges() {
+    const list = document.getElementById("dailyChallengesList");
+
+    list.innerHTML = dailyChallenges.map(challenge => `
+        <div class="account-card">
+            <h3>${challenge.name}</h3>
+            <p>Récompense : ${challenge.reward} pièces</p>
+            <p>Objectif : ${challenge.target}</p>
+        </div>
+    `).join("");
+}
