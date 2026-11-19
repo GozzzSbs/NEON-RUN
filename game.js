@@ -3599,3 +3599,28 @@ function closeDailyChallenges() {
 
 window.openDailyChallenges = openDailyChallenges;
 window.closeDailyChallenges = closeDailyChallenges;
+function updateDailyChallengeProgress(type, amount) {
+    const challenges = getDailyChallenges();
+
+    const today = new Date().toLocaleDateString("fr-CA");
+    const data = JSON.parse(
+        localStorage.getItem("dailyChallengesData") || "{}"
+    );
+
+    if (data.date !== today) return;
+
+    if (!data.progress) data.progress = {};
+
+    challenges.forEach(challenge => {
+        const challengeType = challenge.id.replace(/[0-9]/g, "");
+
+        if (challengeType !== type) return;
+
+        if (data.claimed?.includes(challenge.id)) return;
+
+        data.progress[challenge.id] =
+            (data.progress[challenge.id] || 0) + amount;
+    });
+
+    localStorage.setItem("dailyChallengesData", JSON.stringify(data));
+}
