@@ -1362,17 +1362,17 @@ async function saveScoreToSupabase() {
 
         if (mode === "nocoin") {
 
-            const bestTime = Math.min(
-                ...previousScores
-                    .map(s => Number(s.time_seconds))
-                    .filter(t => Number.isFinite(t) && t > 0)
-            );
+    const bestTime = Math.max(
+        ...previousScores
+            .map(s => Number(s.time_seconds))
+            .filter(t => Number.isFinite(t) && t > 0)
+    );
 
-            if (Number.isFinite(bestTime) && newTime <= bestTime) {
-    console.log("Pas de nouveau record No Coin.");
-    return;
+    if (Number.isFinite(bestTime) && newTime <= bestTime) {
+        console.log("Pas de nouveau record No Coin.");
+        return;
+    }
 }
-
         } else {
 
             const bestScore = Math.max(
