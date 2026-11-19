@@ -1520,12 +1520,13 @@ async function saveScoreToSupabase() {
     const { error: insertError } = await supabaseClient
         .from("neon_scores")
         .insert([{
-            player_pseudo: pseudo,
-            score: newScore,
-            coins: Math.floor(coins),
-            game_mode: mode,
-            time_seconds: newTime
-        }]);
+    player_pseudo: pseudo,
+    score: newScore,
+    coins: Math.floor(coins),
+    game_mode: mode,
+    difficulty: difficulty,
+    time_seconds: newTime
+}]);
 
     if (insertError) {
         console.error("Erreur sauvegarde du record :", insertError);
