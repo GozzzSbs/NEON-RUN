@@ -1056,13 +1056,14 @@ const pattern = patterns[Math.floor(Math.random() * patterns.length)];
         }
     }
 
-    // 2. ZIGZAG
-    if (pattern === 1) {
-        for (let i = 0; i < 10; i++) {
-            const lane = i % 2 === 0 ? laneA : laneB;
-            createCoin(lane, -65 - i * 3);
-        }
+    // 2. ZIGZAG SUR LES 3 VOIES
+if (pattern === 1) {
+    const zigzag = [0, 1, 2, 1, 0, 1, 2, 1, 0, 1];
+
+    for (let i = 0; i < zigzag.length; i++) {
+        createCoin(zigzag[i], -65 - i * 3);
     }
+}
 
     // 3. TUNNEL DE PIÈCES
     if (pattern === 2) {
