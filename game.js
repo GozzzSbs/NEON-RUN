@@ -533,43 +533,108 @@ createPlayer();
 // ======================================================
 
 function createTrain(laneIndex, z) {
+
     const train = new THREE.Group();
 
-    const bodyMaterial = mat(0x183e80, 0x102b66, 0.7);
-    const windowMaterial = mat(0x20dfff, 0x00aaff, 1.7);
-    const neonMaterial = mat(0x9b31ff, 0x7800ff, 2);
+    // 4 STYLES DE TRAINS SPATIAUX
+    const styles = [
+        {
+            name: "Galaxy Blue",
+            body: 0x102b66,
+            neon: 0x00ddff,
+            windows: 0x75f5ff,
+            roof: 0x183e80
+        },
+        {
+            name: "Nebula",
+            body: 0x35105c,
+            neon: 0xff35dd,
+            windows: 0xffaaff,
+            roof: 0x541477
+        },
+        {
+            name: "Cosmic Emerald",
+            body: 0x092c32,
+            neon: 0x00ffbb,
+            windows: 0x80ffe0,
+            roof: 0x12434a
+        },
+        {
+            name: "Solar Galaxy",
+            body: 0x30200c,
+            neon: 0xffaa22,
+            windows: 0xffe49a,
+            roof: 0x50300d
+        }
+    ];
 
-    // Corps du train
+    // Choisir un style au hasard
+    const style = styles[
+        Math.floor(Math.random() * styles.length)
+    ];
+
+    const bodyMaterial = mat(style.body, style.neon, 0.7);
+    const roofMaterial = mat(style.roof, style.neon, 0.5);
+    const neonMaterial = mat(style.neon, style.neon, 2);
+    const windowMaterial = mat(style.windows, style.windows, 1.7);
+
+    // CORPS PRINCIPAL : dimensions conservées
     box(2.55, 3.4, 13, bodyMaterial, 0, 2, 0, train);
 
-    // Avant lumineux
+    // TOIT PLAT ET LARGE : même forme pour garder la surface supérieure
+    box(2.48, 0.08, 12.8, roofMaterial, 0, 3.74, 0, train);
+
+    // LIGNES LUMINEUSES SUR LE TOIT
+    for (const side of [-1, 1]) {
+        box(0.07, 0.04, 12, neonMaterial,
+            side * 1.12, 3.81, 0, train);
+    }
+
+    // PANNEAUX GALAXY SUR LE TOIT
+    for (let zPos = -4.5; zPos <= 4.5; zPos += 3) {
+        box(0.75, 0.035, 1.1, neonMaterial,
+            0, 3.81, zPos, train);
+    }
+
+    // AVANT LUMINEUX
     box(2.4, 1.1, 0.2, neonMaterial, 0, 3, 6.55, train);
     box(1.7, 0.85, 0.12, windowMaterial, 0, 2.8, 6.68, train);
 
-    // Fenêtres
+    // FENÊTRES LATÉRALES
     for (let zPos = -5; zPos <= 4; zPos += 3) {
-        box(0.08, 1, 1.5, windowMaterial, -1.3, 2.8, zPos, train);
-        box(0.08, 1, 1.5, windowMaterial, 1.3, 2.8, zPos, train);
+        box(0.08, 1, 1.5, windowMaterial,
+            -1.3, 2.8, zPos, train);
+
+        box(0.08, 1, 1.5, windowMaterial,
+            1.3, 2.8, zPos, train);
     }
 
     const wheels = [];
 
-    // Lumières et roues
+    // BANDES LUMINEUSES LATÉRALES
     for (const side of [-1, 1]) {
-        box(0.12, 0.12, 12, neonMaterial, side * 1.3, 1.2, 0, train);
 
-        const headlight = new THREE.PointLight(0x22ddff, 4, 25);
+        box(0.12, 0.12, 12, neonMaterial,
+            side * 1.3, 1.2, 0, train);
+
+        const headlight = new THREE.PointLight(
+            style.neon, 3, 25
+        );
+
         headlight.position.set(side * 0.8, 0.8, 7);
         train.add(headlight);
 
-        box(0.4, 0.4, 0.15, 0x9fffff,
+        box(0.4, 0.4, 0.15, style.windows,
             side * 0.8, 0.8, 6.7, train);
     }
 
+    // BAS DU TRAIN
     box(2.3, 0.4, 11, 0x090914, 0, 0.2, 0, train);
 
+    // ROUES
     for (const zPos of [-4, 4]) {
         for (const side of [-1, 1]) {
+
             const wheel = new THREE.Mesh(
                 new THREE.CylinderGeometry(0.38, 0.38, 0.25, 16),
                 mat(0x222233)
@@ -585,9 +650,10 @@ function createTrain(laneIndex, z) {
 
     train.position.set(lanePositions[laneIndex], 0, z);
 
-    // Données d'animation
+    // DONNÉES D'ANIMATION
     train.userData.wheels = wheels;
     train.userData.shake = Math.random() * Math.PI * 2;
+    train.userData.style = style.name;
 
     scene.add(train);
 
