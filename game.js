@@ -85,6 +85,7 @@ let gameEnded = false;
 let animationStarted = false;
 const originalPlayerMaterials = new Map();
 let equippedSkin = localStorage.getItem("neonEquippedSkin") || "default";
+let shopCapeObject = null;
 let score = 0;
 let coins = 0;
 // TIMER NO COIN
@@ -1853,7 +1854,7 @@ if (!ownedCapes.includes("nr")) {
 let currentShopTab = "skins";
 
 let shopElement = null;
-let shopCapeObject = null;
+
 
 
 // ======================================================
