@@ -1521,7 +1521,7 @@ async function saveScoreToSupabase() {
     score: newScore,
     coins: Math.floor(coins),
     game_mode: mode,
-    difficulty: difficulty,
+    difficulty: window.difficulty || difficulty,
     time_seconds: newTime
 }]);
 
