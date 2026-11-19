@@ -344,7 +344,7 @@ createNebula(-70, 25, -210, 0x13cfff, 28);
 
 const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(300, 350),
-    mat(0x100d24)
+    mat(0x10251b)
 );
 
 floor.rotation.x = -Math.PI / 2;
@@ -363,7 +363,7 @@ normalTrackMeshes.push(road);
 for (const x of [-5.8, 5.8]) {
     const edge = box(
         0.12, 0.12, 220,
-        mat(0x9c25ff, 0x8b00ff, 1.5),
+        mat(0x35ff8a, 0x087a38, 1.5)
         x, -0.05, -80
     );
 
