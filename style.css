@@ -1034,3 +1034,184 @@ canvas {
         padding: 20px;
     }
 }
+/* ==========================================
+   NEON RUN — THÈME MÉTRO NOCTURNE
+   À AJOUTER TOUT EN BAS DU CSS
+========================================== */
+
+body {
+    background: #101318;
+    color: #f4f4f4;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.background-grid {
+    background:
+        radial-gradient(circle at 80% 15%, #343b46, transparent 42%),
+        linear-gradient(#252b33 1px, transparent 1px),
+        linear-gradient(90deg, #252b33 1px, transparent 1px);
+    background-size: auto, 40px 40px, 40px 40px;
+}
+
+.brand h1 {
+    color: #ffb52e;
+    text-shadow: 0 0 18px #ff9d2533;
+}
+
+.brand h1 span {
+    color: #ff5538;
+}
+
+.status,
+.hero p:first-child {
+    color: #ffb52e;
+}
+
+.panel,
+.account-container,
+.lobby-panel-content,
+.profile-box,
+.podium-player {
+    background: linear-gradient(145deg, #252c36, #171c23);
+    border-color: #59616d;
+    box-shadow: 0 8px 25px #0006;
+}
+
+#menu button {
+    background: linear-gradient(145deg, #303945, #202630);
+    border: 1px solid #59616d;
+    color: #fff;
+    transition: .2s ease;
+}
+
+#menu button:hover {
+    border-color: #ffb52e;
+    box-shadow: 0 0 12px #ffb52e33;
+    transform: translateY(-2px);
+}
+
+#menu button.active {
+    background: #ffb52e;
+    color: #171717;
+    border-color: #ffcf70;
+}
+
+.mode-buttons button.active {
+    background: #e96832;
+    color: white;
+}
+
+.play-button {
+    background: linear-gradient(180deg, #ffd15c, #f39a18) !important;
+    color: #171717 !important;
+    box-shadow: 0 5px 0 #a65d0b;
+}
+
+.play-button:hover {
+    box-shadow: 0 5px 0 #a65d0b, 0 0 22px #ffad3555;
+}
+
+.stat-card {
+    background: #29323e;
+    border-color: #697584;
+}
+
+.stat-card small {
+    color: #d0d6df;
+}
+
+#accountScreen {
+    background:
+        radial-gradient(circle at top, #424b59, #101318 70%);
+}
+
+.account-avatar {
+    background: linear-gradient(135deg, #e96832, #ffb52e);
+    box-shadow: 0 0 22px #ff9d2566;
+}
+
+.account-header h1,
+.account-card strong {
+    color: #ffb52e;
+    text-shadow: 0 0 12px #ff9d2544;
+}
+
+.account-card {
+    background: linear-gradient(145deg, #303945, #1b222c);
+    border-color: #bd752f;
+    box-shadow: 0 0 15px #ff9d2522;
+}
+
+.account-card small,
+.account-header p {
+    color: #c5cbd4;
+}
+
+.account-info {
+    background: #202832;
+    border-color: #59616d;
+}
+
+.account-info h3 {
+    color: #ffb52e;
+}
+
+.account-back {
+    background: #303945;
+    border-color: #ffb52e;
+}
+
+.account-back:hover {
+    background: #bd752f;
+    box-shadow: 0 0 18px #ffb52e55;
+}
+
+#leaderboardScreen {
+    background: #101318;
+}
+
+#leaderboardScreen h1,
+.leaderboard-heading {
+    color: #ffb52e;
+    text-shadow: 0 0 12px #ffb52e33;
+}
+
+.leaderboard-list {
+    border-color: #59616d;
+}
+
+.leaderboard-heading {
+    background: #303945;
+}
+
+.leaderboard-row:nth-child(even) {
+    background: #202832;
+}
+
+#leaderboardScreen button {
+    background: #29323e;
+    border-color: #bd752f;
+}
+
+#leaderboardScreen button:hover {
+    background: #bd752f;
+}
+
+#gameOver .result {
+    background: linear-gradient(145deg, #303945, #101318);
+    border-color: #ffb52e;
+    box-shadow: 0 0 30px #ff9d2544;
+}
+
+#gameOver .play-button {
+    background: linear-gradient(90deg, #e96832, #ffb52e) !important;
+}
+
+#lobbyNotification {
+    background: #29323e;
+    border-color: #ffb52e;
+}
+
+.lobby-panel-content h2 {
+    color: #ffb52e;
+}
