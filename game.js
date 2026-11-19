@@ -1524,7 +1524,7 @@ console.log("DIFFICULTÉ ENREGISTRÉE :", difficulty, window.difficulty);
     score: newScore,
     coins: Math.floor(coins),
     game_mode: mode,
-    difficulty: window.difficulty || difficulty,
+    difficulty: currentDifficulty,
     time_seconds: newTime
 }]);
 
