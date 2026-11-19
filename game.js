@@ -83,7 +83,7 @@ let running = false;
 let paused = false;
 let gameEnded = false;
 let animationStarted = false;
-
+const originalPlayerMaterials = new Map();
 let score = 0;
 let coins = 0;
 // TIMER NO COIN
@@ -1854,7 +1854,6 @@ let currentShopTab = "skins";
 let shopElement = null;
 let shopCapeObject = null;
 
-const originalPlayerMaterials = new Map();
 
 // ======================================================
 // SAUVEGARDE DES ACHATS
