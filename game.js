@@ -102,6 +102,7 @@ let lane = 1;
 let targetX = 0;
 
 let jumping = false;
+let ridingTrain = null;
 let sliding = false;
 let jumpVelocity = 0;
 let slideTimer = 0;
