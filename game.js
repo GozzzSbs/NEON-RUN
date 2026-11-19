@@ -3643,3 +3643,25 @@ function claimDailyChallenge(id) {
 }
 
 window.claimDailyChallenge = claimDailyChallenge;
+function updateDailyChallengeProgress(type, amount) {
+    const data = JSON.parse(
+        localStorage.getItem("dailyChallengesData") || "{}"
+    );
+
+    if (!data.progress) data.progress = {};
+    if (!data.claimed) data.claimed = [];
+
+    const challenges = getDailyChallenges();
+
+    challenges.forEach(challenge => {
+        const challengeType = challenge.id.replace(/[0-9]/g, "");
+
+        if (challengeType !== type) return;
+        if (data.claimed.includes(challenge.id)) return;
+
+        data.progress[challenge.id] =
+            (data.progress[challenge.id] || 0) + amount;
+    });
+
+    localStorage.setItem("dailyChallengesData", JSON.stringify(data));
+}
