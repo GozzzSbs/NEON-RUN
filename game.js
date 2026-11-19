@@ -1368,10 +1368,10 @@ async function saveScoreToSupabase() {
                     .filter(t => Number.isFinite(t) && t > 0)
             );
 
-            if (Number.isFinite(bestTime) && newTime >= bestTime) {
-                console.log("Pas de nouveau record No Coin.");
-                return;
-            }
+            if (Number.isFinite(bestTime) && newTime <= bestTime) {
+    console.log("Pas de nouveau record No Coin.");
+    return;
+}
 
         } else {
 
