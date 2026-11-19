@@ -1785,6 +1785,7 @@ function startGame() {
     }
 
     running = true;
+    updateDailyChallengeProgress("runs", 1);
 paused = false;
 gameEnded = false;
 
