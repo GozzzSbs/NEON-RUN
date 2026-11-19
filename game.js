@@ -669,95 +669,158 @@ function createTrain(laneIndex, z) {
 // ======================================================
 
 function createBarrier(laneIndex, z) {
+
     const barrier = new THREE.Group();
 
-    const red = mat(0xff263f, 0x990018, 1);
-    const blue = mat(0x00dfff, 0x0077ff, 2);
-    const purple = mat(0xb42cff, 0x7800ff, 2);
-    const yellow = mat(0xffd000, 0xff8800, 1.5);
-    const metal = mat(0x777788, 0x222233, 0.5);
+    // MATÉRIAUX GALAXY
+    const red = mat(0xff244f, 0x990020, 1.5);
+    const white = mat(0xeafaff, 0x80dfff, 1);
+    const blue = mat(0x087cff, 0x003bff, 2);
+    const cyan = mat(0x00eaff, 0x0088ff, 2);
+    const purple = mat(0x9b31ff, 0x6200ff, 2);
+    const metal = mat(0x252b49, 0x10152e, 0.8);
 
-    // Choisir un modèle au hasard
-    const variant = Math.floor(Math.random() * 5);
+    // 3 MODÈLES AU HASARD
+    const variant = Math.floor(Math.random() * 3);
 
-    if (variant === 0) {
-        // BARRIÈRE CLASSIQUE ROUGE
-        box(2.1, 0.8, 0.3, red, 0, 1, 0, barrier);
-
-        for (const side of [-1, 1]) {
-            box(0.15, 1.3, 0.2, metal, side * 0.8, 0.65, 0, barrier);
-        }
-
-        for (let i = -2; i <= 2; i++) {
-            box(0.2, 0.85, 0.32, metal, i * 0.4, 1, 0, barrier);
-        }
-    }
-
-    else if (variant === 1) {
-        // BARRIÈRE LASER BLEUE
-        for (const side of [-1, 1]) {
-            box(0.25, 2.2, 0.3, blue, side * 1, 1.1, 0, barrier);
-        }
-
-        box(2.1, 0.12, 0.15, blue, 0, 2, 0, barrier);
-        box(2.1, 0.12, 0.15, blue, 0, 0.5, 0, barrier);
-
-        const laser = new THREE.Mesh(
-            new THREE.BoxGeometry(1.8, 0.15, 0.2),
-            new THREE.MeshBasicMaterial({
-                color: 0x00ffff,
-                transparent: true,
-                opacity: 0.9
-            })
+    // PETITE FONCTION POUR LES SPHÈRES
+    function orb(x, y, z, radius, material) {
+        const sphere = new THREE.Mesh(
+            new THREE.SphereGeometry(radius, 20, 16),
+            material
         );
 
-        laser.position.y = 1.2;
-        barrier.add(laser);
+        sphere.position.set(x, y, z);
+        barrier.add(sphere);
     }
 
-    else if (variant === 2) {
-        // DOUBLE BARRIÈRE ÉLECTRIQUE
+    // PETITE FONCTION POUR LES BANDES
+    function stripe(x, y, rotation) {
+        const mesh = new THREE.Mesh(
+            new THREE.BoxGeometry(0.38, 0.9, 0.16),
+            red
+        );
+
+        mesh.position.set(x, y, 0);
+        mesh.rotation.z = rotation;
+        barrier.add(mesh);
+    }
+
+    // =================================================
+    // MODÈLE 1 : GRANDE BARRIÈRE SUSPENDUE
+    // =================================================
+
+    if (variant === 0) {
+
+        // Supports latéraux
         for (const side of [-1, 1]) {
-            box(0.5, 1.8, 0.5, purple, side * 0.75, 0.9, 0, barrier);
 
-            box(0.65, 0.18, 0.6, yellow,
-                side * 0.75, 1.9, 0, barrier);
+            box(0.18, 2.5, 0.25,
+                metal, side * 1.05, 1.25, 0, barrier);
+
+            box(0.24, 0.12, 0.3,
+                cyan, side * 1.05, 2.5, 0, barrier);
+
+            // Boules d'énergie
+            orb(side * 0.92, 2.55, 0, 0.25, blue);
         }
 
-        box(1.7, 0.18, 0.3, purple, 0, 1.1, 0, barrier);
-        box(1.7, 0.18, 0.3, yellow, 0, 0.65, 0, barrier);
+        // Panneau rayé
+        box(2.1, 1.15, 0.35,
+            red, 0, 2.15, 0, barrier);
+
+        // Bandes blanches
+        for (let i = -2; i <= 2; i++) {
+            stripe(i * 0.4, 2.15, 0);
+        }
+
+        // Contour lumineux
+        box(2.2, 0.08, 0.42,
+            cyan, 0, 2.75, 0, barrier);
+
+        // Énergie au centre
+        box(0.12, 0.95, 0.43,
+            purple, 0, 2.15, -0.03, barrier);
     }
-        
-else if (variant === 3) {
-    // BARRIÈRE HAUTE : OBLIGE À GLISSER
-    const metal = mat(0x555577, 0x222244, 0.8);
-    const red = mat(0xff1744, 0xaa0022, 2);
 
-    // Deux piliers latéraux
-    for (const side of [-1, 1]) {
-        box(0.25, 2.8, 0.35, metal, side * 1.05, 1.4, 0, barrier);
+    // =================================================
+    // MODÈLE 2 : BARRIÈRE SUR PLATEFORME
+    // =================================================
+
+    else if (variant === 1) {
+
+        // Base futuriste
+        box(2.35, 0.25, 0.7,
+            blue, 0, 0.15, 0, barrier);
+
+        box(2.1, 0.08, 0.74,
+            cyan, 0, 0.3, 0, barrier);
+
+        // Montants
+        for (const side of [-1, 1]) {
+
+            box(0.2, 1.4, 0.3,
+                metal, side * 0.85, 0.9, 0, barrier);
+
+            box(0.3, 0.3, 0.35,
+                purple, side * 0.85, 1.65, 0, barrier);
+
+            orb(side * 0.85, 1.85, 0, 0.22, cyan);
+        }
+
+        // Panneau central
+        box(2.1, 0.85, 0.35,
+            red, 0, 1.55, 0, barrier);
+
+        // Bandes blanches
+        for (let i = -2; i <= 2; i++) {
+            stripe(i * 0.4, 1.55, 0);
+        }
+
+        // Ligne lumineuse supérieure
+        box(2.2, 0.08, 0.4,
+            cyan, 0, 2.02, 0, barrier);
     }
 
-    // Grande barre horizontale placée en hauteur
-    box(2.3, 0.45, 0.4, red, 0, 2.45, 0, barrier);
+    // =================================================
+    // MODÈLE 3 : BARRIÈRE BASSE À SAUTER
+    // =================================================
 
-    // Bande lumineuse
-    box(2.2, 0.08, 0.43, 0xffaaaa, 0, 2.45, 0, barrier);
-}
     else {
-        // BARRIÈRE MÉTALLIQUE FUTURISTE
-        box(2.2, 1.3, 0.5, metal, 0, 0.8, 0, barrier);
 
-        box(2.3, 0.15, 0.55, yellow, 0, 1.5, 0, barrier);
+        // Panneau principal
+        box(2.1, 1.05, 0.35,
+            red, 0, 0.95, 0, barrier);
 
-        for (let i = -1; i <= 1; i++) {
-            box(0.15, 1.1, 0.58, red, i * 0.7, 0.85, 0, barrier);
+        // Bandes blanches
+        for (let i = -2; i <= 2; i++) {
+            stripe(i * 0.4, 0.95, 0);
         }
 
-        box(2.3, 0.12, 0.55, purple, 0, 0.15, 0, barrier);
+        // Grosses sphères latérales
+        for (const side of [-1, 1]) {
+
+            orb(side * 1.08, 1.35, 0, 0.28, blue);
+
+            box(0.16, 0.9, 0.25,
+                metal, side * 1.08, 0.45, 0, barrier);
+        }
+
+        // Socle
+        box(2.25, 0.18, 0.55,
+            metal, 0, 0.08, 0, barrier);
+
+        // Ligne d'énergie
+        box(2.15, 0.07, 0.4,
+            cyan, 0, 1.5, 0, barrier);
     }
 
-    barrier.position.set(lanePositions[laneIndex], 0, z);
+    // POSITION
+    barrier.position.set(
+        lanePositions[laneIndex],
+        0,
+        z
+    );
 
     scene.add(barrier);
 
