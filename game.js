@@ -363,7 +363,7 @@ normalTrackMeshes.push(road);
 for (const x of [-5.8, 5.8]) {
     const edge = box(
         0.12, 0.12, 220,
-        mat(0x35ff8a, 0x087a38, 1.5)
+                mat(0x35ff8a, 0x087a38, 1.5),
         x, -0.05, -80
     );
 
