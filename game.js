@@ -1727,7 +1727,13 @@ function startGame() {
         soonScreen.style.display = "flex";
         return;
     }
+let runsPlayed = Number(
+    localStorage.getItem("neonRunsPlayed") || 0
+);
 
+runsPlayed++;
+
+localStorage.setItem("neonRunsPlayed", runsPlayed);
     score = 0;
     coins = 0;
 
@@ -3475,3 +3481,79 @@ function closeLeaderboard() {
 }
 
 window.closeLeaderboard = closeLeaderboard;
+// ======================================
+// PROFIL DU JOUEUR NEON RUN
+// ======================================
+
+async function openAccount() {
+
+    document.getElementById("menu").classList.add("hidden");
+
+    document.getElementById("accountScreen")
+        .classList.remove("hidden");
+
+    const pseudo = localStorage.getItem("neonPlayerPseudo") || "RUNNER";
+
+    document.getElementById("accountPseudo").textContent = pseudo;
+
+    document.getElementById("accountRuns").textContent =
+        localStorage.getItem("neonRunsPlayed") || 0;
+
+    document.getElementById("accountClassic").textContent = "…";
+    document.getElementById("accountNoCoin").textContent = "…";
+
+    if (!supabaseClient) {
+        document.getElementById("accountClassic").textContent = "—";
+        document.getElementById("accountNoCoin").textContent = "—";
+        return;
+    }
+
+    const { data, error } = await supabaseClient
+        .from("neon_scores")
+        .select("score, time_seconds")
+        .eq("player_pseudo", pseudo)
+        .in("game_mode", ["classic", "nocoin"]);
+
+    if (error) {
+        console.error("Erreur profil :", error);
+
+        document.getElementById("accountClassic").textContent = "Erreur";
+        document.getElementById("accountNoCoin").textContent = "Erreur";
+        return;
+    }
+
+    const scores = data || [];
+
+    const classicScores = scores
+        .filter(s => Number.isFinite(Number(s.score)));
+
+    const noCoinTimes = scores
+        .map(s => Number(s.time_seconds))
+        .filter(t => Number.isFinite(t) && t > 0);
+
+    const bestClassic = classicScores.length
+        ? Math.max(...classicScores.map(s => Number(s.score)))
+        : 0;
+
+    const bestNoCoin = noCoinTimes.length
+        ? Math.max(...noCoinTimes)
+        : 0;
+
+    document.getElementById("accountClassic").textContent =
+        bestClassic;
+
+    document.getElementById("accountNoCoin").textContent =
+        bestNoCoin.toFixed(2) + " s";
+}
+
+function closeAccount() {
+
+    document.getElementById("accountScreen")
+        .classList.add("hidden");
+
+    document.getElementById("menu")
+        .classList.remove("hidden");
+}
+
+window.openAccount = openAccount;
+window.closeAccount = closeAccount;
