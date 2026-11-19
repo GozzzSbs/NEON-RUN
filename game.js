@@ -1546,7 +1546,9 @@ function animate() {
     frame++;
 
     score++;
-
+if (score % 100 === 0) {
+    updateDailyChallengeProgress("score", 100);
+}
     checkDiamondMilestones();
 
     speedMultiplier = Math.min(
