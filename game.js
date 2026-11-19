@@ -1411,7 +1411,7 @@ function moveEnvironment() {
         }
     });
 
-    
+}
 
 // ======================================================
 // OBSTACLES ET TRAINS
