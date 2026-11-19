@@ -3139,7 +3139,8 @@ const leaderboardDifficulty = window.selectedLeaderboardDifficulty || "facile";
         .from("neon_scores")
         .select("player_pseudo, score, game_mode, time_seconds, difficulty")
         .eq("game_mode", leaderboardMode)
-        .limit(1000);
+.eq("difficulty", leaderboardDifficulty)
+.limit(1000);
 
     if (error) {
         players.textContent = "Erreur de chargement.";
