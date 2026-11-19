@@ -3475,15 +3475,51 @@ function closeLeaderboard() {
 }
 
 window.closeLeaderboard = closeLeaderboard;
-function openAccount() {
+async function openAccount() {
     document.getElementById("menu").classList.add("hidden");
     document.getElementById("accountScreen").classList.remove("hidden");
-}
 
-function closeAccount() {
-    document.getElementById("accountScreen").classList.add("hidden");
-    document.getElementById("menu").classList.remove("hidden");
-}
+    const pseudo = localStorage.getItem("neonPlayerPseudo") || "RUNNER";
 
-window.openAccount = openAccount;
-window.closeAccount = closeAccount;
+    document.getElementById("accountPseudo").textContent = pseudo;
+    document.getElementById("accountRuns").textContent =
+        localStorage.getItem("neonRunsPlayed") || 0;
+
+    document.getElementById("accountClassic").textContent = "Chargement...";
+    document.getElementById("accountNoCoin").textContent = "Chargement...";
+
+    if (!supabaseClient) {
+        document.getElementById("accountClassic").textContent = "—";
+        document.getElementById("accountNoCoin").textContent = "—";
+        return;
+    }
+
+    const { data, error } = await supabaseClient
+        .from("neon_scores")
+        .select("score, time_seconds, game_mode")
+        .eq("player_pseudo", pseudo);
+
+    if (error) {
+        console.error("Erreur profil :", error);
+        document.getElementById("accountClassic").textContent = "Erreur";
+        document.getElementById("accountNoCoin").textContent = "Erreur";
+        return;
+    }
+
+    const scores = data || [];
+
+    const classic = scores.filter(s => s.game_mode === "classic");
+    const noCoin = scores.filter(s => s.game_mode === "nocoin");
+
+    const bestClassic = classic.length
+        ? Math.max(...classic.map(s => Number(s.score) || 0))
+        : 0;
+
+    const bestNoCoin = noCoin.length
+        ? Math.max(...noCoin.map(s => Number(s.time_seconds) || 0))
+        : 0;
+
+    document.getElementById("accountClassic").textContent = bestClassic;
+    document.getElementById("accountNoCoin").textContent =
+        bestNoCoin.toFixed(2) + " s";
+}
