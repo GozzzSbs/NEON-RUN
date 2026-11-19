@@ -3131,7 +3131,8 @@ async function openLeaderboard() {
     players.textContent = "Chargement...";
 
     const leaderboardMode = selectedLeaderboardMode || "classic";
-    const isNoCoin = leaderboardMode === "nocoin";
+const isNoCoin = leaderboardMode === "nocoin";
+const leaderboardDifficulty = window.selectedLeaderboardDifficulty || "facile";
 
     // RÉCUPÉRER LES SCORES
     const { data, error } = await supabaseClient
