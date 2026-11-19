@@ -1123,7 +1123,7 @@ function jump() {
     player.scale.y = 1;
 
     jumping = true;
-    jumpVelocity = selectedMode === "lava" ? 0.32 : 0.22;
+    jumpVelocity = 0.32;
 }
 
 function slide() {
