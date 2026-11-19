@@ -3580,47 +3580,66 @@ function openDailyChallenges() {
     document.getElementById("menu").classList.add("hidden");
     document.getElementById("dailyChallengesScreen").classList.remove("hidden");
 
-    const challenges = getDailyChallenges();
-
-    document.getElementById("dailyChallengesList").innerHTML =
-        challenges.map(challenge => `
-            <div class="account-card">
-                <h3>${challenge.name}</h3>
-                <p>Récompense : ${challenge.reward} pièces</p>
-                <p>Objectif : ${challenge.target}</p>
-            </div>
-        `).join("");
+    renderDailyChallenges();
 }
 
-function closeDailyChallenges() {
-    document.getElementById("dailyChallengesScreen").classList.add("hidden");
-    document.getElementById("menu").classList.remove("hidden");
-}
-
-window.openDailyChallenges = openDailyChallenges;
-window.closeDailyChallenges = closeDailyChallenges;
-function updateDailyChallengeProgress(type, amount) {
+function renderDailyChallenges() {
     const challenges = getDailyChallenges();
-
-    const today = new Date().toLocaleDateString("fr-CA");
-    const data = JSON.parse(
-        localStorage.getItem("dailyChallengesData") || "{}"
-    );
-
-    if (data.date !== today) return;
+    const data = JSON.parse(localStorage.getItem("dailyChallengesData") || "{}");
 
     if (!data.progress) data.progress = {};
-
-    challenges.forEach(challenge => {
-        const challengeType = challenge.id.replace(/[0-9]/g, "");
-
-        if (challengeType !== type) return;
-
-        if (data.claimed?.includes(challenge.id)) return;
-
-        data.progress[challenge.id] =
-            (data.progress[challenge.id] || 0) + amount;
-    });
+    if (!data.claimed) data.claimed = [];
 
     localStorage.setItem("dailyChallengesData", JSON.stringify(data));
+
+    document.getElementById("dailyChallengesList").innerHTML =
+        challenges.map(challenge => {
+            const progress = Math.min(
+                data.progress[challenge.id] || 0,
+                challenge.target
+            );
+
+            const claimed = data.claimed.includes(challenge.id);
+            const completed = progress >= challenge.target;
+
+            return `
+                <div class="account-card">
+                    <h3>${challenge.name}</h3>
+                    <p>💎 ${challenge.reward} diamants</p>
+                    <p>Progression : ${progress} / ${challenge.target}</p>
+
+                    <div style="background:#222;border-radius:10px;height:10px;margin:12px 0;">
+                        <div style="background:#00eaff;width:${progress / challenge.target * 100}%;height:10px;border-radius:10px;"></div>
+                    </div>
+
+                    ${
+                        claimed
+                        ? '<p>✅ RÉCOMPENSE RÉCUPÉRÉE</p>'
+                        : completed
+                            ? `<button onclick="claimDailyChallenge('${challenge.id}')">💎 RÉCUPÉRER</button>`
+                            : '<p>🔒 EN COURS</p>'
+                    }
+                </div>
+            `;
+        }).join("");
 }
+
+function claimDailyChallenge(id) {
+    const data = JSON.parse(localStorage.getItem("dailyChallengesData") || "{}");
+    const challenge = getDailyChallenges().find(c => c.id === id);
+
+    if (!challenge || !data.progress || !data.claimed) return;
+    if (data.claimed.includes(id)) return;
+    if ((data.progress[id] || 0) < challenge.target) return;
+
+    data.claimed.push(id);
+
+    shopDiamonds += challenge.reward;
+    localStorage.setItem("neonDiamonds", shopDiamonds);
+    localStorage.setItem("dailyChallengesData", JSON.stringify(data));
+
+    updateShopWallet();
+    renderDailyChallenges();
+}
+
+window.claimDailyChallenge = claimDailyChallenge;
