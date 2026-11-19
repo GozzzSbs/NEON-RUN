@@ -3526,3 +3526,18 @@ async function openAccount() {
     document.getElementById("accountNoCoin").textContent =
         bestNoCoin.toFixed(2) + " s";
 }
+window.selectedLeaderboardDifficulty = "facile";
+
+function changeLeaderboardDifficulty(level, button) {
+
+    window.selectedLeaderboardDifficulty = level;
+
+    document.querySelectorAll(".difficulty-leaderboard-tabs button")
+        .forEach(b => b.classList.remove("active"));
+
+    button.classList.add("active");
+
+    openLeaderboard();
+}
+
+window.changeLeaderboardDifficulty = changeLeaderboardDifficulty;
