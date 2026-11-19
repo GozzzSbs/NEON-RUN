@@ -3555,19 +3555,25 @@ const dailyChallengePool = [
     { id: "coins50", name: "🪙 Récolter 50 pièces", reward: 75, target: 50 },
     { id: "coins100", name: "💰 Récolter 100 pièces", reward: 150, target: 100 },
     { id: "runs3", name: "🎮 Jouer 3 parties", reward: 40, target: 3 },
+   const dailyChallengePool = [
+    { id: "score1000", name: "🏃 Atteindre 1000 points", reward: 30, target: 1000 },
+    { id: "score5000", name: "🏃 Atteindre 5000 points", reward: 100, target: 5000 },
+    { id: "score10000", name: "🏆 Atteindre 10000 points", reward: 200, target: 10000 },
+    { id: "coins20", name: "🪙 Récolter 20 pièces", reward: 30, target: 20 },
+    { id: "coins50", name: "🪙 Récolter 50 pièces", reward: 75, target: 50 },
+    { id: "coins100", name: "💰 Récolter 100 pièces", reward: 150, target: 100 },
+    { id: "runs3", name: "🎮 Jouer 3 parties", reward: 40, target: 3 },
     { id: "runs5", name: "🎮 Jouer 5 parties", reward: 80, target: 5 },
     { id: "runs10", name: "🔥 Jouer 10 parties", reward: 150, target: 10 }
 ];
 
 function getDailyChallenges() {
     const today = new Date().toLocaleDateString("fr-CA");
-
     const saved = JSON.parse(localStorage.getItem("dailyChallengesData") || "{}");
 
     if (saved.date === today) return saved.challenges;
 
     const shuffled = [...dailyChallengePool].sort(() => Math.random() - 0.5);
-
     const challenges = shuffled.slice(0, 3);
 
     localStorage.setItem("dailyChallengesData", JSON.stringify({
@@ -3577,4 +3583,3 @@ function getDailyChallenges() {
 
     return challenges;
 }
-```
