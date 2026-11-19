@@ -1324,36 +1324,83 @@ saveScoreToSupabase().catch(error => {
 
 async function saveScoreToSupabase() {
 
-   const pseudo = localStorage.getItem("neonPlayerPseudo");
+    const pseudo = localStorage.getItem("neonPlayerPseudo");
 
-if (!pseudo || pseudo.trim() === "" || pseudo === "TON_PSEUDO") {
-    console.warn("Pseudo invalide : score non enregistré.");
-    return;
-} 
+    if (!pseudo || pseudo.trim() === "" || pseudo === "TON_PSEUDO") {
+        console.warn("Pseudo invalide : score non enregistré.");
+        return;
+    }
 
     if (!supabaseClient) {
         console.warn("Supabase n'est pas connecté !");
         return;
     }
 
-    const { data, error } = await supabaseClient
-        .from("neon_scores")
-        .insert([
-    {
-        player_pseudo: pseudo,
-        score: Math.floor(score),
-        coins: Math.floor(coins),
-        game_mode: selectedMode || "classic",
-        time_seconds: selectedMode === "nocoin"
-            ? Number(noCoinElapsed.toFixed(2))
-            : null
-    }
-]);
+    const mode = selectedMode || "classic";
 
-    if (error) {
-        console.error("Erreur sauvegarde du score :", error);
+    const newScore = Math.floor(score);
+
+    const newTime = mode === "nocoin"
+        ? Number(noCoinElapsed.toFixed(2))
+        : null;
+
+    // Récupérer les anciens records du joueur dans ce mode
+    const { data: previousScores, error: fetchError } =
+        await supabaseClient
+            .from("neon_scores")
+            .select("score, time_seconds")
+            .eq("player_pseudo", pseudo)
+            .eq("game_mode", mode);
+
+    if (fetchError) {
+        console.error("Erreur récupération record :", fetchError);
+        return;
+    }
+
+    // Vérifier si le joueur a déjà un record
+    if (previousScores && previousScores.length > 0) {
+
+        if (mode === "nocoin") {
+
+            const bestTime = Math.min(
+                ...previousScores
+                    .map(s => Number(s.time_seconds))
+                    .filter(t => Number.isFinite(t) && t > 0)
+            );
+
+            if (Number.isFinite(bestTime) && newTime >= bestTime) {
+                console.log("Pas de nouveau record No Coin.");
+                return;
+            }
+
+        } else {
+
+            const bestScore = Math.max(
+                ...previousScores.map(s => Number(s.score))
+            );
+
+            if (newScore <= bestScore) {
+                console.log("Pas de nouveau record classique.");
+                return;
+            }
+        }
+    }
+
+    // Nouveau record : on l'enregistre !
+    const { error: insertError } = await supabaseClient
+        .from("neon_scores")
+        .insert([{
+            player_pseudo: pseudo,
+            score: newScore,
+            coins: Math.floor(coins),
+            game_mode: mode,
+            time_seconds: newTime
+        }]);
+
+    if (insertError) {
+        console.error("Erreur sauvegarde du record :", insertError);
     } else {
-        console.log("🏆 Score envoyé au classement mondial !");
+        console.log("🏆 NOUVEAU RECORD ENREGISTRÉ !");
     }
 }
 // ======================================================
