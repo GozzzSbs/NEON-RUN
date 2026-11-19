@@ -3136,7 +3136,7 @@ async function openLeaderboard() {
     // RÉCUPÉRER LES SCORES
     const { data, error } = await supabaseClient
         .from("neon_scores")
-        .select("player_pseudo, score, game_mode, time_seconds")
+        .select("player_pseudo, score, game_mode, time_seconds, difficulty")
         .eq("game_mode", leaderboardMode)
         .limit(1000);
 
