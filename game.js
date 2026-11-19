@@ -3665,3 +3665,14 @@ function updateDailyChallengeProgress(type, amount) {
 
     localStorage.setItem("dailyChallengesData", JSON.stringify(data));
 }
+function closeDailyChallenges() {
+    document.getElementById("dailyChallengesScreen").classList.add("hidden");
+    document.getElementById("menu").classList.remove("hidden");
+}
+
+function closeDailyChallenges() {
+    document.getElementById("dailyChallengesScreen").classList.add("hidden");
+    document.getElementById("menu").classList.remove("hidden");
+}
+
+window.closeDailyChallenges = closeDailyChallenges;
