@@ -1404,7 +1404,6 @@ async function saveScoreToSupabase() {
         console.log("🏆 NOUVEAU RECORD ENREGISTRÉ !");
     }
 }
-```
 // ======================================================
 // BOUCLE PRINCIPALE
 // ======================================================
