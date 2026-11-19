@@ -1217,7 +1217,7 @@ function checkCollisions() {
             }
 
             coins++;
-
+updateDailyChallengeProgress("coins", 1);
             shopWallet++;
             localStorage.setItem("neonWallet", shopWallet);
 
