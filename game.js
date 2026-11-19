@@ -1477,9 +1477,10 @@ async function saveScoreToSupabase() {
     const { data: previousScores, error: fetchError } =
         await supabaseClient
             .from("neon_scores")
-            .select("score, time_seconds")
-            .eq("player_pseudo", pseudo)
-            .eq("game_mode", mode);
+.select("score, time_seconds")
+.eq("player_pseudo", pseudo)
+.eq("game_mode", mode)
+.eq("difficulty", currentDifficulty);
 
     if (fetchError) {
         console.error("Erreur récupération record :", fetchError);
