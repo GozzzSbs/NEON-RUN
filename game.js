@@ -240,24 +240,103 @@ createNebula(45, 45, -130, 0x163cff, 30);
 createNebula(0, 55, -190, 0xff2299, 35);
 createNebula(-70, 25, -210, 0x13cfff, 28);
 
-// Planète géante
-const planet = new THREE.Mesh(
-    new THREE.SphereGeometry(15, 32, 32),
-    mat(0x402080, 0x210044, 0.4)
-);
+// =====================================
+// 🌿 JUNGLE MYSTÉRIEUSE
+// =====================================
 
-planet.position.set(48, 28, -115);
-scene.add(planet);
+{
+    scene.background = new THREE.Color(0x06150f);
+    scene.fog = new THREE.Fog(0x06150f, 55, 210);
 
-// Anneau de planète
-const ring = new THREE.Mesh(
-    new THREE.TorusGeometry(20, 0.7, 8, 100),
-    mat(0x9b65ff, 0x6020ff, 1)
-);
+    const jungleTrunk = new THREE.MeshStandardMaterial({
+        color: 0x382116,
+        roughness: 1
+    });
 
-ring.position.copy(planet.position);
-ring.rotation.x = 1.2;
-scene.add(ring);
+    const jungleLeaves = new THREE.MeshStandardMaterial({
+        color: 0x126b38,
+        roughness: 1
+    });
+
+    const jungleDarkLeaves = new THREE.MeshStandardMaterial({
+        color: 0x073d29,
+        roughness: 1
+    });
+
+    const fireflyMaterial = new THREE.MeshBasicMaterial({
+        color: 0x9dff70
+    });
+
+    // Création des arbres des deux côtés des rails
+    for (let i = 0; i < 18; i++) {
+
+        for (const side of [-1, 1]) {
+
+            const tree = new THREE.Group();
+
+            const height = 8 + (i % 4) * 2;
+
+            const trunk = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.45, 0.8, height, 8),
+                jungleTrunk
+            );
+
+            trunk.position.y = height / 2;
+            tree.add(trunk);
+
+            const crown1 = new THREE.Mesh(
+                new THREE.SphereGeometry(3.5, 8, 8),
+                jungleLeaves
+            );
+
+            crown1.position.set(0, height, 0);
+            tree.add(crown1);
+
+            const crown2 = new THREE.Mesh(
+                new THREE.SphereGeometry(2.8, 8, 8),
+                jungleDarkLeaves
+            );
+
+            crown2.position.set(1.8, height + 1.5, 0);
+            tree.add(crown2);
+
+            const crown3 = new THREE.Mesh(
+                new THREE.SphereGeometry(2.8, 8, 8),
+                jungleLeaves
+            );
+
+            crown3.position.set(-1.8, height + 1.2, 0);
+            tree.add(crown3);
+
+            tree.position.set(
+                side * (13 + (i % 3) * 4),
+                0,
+                -20 - i * 13
+            );
+
+            tree.scale.setScalar(0.8 + (i % 3) * 0.2);
+
+            scene.add(tree);
+        }
+    }
+
+    // Lucioles lumineuses dans la jungle
+    for (let i = 0; i < 45; i++) {
+
+        const firefly = new THREE.Mesh(
+            new THREE.SphereGeometry(0.12, 8, 8),
+            fireflyMaterial
+        );
+
+        firefly.position.set(
+            (Math.random() - 0.5) * 55,
+            1 + Math.random() * 10,
+            -Math.random() * 200
+        );
+
+        scene.add(firefly);
+    }
+}
 
 // ======================================================
 // SOL SPATIAL
