@@ -1741,6 +1741,7 @@ function startGame() {
     targetX = 0;
 
     jumping = false;
+    ridingTrain = null;
     sliding = false;
 
     jumpVelocity = 0;
