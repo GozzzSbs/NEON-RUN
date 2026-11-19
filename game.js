@@ -3339,3 +3339,10 @@ async function logoutPlayer() {
 
     console.log("Déconnexion réussie !");
 }
+// RETOUR AU MENU DEPUIS LE CLASSEMENT
+function closeLeaderboard() {
+    document.getElementById("leaderboardScreen").classList.add("hidden");
+    document.getElementById("menu").classList.remove("hidden");
+}
+
+window.closeLeaderboard = closeLeaderboard;
