@@ -3475,3 +3475,15 @@ function closeLeaderboard() {
 }
 
 window.closeLeaderboard = closeLeaderboard;
+function openAccount() {
+    document.getElementById("menu").classList.add("hidden");
+    document.getElementById("accountScreen").classList.remove("hidden");
+}
+
+function closeAccount() {
+    document.getElementById("accountScreen").classList.add("hidden");
+    document.getElementById("menu").classList.remove("hidden");
+}
+
+window.openAccount = openAccount;
+window.closeAccount = closeAccount;
