@@ -1640,6 +1640,22 @@ if (jumpVelocity < 0) {
     moveEnvironment();
     moveLavaPlatforms();
     moveObstacles();
+    // JACKO RESTE SUR LE TOIT DU TRAIN
+if (ridingTrain) {
+    const trainExists = obstacles.some(
+        obstacle => obstacle.object === ridingTrain
+    );
+
+    if (trainExists) {
+        ridingTrain.position.z -= speed * 1.8;
+        player.position.y = 3.78 + ridingTrain.position.y;
+        jumping = false;
+    } else {
+        ridingTrain = null;
+        jumping = true;
+        jumpVelocity = 0;
+    }
+}
     moveCoins();
 
     checkCollisions();
