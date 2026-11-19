@@ -1322,6 +1322,7 @@ saveScoreToSupabase().catch(error => {
 // SAUVEGARDE DU SCORE DANS SUPABASE
 // ======================================================
 
+```js
 async function saveScoreToSupabase() {
 
     const pseudo = localStorage.getItem("neonPlayerPseudo");
@@ -1337,14 +1338,12 @@ async function saveScoreToSupabase() {
     }
 
     const mode = selectedMode || "classic";
-
     const newScore = Math.floor(score);
 
     const newTime = mode === "nocoin"
         ? Number(noCoinElapsed.toFixed(2))
         : null;
 
-    // Récupérer les anciens records du joueur dans ce mode
     const { data: previousScores, error: fetchError } =
         await supabaseClient
             .from("neon_scores")
@@ -1357,22 +1356,23 @@ async function saveScoreToSupabase() {
         return;
     }
 
-    // Vérifier si le joueur a déjà un record
     if (previousScores && previousScores.length > 0) {
 
         if (mode === "nocoin") {
 
-    const bestTime = Math.max(
-        ...previousScores
-            .map(s => Number(s.time_seconds))
-            .filter(t => Number.isFinite(t) && t > 0)
-    );
+            const validTimes = previousScores
+                .map(s => Number(s.time_seconds))
+                .filter(t => Number.isFinite(t) && t > 0);
 
-    if (Number.isFinite(bestTime) && newTime <= bestTime) {
-        console.log("Pas de nouveau record No Coin.");
-        return;
-    }
-}
+            const bestTime = validTimes.length
+                ? Math.max(...validTimes)
+                : 0;
+
+            if (newTime <= bestTime) {
+                console.log("Pas de nouveau record No Coin.");
+                return;
+            }
+
         } else {
 
             const bestScore = Math.max(
@@ -1386,7 +1386,6 @@ async function saveScoreToSupabase() {
         }
     }
 
-    // Nouveau record : on l'enregistre !
     const { error: insertError } = await supabaseClient
         .from("neon_scores")
         .insert([{
@@ -1403,6 +1402,7 @@ async function saveScoreToSupabase() {
         console.log("🏆 NOUVEAU RECORD ENREGISTRÉ !");
     }
 }
+```
 // ======================================================
 // BOUCLE PRINCIPALE
 // ======================================================
