@@ -1411,17 +1411,7 @@ function moveEnvironment() {
         }
     });
 
-    movingAliens.forEach(ship => {
-        ship.position.x += ship.userData.direction || 0.08;
-        ship.position.y += Math.sin(frame * 0.025 + ship.position.z) * 0.015;
-        ship.rotation.z = Math.sin(frame * 0.02 + ship.position.z) * 0.04;
-
-        if (ship.position.x > 75) {
-            ship.position.x = -75;
-            ship.position.z = -40 - Math.random() * 180;
-        }
-    });
-}
+    
 
 // ======================================================
 // OBSTACLES ET TRAINS
