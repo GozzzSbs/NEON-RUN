@@ -1084,7 +1084,7 @@ window.selectMode = selectMode;
 
 function setDifficulty(level, button) {
     difficulty = level;
-
+window.difficulty = level;
     document.querySelectorAll(".difficulty-buttons button").forEach(b => {
         b.classList.remove("active");
     });
