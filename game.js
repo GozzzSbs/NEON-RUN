@@ -1180,10 +1180,11 @@ function checkCollisions() {
         if (!sameLane) continue;
 
         if (
-            obstacle.type === "train" &&
-            distance > -8 &&
-            distance < 2
-        ) {
+    obstacle.type === "train" &&
+    ridingTrain !== obstacle.object &&
+    distance > -8 &&
+    distance < 2
+) {
             endGame("Un train spatial t'a percuté !");
             return;
         }
