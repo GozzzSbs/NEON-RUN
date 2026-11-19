@@ -1467,6 +1467,7 @@ async function saveScoreToSupabase() {
     }
 
     const mode = selectedMode || "classic";
+    const currentDifficulty = window.difficulty || difficulty;
     const newScore = Math.floor(score);
 
     const newTime = mode === "nocoin"
