@@ -2013,7 +2013,9 @@ if (!ownedSkins.includes("default")) {
 
 
 
-if (!["default", "el_blackito"].includes(equippedSkin)) {
+const validSkins = SHOP_CATALOG.skins.map(skin => skin.id);
+
+if (!validSkins.includes(equippedSkin)) {
     equippedSkin = "default";
 }
 
