@@ -2873,7 +2873,10 @@ window.openShop = openShop;
 function closeShop() {
     if (shopElement) {
         shopElement.classList.remove("open");
+        shopElement.classList.add("hidden");
     }
+
+    document.getElementById("menu").classList.remove("hidden");
 }
 
 window.closeShop = closeShop;
