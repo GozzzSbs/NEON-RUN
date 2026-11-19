@@ -1184,6 +1184,7 @@ function checkCollisions() {
         if (
     obstacle.type === "train" &&
     ridingTrain !== obstacle.object &&
+    player.position.y < 3.5 &&
     distance > -8 &&
     distance < 2
 ) {
