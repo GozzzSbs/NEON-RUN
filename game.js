@@ -319,7 +319,7 @@ createNebula(-70, 25, -210, 0x13cfff, 28);
             scene.add(tree);
         }
     }
-
+}
     // Lucioles lumineuses dans la jungle
     for (let i = 0; i < 45; i++) {
 
