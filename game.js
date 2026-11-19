@@ -1031,6 +1031,7 @@ function isPlayerAboveLavaPlatform() {
 function spawnObjects() {
     const laneIndex = Math.floor(Math.random() * 3);
 
+    // Obstacles actuels : on ne change rien
     if (Math.random() < 0.55) {
         createTrain(laneIndex, -115);
     } else {
@@ -1039,14 +1040,45 @@ function spawnObjects() {
 
     if (selectedMode === "lava") return;
 
-    if (Math.random() < 0.8) {
-        const possibleLanes = [0, 1, 2].filter(l => l !== laneIndex);
+    const possibleLanes = [0, 1, 2].filter(l => l !== laneIndex);
 
-        const coinLane =
-            possibleLanes[Math.floor(Math.random() * possibleLanes.length)];
+    const laneA = possibleLanes[0];
+    const laneB = possibleLanes[1];
 
-        for (let i = 0; i < 5; i++) {
-            createCoin(coinLane, -75 - i * 3);
+    const pattern = Math.floor(Math.random() * 4);
+
+    // 1. DOUBLE RANGÉE
+    if (pattern === 0) {
+        for (let i = 0; i < 6; i++) {
+            createCoin(laneA, -65 - i * 3);
+            createCoin(laneB, -65 - i * 3);
+        }
+    }
+
+    // 2. ZIGZAG
+    if (pattern === 1) {
+        for (let i = 0; i < 10; i++) {
+            const lane = i % 2 === 0 ? laneA : laneB;
+            createCoin(lane, -65 - i * 3);
+        }
+    }
+
+    // 3. TUNNEL DE PIÈCES
+    if (pattern === 2) {
+        for (let i = 0; i < 9; i++) {
+            createCoin(laneA, -65 - i * 3);
+            createCoin(laneB, -65 - i * 3);
+        }
+    }
+
+    // 4. CHOIX ENTRE DEUX PARCOURS
+    if (pattern === 3) {
+        for (let i = 0; i < 4; i++) {
+            createCoin(laneA, -65 - i * 3);
+        }
+
+        for (let i = 0; i < 9; i++) {
+            createCoin(laneB, -65 - i * 3);
         }
     }
 }
