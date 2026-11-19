@@ -1514,7 +1514,7 @@ async function saveScoreToSupabase() {
             }
         }
     }
-
+console.log("DIFFICULTÉ ENREGISTRÉE :", difficulty, window.difficulty);
     const { error: insertError } = await supabaseClient
         .from("neon_scores")
         .insert([{
