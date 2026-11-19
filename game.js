@@ -1571,6 +1571,7 @@ if (score % 100 === 0) {
     player.position.x += (targetX - player.position.x) * 0.18;
 
     if (jumping) {
+        const previousY = player.position.y;
         player.position.y += jumpVelocity;
 
         jumpVelocity -= selectedMode === "lava" ? 0.035 : 0.012;
