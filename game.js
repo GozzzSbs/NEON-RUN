@@ -1324,7 +1324,6 @@ saveScoreToSupabase().catch(error => {
 // SAUVEGARDE DU SCORE DANS SUPABASE
 // ======================================================
 
-```js
 async function saveScoreToSupabase() {
 
     const pseudo = localStorage.getItem("neonPlayerPseudo");
