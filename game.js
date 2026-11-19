@@ -85,6 +85,7 @@ let gameEnded = false;
 let animationStarted = false;
 const originalPlayerMaterials = new Map();
 let equippedSkin = localStorage.getItem("neonEquippedSkin") || "default";
+let equippedCape = localStorage.getItem("neonEquippedCape") || "";
 let shopCapeObject = null;
 let score = 0;
 let coins = 0;
@@ -1837,7 +1838,7 @@ if (!ownedSkins.includes("default")) {
 
 
 
-let equippedCape = localStorage.getItem("neonEquippedCape") || "";
+
 
 if (!["default", "el_blackito"].includes(equippedSkin)) {
     equippedSkin = "default";
