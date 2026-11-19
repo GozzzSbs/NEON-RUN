@@ -1508,10 +1508,10 @@ async function saveScoreToSupabase() {
                 ...previousScores.map(s => Number(s.score))
             );
 
-            if (newScore <= bestScore) {
-                console.log("Pas de nouveau record classique.");
-                return;
-            }
+            if (newScore < bestScore) {
+    console.log("Pas de nouveau record classique.");
+    return;
+}
         }
     }
 console.log("DIFFICULTÉ ENREGISTRÉE :", difficulty, window.difficulty);
