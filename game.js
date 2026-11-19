@@ -3003,19 +3003,15 @@ async function openLeaderboard() {
     const leaderboardMode = selectedLeaderboardMode || "classic";
     const isNoCoin = leaderboardMode === "nocoin";
 
-    // RÉCUPÉRATION DES SCORES
+    // RÉCUPÉRER LES SCORES
     const { data, error } = await supabaseClient
         .from("neon_scores")
         .select("player_pseudo, score, game_mode, time_seconds")
         .eq("game_mode", leaderboardMode)
-        .order(
-            isNoCoin ? "time_seconds" : "score",
-            { ascending: isNoCoin }
-        )
-        .limit(100);
+        .limit(1000);
 
     if (error) {
-        players.textContent = "Erreur de chargement du classement.";
+        players.textContent = "Erreur de chargement.";
         console.error(error);
         return;
     }
@@ -3028,30 +3024,67 @@ async function openLeaderboard() {
         return;
     }
 
-    // RÉCUPÉRATION DES JOUEURS CERTIFIÉS
-    const pseudos = [...new Set(data.map(j => j.player_pseudo))];
+    // GARDER UNIQUEMENT LE MEILLEUR RECORD DE CHAQUE JOUEUR
+    const bestPlayers = new Map();
 
-    const { data: verifiedPlayers, error: verifiedError } = await supabaseClient
-        .from("neon_players")
-        .select("pseudo, verified")
-        .in("pseudo", pseudos)
-        .eq("verified", true);
+    data.forEach(joueur => {
+
+        const key = joueur.player_pseudo.toLowerCase();
+        const previous = bestPlayers.get(key);
+
+        if (!previous) {
+            bestPlayers.set(key, joueur);
+            return;
+        }
+
+        if (isNoCoin) {
+
+            if (Number(joueur.time_seconds) > Number(previous.time_seconds)) {
+                bestPlayers.set(key, joueur);
+            }
+
+        } else {
+
+            if (Number(joueur.score) > Number(previous.score)) {
+                bestPlayers.set(key, joueur);
+            }
+        }
+    });
+
+    // TRIER LES MEILLEURS RECORDS
+    const rankedPlayers = [...bestPlayers.values()].sort((a, b) => {
+
+        if (isNoCoin) {
+            return Number(b.time_seconds) - Number(a.time_seconds);
+        }
+
+        return Number(b.score) - Number(a.score);
+    });
+
+    // RÉCUPÉRER LES BADGES
+    const pseudos = [...new Set(rankedPlayers.map(j => j.player_pseudo))];
+
+    const { data: verifiedPlayers, error: verifiedError } =
+        await supabaseClient
+            .from("neon_players")
+            .select("pseudo, verified")
+            .in("pseudo", pseudos)
+            .eq("verified", true);
 
     if (verifiedError) {
         console.error("Erreur badges :", verifiedError);
     }
 
     const verifiedPseudos = new Set(
-        (verifiedPlayers || []).map(j => j.pseudo)
+        (verifiedPlayers || []).map(j => j.pseudo.toLowerCase())
     );
 
-    // CRÉATION DU NOM AVEC BADGE
     function createPlayerName(pseudo) {
 
         const name = document.createElement("span");
         name.textContent = pseudo;
 
-        if (verifiedPseudos.has(pseudo)) {
+        if (verifiedPseudos.has(pseudo.toLowerCase())) {
 
             const badge = document.createElement("span");
 
@@ -3059,18 +3092,17 @@ async function openLeaderboard() {
             badge.title = "Joueur certifié";
 
             badge.style.cssText = `
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                width: 17px;
-                height: 17px;
-                margin-left: 6px;
-                border-radius: 50%;
-                background: #1DA1F2;
-                color: white;
-                font-size: 12px;
-                font-weight: bold;
-                vertical-align: middle;
+                display:inline-flex;
+                align-items:center;
+                justify-content:center;
+                width:17px;
+                height:17px;
+                margin-left:6px;
+                border-radius:50%;
+                background:#1DA1F2;
+                color:white;
+                font-size:12px;
+                font-weight:bold;
             `;
 
             name.appendChild(badge);
@@ -3082,7 +3114,7 @@ async function openLeaderboard() {
     // PODIUM
     [1, 0, 2].forEach(index => {
 
-        const joueur = data[index];
+        const joueur = rankedPlayers[index];
 
         const card = document.createElement("div");
         card.className = "podium-player";
@@ -3097,9 +3129,7 @@ async function openLeaderboard() {
             const points = document.createElement("div");
 
             points.textContent = isNoCoin
-                ? (joueur.time_seconds != null
-                    ? Number(joueur.time_seconds).toFixed(2) + " s"
-                    : "—")
+                ? Number(joueur.time_seconds).toFixed(2) + " s"
                 : joueur.score + " points";
 
             card.append(rank, name, points);
@@ -3111,8 +3141,8 @@ async function openLeaderboard() {
         podium.appendChild(card);
     });
 
-    // LISTE DES JOUEURS
-    data.forEach((joueur, index) => {
+    // LISTE DU CLASSEMENT
+    rankedPlayers.forEach((joueur, index) => {
 
         const row = document.createElement("div");
         row.className = "leaderboard-row";
@@ -3122,15 +3152,14 @@ async function openLeaderboard() {
 
         const name = createPlayerName(joueur.player_pseudo);
 
-        const score = document.createElement("span");
+        const result = document.createElement("span");
 
-        score.textContent = isNoCoin
-            ? (joueur.time_seconds != null
-                ? Number(joueur.time_seconds).toFixed(2) + " s"
-                : "—")
+        result.textContent = isNoCoin
+            ? Number(joueur.time_seconds).toFixed(2) + " s"
             : joueur.score;
 
-        row.append(rank, name, score);
+        row.append(rank, name, result);
+
         players.appendChild(row);
     });
 }
