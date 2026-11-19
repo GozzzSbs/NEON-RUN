@@ -1243,9 +1243,9 @@ function checkCollisions() {
         const coin = coinObjects[i];
 
         if (
-            Math.abs(coin.position.z) < 1.5 &&
-            Math.abs(coin.position.x - player.position.x) < 1.2 &&
-            Math.abs(coin.position.y - (1.3 + player.position.y)) < 1.5
+            Math.abs(coin.position.z) < 0.8 &&
+Math.abs(coin.position.x - player.position.x) < 0.75 &&
+Math.abs(coin.position.y - (1.3 + player.position.y)) < 1.0
         ) {
             scene.remove(coin);
             coinObjects.splice(i, 1);
