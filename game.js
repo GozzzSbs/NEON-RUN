@@ -833,7 +833,7 @@ function createBarrier(laneIndex, z) {
 // PIÈCES COSMIQUES
 // ======================================================
 
-function createCoin(laneIndex, z) {
+function createCoin(laneIndex, z, height = 1.3) {
     const coin = new THREE.Group();
 
     const goldMaterial = new THREE.MeshStandardMaterial({
@@ -858,7 +858,7 @@ function createCoin(laneIndex, z) {
 
     coin.add(center);
 
-    coin.position.set(lanePositions[laneIndex], 1.3, z);
+    coin.position.set(lanePositions[laneIndex], height, z);
     scene.add(coin);
     coinObjects.push(coin);
 }
