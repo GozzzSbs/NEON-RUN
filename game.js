@@ -1469,7 +1469,7 @@ function moveObstacles() {
 }
 function moveCoins() {
     coinObjects.forEach(coin => {
-        coin.position.z += speed;
+        coin.position.z += coin.userData.onTrain ? speed * 1.8 : speed;
         coin.rotation.y += 0.08;
         coin.rotation.z += 0.04;
     });
