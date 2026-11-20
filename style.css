@@ -1379,3 +1379,48 @@ button:active {
 #menu button:active {
     transform: scale(0.96);
 }
+/* ORGANISATION DU MENU STREETWEAR */
+
+#menu {
+    box-sizing: border-box;
+    padding: 30px;
+}
+
+#menu > * {
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.menu-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.statistics {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.difficulty-buttons,
+.mode-buttons,
+.small-buttons,
+.secondary-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.rules-panel {
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+.controls-help {
+    text-align: center;
+    margin-top: 20px;
+}
