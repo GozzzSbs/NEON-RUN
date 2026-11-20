@@ -1103,8 +1103,13 @@ if (pattern === 5) {
         createCoin(laneB, -65 - i * 3);
     }
 
+    const centerLane = 1;
+
+if (centerLane !== laneIndex) {
     for (let i = 0; i < 4; i++) {
-        createCoin(1, -77 - i * 3);
+        createCoin(centerLane, -77 - i * 3);
+    }
+}
     }
 }
     // 4. CHOIX ENTRE DEUX PARCOURS
