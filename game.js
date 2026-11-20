@@ -1300,7 +1300,8 @@ function checkCollisions() {
     // Ramassage des pièces
     for (let i = coinObjects.length - 1; i >= 0; i--) {
         const coin = coinObjects[i];
-
+const coinWorldPosition = new THREE.Vector3();
+coin.getWorldPosition(coinWorldPosition);
         if (
             Math.abs(coin.position.z) < 0.8 &&
 Math.abs(coin.position.x - player.position.x) < 0.75 &&
