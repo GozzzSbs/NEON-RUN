@@ -1061,7 +1061,7 @@ if (trainSpawned) {
     const coinCount = 3 + Math.floor(Math.random() * 6);
 
     for (let i = 0; i < coinCount; i++) {
-        createCoin(laneIndex, -110 - i * 2, 5.08);
+        createCoin(laneIndex, -110 - i * 2, 5.08, true, spawnedTrain);
     }
 }
 const possibleLanes = [0, 1, 2].filter(l => l !== laneIndex);
