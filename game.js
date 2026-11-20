@@ -859,10 +859,21 @@ function createCoin(laneIndex, z, height = 1.3, onTrain = false, train = null) {
 
     coin.add(center);
 
+    coin.userData.onTrain = onTrain;
+
+if (onTrain && train) {
+    coin.position.set(
+        0,
+        height - train.position.y,
+        z - train.position.z
+    );
+    train.add(coin);
+} else {
     coin.position.set(lanePositions[laneIndex], height, z);
     scene.add(coin);
-    coinObjects.push(coin);
-    coin.userData.onTrain = onTrain;
+}
+
+coinObjects.push(coin);
 }
 
 // ======================================================
