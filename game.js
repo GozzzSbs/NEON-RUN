@@ -660,6 +660,7 @@ function createTrain(laneIndex, z) {
         type: "train",
         lane: laneIndex
     });
+    return train;
 }
 
 // ======================================================
