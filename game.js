@@ -1678,7 +1678,9 @@ if (score % 100 === 0) {
 
     spawnTimer++;
 
-    const spawnDelay = Math.max(48, 100 - speed * 25);
+    const spawnDelay = selectedMode === "nocoin"
+    ? Math.max(75, 145 - speed * 20)
+    : Math.max(48, 100 - speed * 25);
 
     if (spawnTimer >= spawnDelay) {
         spawnObjects();
