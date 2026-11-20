@@ -1040,7 +1040,7 @@ if (trainSpawned) {
     createBarrier(laneIndex, -105);
 }
 
-    if (selectedMode === "lava") return;
+    if (selectedMode === "lava" || selectedMode === "nocoin") return;
 // PIÈCES SUR LE TOIT DU TRAIN
 if (trainSpawned) {
     const coinCount = 3 + Math.floor(Math.random() * 6);
