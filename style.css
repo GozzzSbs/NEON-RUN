@@ -1335,3 +1335,26 @@ button:active {
     transform: translateY(2px);
     box-shadow: 0 1px 0 #9c3900;
 }
+/* MENU PRINCIPAL STREETWEAR */
+
+#menu {
+    background: linear-gradient(
+        145deg,
+        #242424,
+        #111111 65%,
+        #302016
+    );
+    border: 2px solid #ff7900;
+    border-radius: 22px;
+    box-shadow: 0 0 25px rgba(255, 120, 0, 0.2);
+    padding: 25px;
+}
+
+/* Titres du menu */
+#menu h1,
+#menu h2 {
+    color: #ff8c00;
+    text-transform: uppercase;
+    font-weight: 900;
+    text-shadow: 3px 3px 0 #713000;
+}
