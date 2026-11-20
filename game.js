@@ -1035,8 +1035,10 @@ function spawnObjects() {
     // Obstacles actuels : on ne change rien
     const trainSpawned = Math.random() < 0.55;
 
+let spawnedTrain = null;
+
 if (trainSpawned) {
-    createTrain(laneIndex, -115);
+    spawnedTrain = createTrain(laneIndex, -115);
 } else {
     createBarrier(laneIndex, -105);
 }
