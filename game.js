@@ -1105,9 +1105,14 @@ if (pattern === 4) {
 // 5. DEUX CHEMINS QUI REJOIGNENT LE CENTRE
 if (pattern === 5) {
     for (let i = 0; i < 4; i++) {
+    if (laneA !== laneIndex) {
         createCoin(laneA, -65 - i * 3);
+    }
+
+    if (laneB !== laneIndex) {
         createCoin(laneB, -65 - i * 3);
     }
+}
 
     const centerLane = 1;
 
