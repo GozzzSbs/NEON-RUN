@@ -2406,9 +2406,7 @@ function createShopStyles() {
             align-items: center;
             justify-content: center;
             padding: 18px;
-            background:
-                radial-gradient(ellipse at 50% 0%, #42117d99, transparent 60%),
-                rgba(3, 2, 15, 0.94);
+            background: radial-gradient(ellipse at 50% 0%, #ff850033, transparent 60%), rgba(5,5,5,0.96);
             backdrop-filter: blur(12px);
             font-family: Arial, sans-serif;
             color: white;
@@ -2423,13 +2421,11 @@ function createShopStyles() {
             width: min(850px, 100%);
             max-height: 90vh;
             overflow-y: auto;
-            border: 2px solid #a52cff;
+            border: 2px solid #ff8500;
             border-radius: 22px;
             padding: 25px;
-            background: linear-gradient(145deg, #17102e, #080716);
-            box-shadow:
-                0 0 25px #8d24ff66,
-                inset 0 0 25px #5520a022;
+            background: linear-gradient(145deg, #252525, #101010);
+            box-shadow: 0 0 25px #ff850044, inset 0 0 25px #ff850011;
         }
 
         .neon-shop-title {
@@ -2437,14 +2433,14 @@ function createShopStyles() {
             font-size: clamp(27px, 5vw, 43px);
             font-weight: 1000;
             letter-spacing: 5px;
-            color: #d69aff;
-            text-shadow: 0 0 18px #a52cff;
+            color: #ff9a1f;
+            text-shadow: 0 0 18px #ff8500;
             margin: 5px 0 8px;
         }
 
         .neon-shop-subtitle {
             text-align: center;
-            color: #aaa0ca;
+            color: #c7c7c7;
             margin-bottom: 20px;
             font-size: 13px;
         }
@@ -2461,8 +2457,8 @@ function createShopStyles() {
         }
 
         .neon-shop-coins {
-            color: #ffd84a;
-            text-shadow: 0 0 10px #ffae00;
+            color: #ffbd35;
+            text-shadow: 0 0 10px #ff8500;
         }
 
         .neon-shop-diamonds {
@@ -2478,8 +2474,8 @@ function createShopStyles() {
         }
 
         .neon-shop-tab {
-            border: 1px solid #7134bd;
-            background: #211438;
+            border: 1px solid #a85b16;
+            background: #292929;
             color: white;
             padding: 12px 30px;
             border-radius: 12px;
@@ -2490,9 +2486,10 @@ function createShopStyles() {
         }
 
         .neon-shop-tab.active {
-            background: #8d28d8;
-            border-color: #e2aaff;
-            box-shadow: 0 0 17px #a52cff;
+            background: linear-gradient(180deg, #ffad33, #f06b00);
+            border-color: #ffd36a;
+            color: #171717;
+            box-shadow: 0 0 17px #ff850055;
         }
 
         .neon-shop-grid {
@@ -2507,16 +2504,17 @@ function createShopStyles() {
             padding: 17px;
             min-height: 210px;
             text-align: center;
-            border: 1px solid #49336d;
+            border: 1px solid #494949;
+            border-bottom: 3px solid #ff8500;
             border-radius: 16px;
-            background: linear-gradient(150deg, #261a40, #100d21);
+            background: linear-gradient(150deg, #303030, #171717);
             transition: 0.2s;
         }
 
         .neon-shop-card:hover {
             transform: translateY(-4px);
-            border-color: #c36aff;
-            box-shadow: 0 0 18px #9a36ff55;
+            border-color: #ff9a1f;
+            box-shadow: 0 0 18px #ff850044;
         }
 
         .neon-shop-preview {
@@ -2536,13 +2534,13 @@ function createShopStyles() {
         }
 
         .neon-shop-card p {
-            color: #aaa0c4;
+            color: #c7c7c7;
             font-size: 12px;
             min-height: 30px;
         }
 
         .neon-shop-price {
-            color: #ffd84a;
+            color: #ffbd35;
             font-weight: bold;
             margin: 9px 0;
         }
@@ -2553,45 +2551,50 @@ function createShopStyles() {
             border: 0;
             border-radius: 9px;
             cursor: pointer;
-            color: white;
-            background: linear-gradient(90deg, #8126ce, #bd35f5);
+            color: #171717;
+            background: linear-gradient(180deg, #ffad33, #ed6900);
             font-weight: bold;
             letter-spacing: 1px;
+            transition: 0.2s;
         }
 
         .neon-shop-action:hover {
-            filter: brightness(1.25);
+            filter: brightness(1.2);
+            transform: translateY(-2px);
         }
 
         .neon-shop-action.equipped {
             background: #176b49;
+            color: white;
             cursor: default;
         }
 
         .neon-shop-action.locked {
-            background: #454052;
+            background: #454545;
+            color: white;
         }
 
         .neon-shop-close {
             display: block;
             margin: 23px auto 0;
             padding: 11px 35px;
-            border: 1px solid #a52cff;
+            border: 1px solid #ff8500;
             border-radius: 10px;
             color: white;
-            background: #28133e;
+            background: #292929;
             cursor: pointer;
             font-weight: bold;
+            transition: 0.2s;
         }
 
         .neon-shop-close:hover {
-            background: #6520a0;
+            background: #ed6900;
         }
 
         .neon-shop-message {
             text-align: center;
             min-height: 22px;
-            color: #ffdc68;
+            color: #ffbd35;
             margin-top: 12px;
             font-size: 13px;
         }
@@ -2603,14 +2606,14 @@ function createShopStyles() {
             left: 50%;
             transform: translateX(-50%);
             padding: 13px 25px;
-            border: 1px solid #48eaff;
+            border: 1px solid #ffbd35;
             border-radius: 14px;
-            background: #071b2fee;
-            color: #68edff;
+            background: #202020ee;
+            color: #ffbd35;
             font-size: 20px;
             font-weight: 900;
-            text-shadow: 0 0 12px #00dfff;
-            box-shadow: 0 0 25px #00cfff77;
+            text-shadow: 0 0 12px #ff8500;
+            box-shadow: 0 0 25px #ff850077;
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.3s;
