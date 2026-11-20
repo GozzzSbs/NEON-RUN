@@ -1062,7 +1062,7 @@ if (trainSpawned && Math.random() < 0.5) {
         createCoin(safeLane, -65 - i * 3);
     }
 }
-const patterns = [0, 1, 1, 1, 1, 1, 2, 3, 3, 3];
+const patterns = [0, 1, 1, 1, 1, 1, 2, 3, 3, 3, 4, 4];
 const pattern = patterns[Math.floor(Math.random() * patterns.length)];
 
     // 1. DOUBLE RANGÉE
@@ -1075,6 +1075,13 @@ const pattern = patterns[Math.floor(Math.random() * patterns.length)];
 
     // 2. ZIGZAG SUR LES 3 VOIES
 if (pattern === 1) {
+    // ZIGZAG ENTRE DEUX VOIES
+if (pattern === 4) {
+    for (let i = 0; i < 8; i++) {
+        const lane = i % 2 === 0 ? laneA : laneB;
+        createCoin(lane, -65 - i * 3);
+    }
+}
     const zigzag = [0, 1, 2, 1, 0, 1, 2, 1, 0, 1];
 
     for (let i = 0; i < zigzag.length; i++) {
