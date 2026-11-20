@@ -1496,3 +1496,38 @@ button:active {
 .small-buttons button {
     min-width: 145px;
 }
+/* GROS BOUTON JOUER */
+
+.play-button {
+    min-width: 190px;
+    padding: 17px 30px;
+    font-size: 19px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    border: 2px solid #ffd36a;
+    border-bottom: 5px solid #a94300;
+    border-radius: 15px;
+    background: linear-gradient(180deg, #ffd15c, #ff8c00);
+    color: #171717;
+    box-shadow: 0 5px 18px rgba(255, 140, 0, 0.25);
+    transition: 0.2s ease;
+}
+
+.play-button:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 25px rgba(255, 140, 0, 0.6);
+}
+/* ANIMATION DES BOUTONS */
+
+#menu button:hover {
+    filter: brightness(1.15);
+    transform: translateY(-3px);
+}
+
+#menu button:active {
+    transform: translateY(2px) scale(0.97);
+}
+
+#menu button {
+    transition: all 0.2s ease;
+}
