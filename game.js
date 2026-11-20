@@ -1043,16 +1043,19 @@ if (trainSpawned) {
     if (selectedMode === "lava") return;
 // PIÈCES SUR LE TOIT DU TRAIN
 if (trainSpawned) {
-    for (let i = 0; i < 5; i++) {
+    const coinCount = 3 + Math.floor(Math.random() * 6);
+
+    for (let i = 0; i < coinCount; i++) {
         createCoin(laneIndex, -110 - i * 2, 5.08);
     }
 }
-    const possibleLanes = [0, 1, 2].filter(l => l !== laneIndex);
 
-    const laneA = possibleLanes[0];
-    const laneB = possibleLanes[1];
+const possibleLanes = [0, 1, 2].filter(l => l !== laneIndex);
 
-    const patterns = [0, 1, 1, 1, 1, 1, 2, 3, 3, 3];
+const laneA = possibleLanes[0];
+const laneB = possibleLanes[1];
+
+const patterns = [0, 1, 1, 1, 1, 1, 2, 3, 3, 3];
 const pattern = patterns[Math.floor(Math.random() * patterns.length)];
 
     // 1. DOUBLE RANGÉE
