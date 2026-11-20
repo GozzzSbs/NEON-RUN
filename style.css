@@ -1358,3 +1358,24 @@ button:active {
     font-weight: 900;
     text-shadow: 3px 3px 0 #713000;
 }
+/* BOUTONS STREETWEAR */
+
+#menu button {
+    min-width: 180px;
+    letter-spacing: 1px;
+    font-size: 15px;
+    border: 2px solid #ffad33;
+    border-bottom: 5px solid #a94300;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #ff9d00, #e65300);
+    text-shadow: 1px 2px 2px #713000;
+}
+
+#menu button:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 18px rgba(255, 140, 0, 0.55);
+}
+
+#menu button:active {
+    transform: scale(0.96);
+}
