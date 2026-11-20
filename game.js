@@ -1111,7 +1111,6 @@ if (centerLane !== laneIndex) {
     }
 }
     }
-}
     // 4. CHOIX ENTRE DEUX PARCOURS
     if (pattern === 3) {
         for (let i = 0; i < 4; i++) {
