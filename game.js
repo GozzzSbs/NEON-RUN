@@ -1077,10 +1077,11 @@ if (pattern === 1) {
     const zigzag = [0, 1, 2, 1, 0, 1, 2, 1, 0, 1];
 
     for (let i = 0; i < zigzag.length; i++) {
-        createCoin(zigzag[i], -65 - i * 3);
+        if (zigzag[i] !== laneIndex) {
+            createCoin(zigzag[i], -65 - i * 3);
+        }
     }
 }
-
 // ZIGZAG ENTRE DEUX VOIES
 if (pattern === 4) {
     for (let i = 0; i < 8; i++) {
