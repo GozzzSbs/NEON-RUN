@@ -1302,3 +1302,36 @@ body {
     background: #00eaff;
     color: #050b18;
 }
+/* =================================
+   NEON RUN 3D - STREETWEAR DESIGN
+================================= */
+
+body {
+    background: #171717;
+    color: #ffffff;
+    font-family: 'Arial Black', Arial, sans-serif;
+}
+
+/* Boutons principaux */
+button {
+    border: 2px solid #ff8c00;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #ff8c00, #ff5e00);
+    color: white;
+    font-weight: 900;
+    text-transform: uppercase;
+    padding: 12px 22px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    box-shadow: 0 4px 0 #9c3900;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    filter: brightness(1.2);
+}
+
+button:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 #9c3900;
+}
