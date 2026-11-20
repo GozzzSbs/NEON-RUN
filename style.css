@@ -1424,3 +1424,75 @@ button:active {
     text-align: center;
     margin-top: 20px;
 }
+/* CARTES DE STATISTIQUES STREETWEAR */
+
+.stat-card {
+    background: linear-gradient(145deg, #303030, #1c1c1c);
+    border: 1px solid #555;
+    border-bottom: 3px solid #ff8500;
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 15px rgba(255, 133, 0, 0.2);
+}
+
+.stat-card strong {
+    color: #ffad33;
+    font-size: 19px;
+}
+
+.stat-card small {
+    color: #dddddd;
+}
+/* PANNEAU DES RÈGLES */
+
+.rules-panel {
+    background: linear-gradient(135deg, #292929, #191919);
+    border: 1px solid #555;
+    border-left: 5px solid #ff8500;
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+}
+
+.rules-panel p {
+    color: #eeeeee;
+    line-height: 1.8;
+}
+/* TITRES DES SECTIONS */
+
+.section-title {
+    color: #ff9a1f;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-left: 4px solid #ff7900;
+    padding-left: 10px;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    text-shadow: 1px 1px 3px #000;
+}
+/* NAVIGATION STREETWEAR */
+
+.small-buttons,
+.secondary-buttons {
+    background: linear-gradient(145deg, #252525, #171717);
+    border: 1px solid #383838;
+    border-radius: 15px;
+    padding: 15px;
+    margin-top: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.secondary-buttons button {
+    min-width: 145px;
+}
+
+.small-buttons button {
+    min-width: 145px;
+}
