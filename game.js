@@ -1054,7 +1054,14 @@ const possibleLanes = [0, 1, 2].filter(l => l !== laneIndex);
 
 const laneA = possibleLanes[0];
 const laneB = possibleLanes[1];
+// PIÈCES SUR LA VOIE LIBRE
+if (trainSpawned) {
+    const safeLane = possibleLanes[Math.floor(Math.random() * 2)];
 
+    for (let i = 0; i < 4; i++) {
+        createCoin(safeLane, -65 - i * 3);
+    }
+}
 const patterns = [0, 1, 1, 1, 1, 1, 2, 3, 3, 3];
 const pattern = patterns[Math.floor(Math.random() * patterns.length)];
 
