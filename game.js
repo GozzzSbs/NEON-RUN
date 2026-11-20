@@ -1062,7 +1062,7 @@ if (trainSpawned && Math.random() < 0.5) {
         createCoin(safeLane, -65 - i * 3);
     }
 }
-const patterns = [0, 1, 1, 1, 1, 1, 2, 3, 3, 3, 4, 4];
+const patterns = [0, 1, 1, 1, 1, 1, 2, 3, 3, 3, 4, 4, 5, 5];
 const pattern = patterns[Math.floor(Math.random() * patterns.length)];
 
     // 1. DOUBLE RANGÉE
@@ -1096,7 +1096,17 @@ if (pattern === 4) {
             createCoin(laneB, -65 - i * 3);
         }
     }
+// 5. DEUX CHEMINS QUI REJOIGNENT LE CENTRE
+if (pattern === 5) {
+    for (let i = 0; i < 4; i++) {
+        createCoin(laneA, -65 - i * 3);
+        createCoin(laneB, -65 - i * 3);
+    }
 
+    for (let i = 0; i < 4; i++) {
+        createCoin(1, -77 - i * 3);
+    }
+}
     // 4. CHOIX ENTRE DEUX PARCOURS
     if (pattern === 3) {
         for (let i = 0; i < 4; i++) {
