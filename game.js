@@ -1032,11 +1032,13 @@ function spawnObjects() {
     const laneIndex = Math.floor(Math.random() * 3);
 
     // Obstacles actuels : on ne change rien
-    if (Math.random() < 0.55) {
-        createTrain(laneIndex, -115);
-    } else {
-        createBarrier(laneIndex, -105);
-    }
+    const trainSpawned = Math.random() < 0.55;
+
+if (trainSpawned) {
+    createTrain(laneIndex, -115);
+} else {
+    createBarrier(laneIndex, -105);
+}
 
     if (selectedMode === "lava") return;
 
