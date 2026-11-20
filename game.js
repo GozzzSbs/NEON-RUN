@@ -1088,12 +1088,6 @@ if (pattern === 4) {
         createCoin(lane, -65 - i * 3);
     }
 }
-    const zigzag = [0, 1, 2, 1, 0, 1, 2, 1, 0, 1];
-
-    for (let i = 0; i < zigzag.length; i++) {
-        createCoin(zigzag[i], -65 - i * 3);
-    }
-}
 
     // 3. TUNNEL DE PIÈCES
     if (pattern === 2) {
