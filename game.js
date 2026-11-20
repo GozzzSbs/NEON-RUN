@@ -1632,7 +1632,30 @@ console.log("DIFFICULTÉ ENREGISTRÉE :", difficulty, window.difficulty);
 // ======================================================
 // BOUCLE PRINCIPALE
 // ======================================================
+function moveCoins() {
+    coinObjects.forEach(coin => {
+        if (!coin.userData.onTrain) {
+            coin.position.z += speed;
+        }
 
+        coin.rotation.y += 0.08;
+        coin.rotation.z += 0.04;
+    });
+
+    coinObjects = coinObjects.filter(coin => {
+        const worldPosition = new THREE.Vector3();
+        coin.getWorldPosition(worldPosition);
+
+        if (worldPosition.z > 18) {
+            if (coin.parent) {
+                coin.parent.remove(coin);
+            }
+            return false;
+        }
+
+        return true;
+    });
+}
 function animate() {
     requestAnimationFrame(animate);
 
