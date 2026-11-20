@@ -1041,7 +1041,12 @@ if (trainSpawned) {
 }
 
     if (selectedMode === "lava") return;
-
+// PIÈCES SUR LE TOIT DU TRAIN
+if (trainSpawned) {
+    for (let i = 0; i < 5; i++) {
+        createCoin(laneIndex, -110 - i * 2, 5.08);
+    }
+}
     const possibleLanes = [0, 1, 2].filter(l => l !== laneIndex);
 
     const laneA = possibleLanes[0];
