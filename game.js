@@ -18,6 +18,46 @@ if (!canvas) throw new Error("Canvas #game introuvable");
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x55baff);
+// ======================================================
+// CIEL BLEU EN DÉGRADÉ
+// ======================================================
+
+const skyGeometry = new THREE.SphereGeometry(350, 32, 32);
+
+const skyMaterial = new THREE.ShaderMaterial({
+    side: THREE.BackSide,
+    depthWrite: false,
+    vertexShader: `
+        varying vec3 vWorldPosition;
+
+        void main() {
+            vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+            vWorldPosition = worldPosition.xyz;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    `,
+    fragmentShader: `
+        varying vec3 vWorldPosition;
+
+        void main() {
+            float height = normalize(vWorldPosition).y;
+
+            vec3 horizon = vec3(0.65, 0.85, 1.0);
+            vec3 zenith = vec3(0.05, 0.35, 0.85);
+
+            float gradient = smoothstep(-0.05, 0.8, height);
+
+            gl_FragColor = vec4(
+                mix(horizon, zenith, gradient),
+                1.0
+            );
+        }
+    `
+});
+
+const skyDome = new THREE.Mesh(skyGeometry, skyMaterial);
+skyDome.renderOrder = -1;
+scene.add(skyDome);
 scene.fog = new THREE.Fog(0x55baff, 150, 300);
 const camera = new THREE.PerspectiveCamera(
     65,
