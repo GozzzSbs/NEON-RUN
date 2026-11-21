@@ -1543,3 +1543,11 @@ button:active {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
     box-sizing: border-box;
 }
+.difficulty-buttons button.active,
+.mode-buttons button.active {
+    border-color: #ffe08a;
+    box-shadow:
+        0 0 0 2px rgba(255, 174, 0, 0.25),
+        0 0 18px rgba(255, 140, 0, 0.35),
+        0 4px 0 #a85a00;
+}
