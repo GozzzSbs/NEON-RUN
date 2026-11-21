@@ -2295,7 +2295,8 @@ running = false;
 paused = false;
 
 stopNoCoinTimer();
-
+// XP gagnée à la fin de la partie
+addPassXP(10 + Math.floor(score / 100));
 saveScoreToSupabase().catch(error => {
     console.error("Erreur lors de la sauvegarde :", error);
 });
