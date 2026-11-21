@@ -4493,7 +4493,11 @@ function openShop() {
 
     shopElement.classList.add("open");
 
-    renderShop();
+renderShop();
+
+if (currentShopTab === "capes") {
+    setupShopCapePreviews();
+}
 }
 
 window.openShop = openShop;
