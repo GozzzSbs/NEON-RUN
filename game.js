@@ -3383,6 +3383,10 @@ function createShopStyles() {
     height: 100%;
     pointer-events: none;
     z-index: 2;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    display: block;
 }
         position: relative;
         .neon-shop-card {
