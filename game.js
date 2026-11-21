@@ -2848,85 +2848,51 @@ window.addEventListener("resize", () => {
 
 const SHOP_CATALOG = {
     skins: [
-    {
-        id: "default",
-        name: "JACKO",
-        price: 0,
-        currency: "coins",
-        color: 0x7900b8,
-        description: "Le runner original."
-    },
-    {
-        id: "el_blackito",
-        name: "EL BLACKITO",
-        price: 10,
-        currency: "diamonds",
-        color: 0x050505,
-        description: "Noir absolu avec des détails blancs."
-    },
-    {
-        id: "electric",
-        name: "ELECTRIC",
-        price: 25,
-        currency: "diamonds",
-        color: 0x00eaff,
-        description: "L'énergie électrique."
-    },
-    {
-        id: "inferno",
-        name: "INFERNO",
-        price: 40,
-        currency: "diamonds",
-        color: 0xff3300,
-        description: "Un runner venu des flammes."
-    },
-    {
-        id: "royal",
-        name: "ROYAL",
-        price: 60,
-        currency: "diamonds",
-        color: 0xffd700,
-        description: "Un style digne d'un roi."
-    },
-    {
-        id: "galaxy",
-        name: "GALAXY",
-        price: 80,
-        currency: "diamonds",
-        color: 0x8a2be2,
-        description: "La puissance de la galaxie."
-    },
-    {
-        id: "diamond",
-        name: "DIAMOND",
-        price: 120,
-        currency: "diamonds",
-        color: 0xffffff,
-        description: "Le skin ultime."
-    }
-],
-
+        {
+            id: "default",
+            name: "JACKO",
+            price: 0,
+            currency: "coins",
+            color: 0x7900b8,
+            description: "Le skin original."
+        },
+        {
+            id: "el_blackito",
+            name: "EL BLACKITO",
+            price: 10,
+            currency: "diamonds",
+            color: 0x050505,
+            description: "Noir absolu avec des détails blancs."
+        },
+        {
+            id: "prince_k",
+            name: "PRINCE K",
+            price: 1000,
+            currency: "diamonds",
+            color: 0xffd700,
+            description: "Un style royal légendaire."
+        }
+    ],
 
     capes: [
-    {
-        id: "nr",
-        name: "CAPE NR",
-        price: 100,
-        currency: "diamonds",
-        color: 0x050505,
-        description: "Cape noire avec le logo NR."
-    },
-    {
-        id: "rxn",
-        name: "La RXN Cape,s",
-        price: 500,
-        currency: "diamonds",
-        color: 0x050505,
-        description: "Cape noire animée : RXN blanc et lune blanche."
+        {
+            id: "nr",
+            name: "CAPE NR",
+            price: 100,
+            currency: "diamonds",
+            color: 0x050505,
+            description: "Cape officiel avec le logo NR."
+        },
+        {
+            id: "rxn",
+            name: "La RXN Cape,s",
+            price: 500,
+            currency: "diamonds",
+            color: 0x050505,
+            description: "Cape noire animée officiel : RXN blanc et lune blanche."
         }
-]
+    ]
 };
-
 // ======================================================
 // SAUVEGARDE
 // ======================================================
