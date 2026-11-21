@@ -3923,7 +3923,7 @@ function animateCape() {
     shopCapeObject.rotation.z = Math.sin(time * 4) * 0.045;
     shopCapeObject.rotation.x = Math.sin(time * 3) * 0.035;
 
-    if (shopCapeObject.userData.capeId === "rxn") {
+    if (["rxn", "rxn_white"].includes(shopCapeObject.userData.capeId)) {
 
         const phase = Math.floor(time) % 2;
 
