@@ -3786,7 +3786,8 @@ cloth.material.needsUpdate = true;
 
         if (id === "certified") {
             const ctx = logoCanvas.getContext("2d");
-
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, 256, 256);
             ctx.fillStyle = "#1DA1F2";
             ctx.beginPath();
             ctx.arc(128, 128, 72, 0, Math.PI * 2);
