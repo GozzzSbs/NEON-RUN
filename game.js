@@ -2580,7 +2580,17 @@ function startNoCoinTimer() {
         const timerText = document.getElementById("noCoinTimerText");
 
         if (timerText) {
-            timerText.textContent = noCoinElapsed.toFixed(2) + " s";
+            const minutes = Math.floor(noCoinElapsed / 60);
+const seconds = Math.floor(noCoinElapsed % 60);
+const centiseconds = Math.floor((noCoinElapsed % 1) * 100);
+
+if (minutes > 0) {
+    timerText.textContent =
+        minutes + "m" + String(seconds).padStart(2, "0");
+} else {
+    timerText.textContent =
+        noCoinElapsed.toFixed(2) + " s";
+}
         }
     }, 30);
 }
