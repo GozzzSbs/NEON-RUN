@@ -3699,8 +3699,12 @@ function renderShop() {
             };
         }
 
-        container.appendChild(card);
+                container.appendChild(card);
     });
+
+    if (currentShopTab === "capes") {
+        setupShopCapePreviews();
+    }
 }
 
 // ======================================================
