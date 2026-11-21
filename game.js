@@ -4866,6 +4866,9 @@ async function updateGamePlayerInfo() {
         badgeElement.title = "Joueur certifié";
     }
 }
+function openPass() {
+    alert("BIENVENUE DANS LE PASS NEON RUN !");
+}
 async function openLeaderboard() {
 
     const screen = document.getElementById("leaderboardScreen");
