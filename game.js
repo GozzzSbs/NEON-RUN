@@ -1766,6 +1766,17 @@ movingBuildings.forEach(building => {
         cloud.position.z = -270;
     }
 });
+    movingBirds.forEach((bird, index) => {
+    bird.position.z += speed * 0.5;
+    bird.position.x += Math.sin(frame * 0.02 + index) * 0.015;
+
+    if (bird.position.z > 25) {
+        bird.position.z = -240;
+        bird.position.x = (Math.random() - 0.5) * 35;
+    }
+
+    bird.rotation.z = Math.sin(frame * 0.08 + index) * 0.08;
+});
 }
 // ======================================================
 // OBSTACLES ET TRAINS
