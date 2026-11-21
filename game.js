@@ -733,37 +733,63 @@ for (const side of [-1, 1]) {
             }
         }
 
-        // BALCONS
-        for (let y = 0; y < Math.floor(height / 6); y++) {
+        // ======================================================
+// VRAIS BALCONS MODERNES
+// ======================================================
 
-            const balcony = new THREE.Mesh(
-                new THREE.BoxGeometry(3.2, 0.25, 1.2),
-                balconyMaterial
-            );
+for (let y = 0; y < Math.floor(height / 6); y++) {
 
-            balcony.position.set(
-                0,
-                -height / 2 + 4 + y * 6,
-                6.5
-            );
+    const balconyY = -height / 2 + 4 + y * 6;
 
-            building.add(balcony);
+    // Plancher du balcon
+    const balconyFloor = new THREE.Mesh(
+        new THREE.BoxGeometry(3.4, 0.25, 1.6),
+        balconyMaterial
+    );
 
-            // RAMBARDE
-            const rail = new THREE.Mesh(
-                new THREE.BoxGeometry(3.2, 0.8, 0.12),
-                balconyRailMaterial
-            );
+    balconyFloor.position.set(0, balconyY, 6.8);
+    building.add(balconyFloor);
 
-            rail.position.set(
-                0,
-                -height / 2 + 4.5 + y * 6,
-                7.05
-            );
+    // Rambarde en verre
+    const glassMaterial = new THREE.MeshStandardMaterial({
+        color: 0x9bd9e8,
+        transparent: true,
+        opacity: 0.45,
+        roughness: 0.15,
+        metalness: 0.2
+    });
 
-            building.add(rail);
-        }
-    }
+    const glass = new THREE.Mesh(
+        new THREE.BoxGeometry(3.4, 0.9, 0.08),
+        glassMaterial
+    );
+
+    glass.position.set(0, balconyY + 0.55, 7.55);
+    building.add(glass);
+
+    // Rambarde latérale gauche
+    const sideLeft = new THREE.Mesh(
+        new THREE.BoxGeometry(0.08, 0.9, 1.5),
+        balconyRailMaterial
+    );
+
+    sideLeft.position.set(-1.65, balconyY + 0.55, 6.8);
+    building.add(sideLeft);
+
+    // Rambarde latérale droite
+    const sideRight = sideLeft.clone();
+
+    sideRight.position.x = 1.65;
+    building.add(sideRight);
+
+    // Petite structure métallique sous le balcon
+    const support = new THREE.Mesh(
+        new THREE.BoxGeometry(3.2, 0.12, 0.12),
+        balconyRailMaterial
+    );
+
+    support.position.set(0, balconyY - 0.2, 7.3);
+    building.add(support);
 }
 // ======================================================
 // PERSONNAGE
