@@ -2722,7 +2722,7 @@ startNoCoinTimer();
 
     updateHUD();
     renderer.render(scene, camera);
-
+}
     if (!animationStarted) {
         animationStarted = true;
         animate();
