@@ -2697,7 +2697,8 @@ playerParts.body.position.y = 1.75;
     updateDailyChallengeProgress("runs", 1);
 paused = false;
 gameEnded = false;
-
+const pauseMenu = document.getElementById("pauseMenu");
+if (pauseMenu) pauseMenu.classList.add("hidden");
 startNoCoinTimer();
 
     const menu = document.getElementById("menu");
