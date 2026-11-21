@@ -2951,6 +2951,32 @@ const SHOP_CATALOG = {
 // ======================================================
 
 let shopWallet = Number(localStorage.getItem("neonWallet") || 0);
+// ======================================================
+// PASS NEON RUN - PROGRESSION
+// ======================================================
+
+let passLevel = Number(localStorage.getItem("neonPassLevel") || 1);
+let passXP = Number(localStorage.getItem("neonPassXP") || 0);
+
+let passRewards = JSON.parse(
+    localStorage.getItem("neonPassRewards") || "null"
+);
+
+if (!Array.isArray(passRewards) || passRewards.length !== 100) {
+    passRewards = Array.from(
+        { length: 100 },
+        () => Math.floor(Math.random() * 28) + 3
+    );
+
+    localStorage.setItem(
+        "neonPassRewards",
+        JSON.stringify(passRewards)
+    );
+}
+
+let claimedPassRewards = JSON.parse(
+    localStorage.getItem("neonPassClaimed") || "[]"
+);
 let shopDiamonds = Number(localStorage.getItem("neonDiamonds") || 0);
 
 function readSavedArray(key, fallback) {
