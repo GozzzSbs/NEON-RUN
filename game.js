@@ -2176,7 +2176,6 @@ movingBuildings.forEach(building => {
 function moveObstacles() {
     obstacles.forEach(obstacle => {
 
-        // ANCIENS TRAINS : ON CONSERVE LEUR MOUVEMENT
         if (obstacle.type === "train") {
 
             obstacle.object.position.z += speed * 1.8;
@@ -2190,28 +2189,12 @@ function moveObstacles() {
             obstacle.object.position.y =
                 Math.sin(frame * 0.25 + obstacle.object.userData.shake) * 0.025;
 
-        }
-
-        // NOUVEAUX TRAINS : ILS RESTENT IMMOBILES
-        else if (obstacle.type === "stationaryTrain") {
-
-            // Aucun déplacement et aucune vibration
-
-        }
-
-        // AUTRES OBSTACLES
-        else {
+        } else {
             obstacle.object.position.z += speed;
         }
     });
 
     obstacles = obstacles.filter(obstacle => {
-
-        // Les nouveaux trains stationnés restent dans la scène
-        if (obstacle.type === "stationaryTrain") {
-            return true;
-        }
-
         if (obstacle.object.position.z > 20) {
             scene.remove(obstacle.object);
             return false;
