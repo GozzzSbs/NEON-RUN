@@ -1627,3 +1627,12 @@ button:active {
     color: #ff9d00;
     margin-left: 8px;
 }
+.player-game-info {
+    position: absolute;
+    top: 12px;
+    left: 15px;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.65);
+    padding: 8px 12px;
+    border-radius: 8px;
+}
