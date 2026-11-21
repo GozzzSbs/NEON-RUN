@@ -4589,10 +4589,10 @@ window.openShop = openShop;
 // ======================================================
 
 function closeShop() {
-    if (shopElement) {
-        shopElement.classList.remove("open");
-        shopElement.classList.add("hidden");
-    }
+    if (!shopElement) return;
+
+    shopElement.classList.remove("open");
+    shopElement.style.display = "none";
 
     document.getElementById("menu").classList.remove("hidden");
 }
