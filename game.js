@@ -1575,7 +1575,7 @@ function moveEnvironment() {
         }
     });
 
-    // DÉFILEMENT DES LAMPADAIRES
+        // DÉFILEMENT DES LAMPADAIRES
     movingStreetLamps.forEach(lamp => {
         lamp.position.z += speed;
 
@@ -1583,13 +1583,12 @@ function moveEnvironment() {
             lamp.position.z -= 240;
         }
     });
-}
 
     // DÉFILEMENT DES MURS
     streetWalls.forEach(wall => {
         wall.position.z += speed;
 
-        if (wall.position.z > 155) {
+        if (wall.position.z > 20) {
             wall.position.z -= 240;
         }
     });
