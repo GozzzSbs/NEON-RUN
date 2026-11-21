@@ -3389,7 +3389,7 @@ function createShopStyles() {
         }
 
         .neon-shop-preview {
-            height: 80px;
+            height: 130px;
             display: flex;
             align-items: center;
             justify-content: center;
