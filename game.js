@@ -3843,8 +3843,8 @@ function animateCape() {
 
     // SAUT : LA CAPE SE SOULÈVE VERS L'ARRIÈRE
     if (jumping) {
-        targetX = -0.65 + Math.sin(time * 8) * 0.08;
-        targetZ = Math.sin(time * 5) * 0.09;
+        targetX = 0.18 + Math.sin(time * 8) * 0.04;
+        targetZ = Math.sin(time * 5) * 0.05;
     }
 
     // GLISSADE
