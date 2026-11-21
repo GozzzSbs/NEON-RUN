@@ -1244,6 +1244,54 @@ function createTrain(laneIndex, z) {
 
     return train;
 }
+function createStationaryTrain(laneIndex, z) {
+    const train = new THREE.Group();
+
+    const bodyMaterial = mat(0x102b66, 0x00ddff, 0.7);
+    const rampMaterial = mat(0x222233, 0x00ddff, 0.8);
+    const neonMaterial = mat(0x00ddff, 0x00ddff, 2);
+
+    // CORPS DU TRAIN
+    box(2.55, 3.4, 13, bodyMaterial, 0, 2, 0, train);
+
+    // TOIT
+    box(2.48, 0.08, 12.8, bodyMaterial, 0, 3.74, 0, train);
+
+    // LIGNES LUMINEUSES
+    for (const side of [-1, 1]) {
+        box(0.07, 0.04, 12, neonMaterial, side * 1.12, 3.81, 0, train);
+    }
+
+    // RAMPE À L'AVANT DU TRAIN
+    const ramp = new THREE.Mesh(
+        new THREE.BoxGeometry(2.4, 0.18, 5),
+        rampMaterial
+    );
+
+    ramp.position.set(0, 1.85, 8.5);
+    ramp.rotation.x = -0.55;
+    train.add(ramp);
+
+    // BANDES LUMINEUSES SUR LA RAMPE
+    for (const side of [-1, 1]) {
+        box(0.06, 0.04, 5, neonMaterial,
+            side * 1.1, 2.05, 8.5, train);
+    }
+
+    train.position.set(lanePositions[laneIndex], 0, z);
+
+    train.userData.stationary = true;
+
+    scene.add(train);
+
+    obstacles.push({
+        object: train,
+        type: "stationaryTrain",
+        lane: laneIndex
+    });
+
+    return train;
+}
 // ======================================================
 // BARRIÈRES FUTURISTES
 // ======================================================
