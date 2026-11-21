@@ -3789,18 +3789,18 @@ cloth.material.needsUpdate = true;
 
             ctx.fillStyle = "#1DA1F2";
             ctx.beginPath();
-            ctx.arc(128, 128, 90, 0, Math.PI * 2);
+            ctx.arc(128, 128, 72, 0, Math.PI * 2);
             ctx.fill();
 
             ctx.strokeStyle = "white";
-            ctx.lineWidth = 19;
-            ctx.lineCap = "round";
-            ctx.lineJoin = "round";
-            ctx.beginPath();
-            ctx.moveTo(82, 128);
-            ctx.lineTo(112, 158);
-            ctx.lineTo(177, 94);
-            ctx.stroke();
+            ctx.lineWidth = 15;
+ctx.lineCap = "round";
+ctx.lineJoin = "round";
+ctx.beginPath();
+ctx.moveTo(91, 128);
+ctx.lineTo(115, 151);
+ctx.lineTo(165, 101);
+ctx.stroke();
 
             texture.needsUpdate = true;
 
