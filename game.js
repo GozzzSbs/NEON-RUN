@@ -4257,10 +4257,7 @@ window.handleShopItem = handleShopItem;
 function applyShopSkin() {
     if (!player) return;
 
-    // SUMMER BOY conserve ses propres couleurs
-    if (equippedSkin === "blond_boy") {
-        return;
-    }
+    if (equippedSkin === "blond_boy") return;
 
     player.traverse(object => {
         if (!object.isMesh || !object.material) return;
@@ -4284,7 +4281,6 @@ function applyShopSkin() {
         });
     });
 
-    // JACKO
     if (equippedSkin === "default") {
         originalPlayerMaterials.forEach((original, material) => {
             material.color.copy(original.color);
@@ -4299,15 +4295,14 @@ function applyShopSkin() {
         return;
     }
 
-    // EL BLACKITO
     if (equippedSkin === "el_blackito") {
         originalPlayerMaterials.forEach((original, material) => {
-            const originalColor = original.color;
+            const c = original.color;
 
             const isDetail =
-                originalColor.r > 0.25 ||
-                originalColor.g > 0.35 ||
-                originalColor.b > 0.25;
+                c.r > 0.25 ||
+                c.g > 0.35 ||
+                c.b > 0.25;
 
             if (isDetail) {
                 material.color.set(0xffffff);
@@ -4321,7 +4316,14 @@ function applyShopSkin() {
                 material.color.set(0x050505);
 
                 if (material.emissive) {
-                    material.emissive.set(0x
+                    material.emissive.set(0x000000);
+                }
+
+                material.emissiveIntensity = 0;
+            }
+        });
+    }
+}
 
 // ======================================================
 // CRÉER LA CAPE NR
