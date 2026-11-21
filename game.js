@@ -4257,6 +4257,11 @@ window.handleShopItem = handleShopItem;
 function applyShopSkin() {
     if (!player) return;
 
+    // SUMMER BOY conserve ses propres couleurs
+    if (equippedSkin === "blond_boy") {
+        return;
+    }
+
     player.traverse(object => {
         if (!object.isMesh || !object.material) return;
 
@@ -4279,6 +4284,7 @@ function applyShopSkin() {
         });
     });
 
+    // JACKO
     if (equippedSkin === "default") {
         originalPlayerMaterials.forEach((original, material) => {
             material.color.copy(original.color);
@@ -4292,45 +4298,8 @@ function applyShopSkin() {
 
         return;
     }
-if (equippedSkin === "electric") {
-    originalPlayerMaterials.forEach((original, material) => {
-        material.color.set(0x00eaff);
-        if (material.emissive) material.emissive.set(0x00eaff);
-        material.emissiveIntensity = 0.6;
-    });
-}
 
-if (equippedSkin === "inferno") {
-    originalPlayerMaterials.forEach((original, material) => {
-        material.color.set(0xff3300);
-        if (material.emissive) material.emissive.set(0xff3300);
-        material.emissiveIntensity = 0.6;
-    });
-}
-
-if (equippedSkin === "royal") {
-    originalPlayerMaterials.forEach((original, material) => {
-        material.color.set(0xffd700);
-        if (material.emissive) material.emissive.set(0xffd700);
-        material.emissiveIntensity = 0.5;
-    });
-}
-
-if (equippedSkin === "galaxy") {
-    originalPlayerMaterials.forEach((original, material) => {
-        material.color.set(0x8a2be2);
-        if (material.emissive) material.emissive.set(0x8a2be2);
-        material.emissiveIntensity = 0.7;
-    });
-}
-
-if (equippedSkin === "diamond") {
-    originalPlayerMaterials.forEach((original, material) => {
-        material.color.set(0xffffff);
-        if (material.emissive) material.emissive.set(0x66ccff);
-        material.emissiveIntensity = 0.8;
-    });
-}
+    // EL BLACKITO
     if (equippedSkin === "el_blackito") {
         originalPlayerMaterials.forEach((original, material) => {
             const originalColor = original.color;
@@ -4352,14 +4321,7 @@ if (equippedSkin === "diamond") {
                 material.color.set(0x050505);
 
                 if (material.emissive) {
-                    material.emissive.set(0x000000);
-                }
-
-                material.emissiveIntensity = 0;
-            }
-        });
-    }
-}
+                    material.emissive.set(0x
 
 // ======================================================
 // CRÉER LA CAPE NR
