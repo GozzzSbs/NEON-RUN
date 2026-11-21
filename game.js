@@ -1401,7 +1401,11 @@ function createBarrier(laneIndex, z) {
 // ======================================================
 // PIÈCES COSMIQUES
 // ======================================================
-
+// GÉOMÉTRIES PARTAGÉES DES PIÈCES
+const coinBodyGeometry = new THREE.CylinderGeometry(0.48, 0.48, 0.12, 32);
+const coinRingGeometry = new THREE.TorusGeometry(0.43, 0.045, 8, 32);
+const coinToothGeometry = new THREE.BoxGeometry(0.07, 0.07, 0.13);
+const coinLogoGeometry = new THREE.PlaneGeometry(0.65, 0.65);
 function createCoin(laneIndex, z, height = 1.3, onTrain = false, train = null) {
 
     const coin = new THREE.Group();
@@ -1415,7 +1419,7 @@ function createCoin(laneIndex, z, height = 1.3, onTrain = false, train = null) {
 
     // CORPS ROND DE LA PIÈCE
     const coinBody = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.48, 0.48, 0.12, 32),
+        coinBodyGeometry,
         goldMaterial
     );
 
@@ -1424,7 +1428,7 @@ function createCoin(laneIndex, z, height = 1.3, onTrain = false, train = null) {
 
     // BORDURE EXTÉRIEURE
     const outerRing = new THREE.Mesh(
-        new THREE.TorusGeometry(0.43, 0.045, 6, 32),
+        coinRingGeometry,
         new THREE.MeshStandardMaterial({
             color: 0xf5cc65,
             metalness: 0.6,
@@ -1446,7 +1450,7 @@ function createCoin(laneIndex, z, height = 1.3, onTrain = false, train = null) {
         const angle = (i / 32) * Math.PI * 2;
 
         const tooth = new THREE.Mesh(
-            new THREE.BoxGeometry(0.07, 0.07, 0.13),
+            coinToothGeometry,
             toothMaterial
         );
 
@@ -1479,7 +1483,7 @@ function createCoin(laneIndex, z, height = 1.3, onTrain = false, train = null) {
 
     // FACE AVANT
     const frontLogo = new THREE.Mesh(
-        new THREE.PlaneGeometry(0.65, 0.65),
+        coinLogoGeometry,
         new THREE.MeshBasicMaterial({
             map: nrTexture,
             transparent: true,
