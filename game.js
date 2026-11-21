@@ -4894,6 +4894,53 @@ async function updateGamePlayerInfo() {
 }
 function openPass() {
     document.getElementById("neonPass").style.display = "block";
+    renderPass();
+}
+
+function closePass() {
+    document.getElementById("neonPass").style.display = "none";
+}
+
+function renderPass() {
+    document.getElementById("passLevel").textContent = passLevel;
+    document.getElementById("passXp").textContent = passXP;
+
+    document.getElementById("passXpBar").style.width =
+        Math.min(passXP, 100) + "%";
+
+    const container = document.getElementById("passRewards");
+    container.innerHTML = "";
+
+    for (let i = 0; i < 100; i++) {
+        const level = i + 1;
+        const reward = passRewards[i];
+        const claimed = claimedPassRewards.includes(level);
+        const unlocked = level <= passLevel;
+
+        const card = document.createElement("div");
+
+        card.style.cssText = `
+            background:#17172b;
+            border:1px solid ${unlocked ? "#00eaff" : "#444"};
+            border-radius:12px;
+            padding:15px;
+            text-align:center;
+        `;
+
+        card.innerHTML = `
+            <h3>NIVEAU ${level}</h3>
+            <p style="font-size:22px">💎 ${reward}</p>
+            ${
+                claimed
+                    ? "<span style='color:#00ff88'>RÉCUPÉRÉ</span>"
+                    : unlocked
+                        ? `<button onclick="claimPassReward(${level})">RÉCUPÉRER</button>`
+                        : "<span style='color:#999'>🔒 VERROUILLÉ</span>"
+            }
+        `;
+
+        container.appendChild(card);
+    }
 }
 
 function closePass() {
