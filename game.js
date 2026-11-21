@@ -324,7 +324,6 @@ const brickMaterial = new THREE.MeshStandardMaterial({
 // TEXTURE GRAFFITI
 // ======================================================
 
-```js
 function createGraffitiTexture(text) {
     const canvasTexture = document.createElement("canvas");
     canvasTexture.width = 1024;
