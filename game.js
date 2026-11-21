@@ -1441,7 +1441,7 @@ function createCoin(laneIndex, z, height = 1.3, onTrain = false, train = null) {
         roughness: 0.5
     });
 
-    for (let i = 0; i < 32; i++) {
+    for (let i = 0; i < 16; i++) {
 
         const angle = (i / 32) * Math.PI * 2;
 
