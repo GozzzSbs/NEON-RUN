@@ -1569,7 +1569,7 @@ window.selectMode = selectMode;
 // DIFFICULTÉ
 // ======================================================
 
-function setDifficulty(level, button) {
+window.setDifficulty = function(level, button) {
     difficulty = level;
 window.difficulty = level;
     console.log("DIFFICULTÉ SÉLECTIONNÉE :", difficulty);
@@ -1580,9 +1580,7 @@ window.difficulty = level;
     if (button) button.classList.add("active");
 
     applyDifficultySettings(true);
-}
-
-window.setDifficulty = setDifficulty;
+};
 console.log("SETDIFFICULTY DISPONIBLE :", typeof window.setDifficulty);
 // ======================================================
 // COMMANDES
