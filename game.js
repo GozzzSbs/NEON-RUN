@@ -1133,6 +1133,7 @@ function createBlondBoy() {
     box(0.86, 0.12, 0.40, yellow, 0, 1.02, 0, player);
 
     player.position.set(0, 0, 0);
+    player.rotation.y = Math.PI;
     scene.add(player);
 }
 function createPlayer() {
