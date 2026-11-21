@@ -4921,13 +4921,14 @@ function renderPass() {
         const card = document.createElement("div");
 
         card.style.cssText = `
-            background:#17172b;
-            border:1px solid ${unlocked ? "#00eaff" : "#444"};
-            border-radius:12px;
-            padding:15px;
-            text-align:center;
-        `;
-
+    background:linear-gradient(145deg,#17172b,#080820);
+    border:1px solid ${unlocked ? "#00eaff" : "#444"};
+    border-radius:15px;
+    padding:15px;
+    text-align:center;
+    box-shadow:${unlocked ? "0 0 12px #00eaff55" : "none"};
+    transition:0.25s;
+`;
         card.innerHTML = `
             <h3>NIVEAU ${level}</h3>
             <p style="font-size:22px">💎 ${reward}</p>
