@@ -735,9 +735,92 @@ for (const side of [-1, 1]) {
 
         building.castShadow = true;
         building.receiveShadow = true;
+// ======================================================
+// DÉTAILS DES TOITS
+// ======================================================
 
+// Cheminée
+const chimney = new THREE.Mesh(
+    new THREE.BoxGeometry(1.2, 2, 1.2),
+    new THREE.MeshStandardMaterial({
+        color: 0x754735,
+        roughness: 0.9
+    })
+);
+
+chimney.position.set(
+    (Math.random() - 0.5) * 3,
+    height / 2 + 1,
+    0
+);
+
+building.add(chimney);
+
+// Antenne
+const antenna = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.06, 0.06, 3, 8),
+    new THREE.MeshStandardMaterial({
+        color: 0x303030,
+        metalness: 0.7
+    })
+);
+
+antenna.position.set(
+    (Math.random() - 0.5) * 3,
+    height / 2 + 1.5,
+    2
+);
+
+building.add(antenna);
+        // Lumière rouge au sommet de l'antenne
+const antennaLight = new THREE.Mesh(
+    new THREE.SphereGeometry(0.18, 12, 12),
+    new THREE.MeshBasicMaterial({
+        color: 0xff2020
+    })
+);
+
+antennaLight.position.set(
+    antenna.position.x,
+    height / 2 + 3.1,
+    antenna.position.z
+);
+
+building.add(antennaLight);
         movingBuildings.push(building);
+// Réservoir métallique sur le toit
+const tank = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.9, 0.9, 1.5, 16),
+    new THREE.MeshStandardMaterial({
+        color: 0x52636b,
+        metalness: 0.7,
+        roughness: 0.4
+    })
+);
 
+tank.position.set(
+    2,
+    height / 2 + 0.75,
+    -2
+);
+
+building.add(tank);
+        // Petit bloc technique sur le toit
+const roofBox = new THREE.Mesh(
+    new THREE.BoxGeometry(1.5, 0.8, 1.5),
+    new THREE.MeshStandardMaterial({
+        color: 0x303b43,
+        roughness: 0.8
+    })
+);
+
+roofBox.position.set(
+    -2,
+    height / 2 + 0.4,
+    -2
+);
+
+building.add(roofBox);
         // ======================================================
         // FENÊTRES
         // ======================================================
