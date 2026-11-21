@@ -1269,9 +1269,9 @@ function createStationaryTrain(laneIndex, z) {
     );
 
     ramp.position.set(0, 1.85, 8.5);
-    ramp.rotation.x = 0.55;
+    ramp.rotation.x = -0.55;
     train.add(ramp);
-train.userData.ramp = ramp;
+
     // BANDES LUMINEUSES SUR LA RAMPE
     for (const side of [-1, 1]) {
         box(0.06, 0.04, 5, neonMaterial,
@@ -2230,7 +2230,6 @@ function moveObstacles() {
 
         if (obstacle.type === "train") {
 
-            // ANCIENS TRAINS : mouvement habituel
             obstacle.object.position.z += speed * 1.8;
 
             const wheels = obstacle.object.userData.wheels || [];
@@ -2242,27 +2241,29 @@ function moveObstacles() {
             obstacle.object.position.y =
                 Math.sin(frame * 0.25 + obstacle.object.userData.shake) * 0.025;
 
-        } else if (obstacle.type === "stationaryTrain") {
-
-            // NOUVEAUX TRAINS : pas de secousses ni de roues animées
-            // Ils avancent vers le joueur avec le décor
-            obstacle.object.position.z += speed;
-
         } else {
+    obstacle.object.position.z += speed;
+}
 
-            obstacle.object.position.z += speed;
-        }
+} else {
+    obstacle.object.position.z += speed;
+}
     });
 
     obstacles = obstacles.filter(obstacle => {
 
-        if (obstacle.object.position.z > 20) {
-            scene.remove(obstacle.object);
-            return false;
-        }
-
+    // Garder les nouveaux trains immobiles
+    if (obstacle.type === "stationaryTrain") {
         return true;
-    });
+    }
+
+    if (obstacle.object.position.z > 20) {
+        scene.remove(obstacle.object);
+        return false;
+    }
+
+    return true;
+});
 
     coinObjects = coinObjects.filter(coin => {
         const worldPosition = new THREE.Vector3();
@@ -2483,29 +2484,23 @@ if (score % 100 === 0) {
         player.position.y += jumpVelocity;
 
         jumpVelocity -= selectedMode === "lava" ? 0.035 : 0.012;
-// DÉTECTION DE L'ATTERRISSAGE SUR LES TRAINS ET RAMPES
+// DÉTECTION DE L'ATTERRISSAGE SUR UN TRAIN
 if (jumpVelocity < 0) {
-
     for (const obstacle of obstacles) {
-
-        if (
-            obstacle.type !== "train" &&
-            obstacle.type !== "stationaryTrain"
-        ) continue;
+        if (obstacle.type !== "train") continue;
 
         const train = obstacle.object;
+        const roofHeight = 3.78 + train.position.y;
 
         const sameLane =
             Math.abs(train.position.x - player.position.x) < 1.2;
 
-        const localZ = player.position.z - train.position.z;
-
-        // DÉTECTION DU TOIT
-        const roofHeight = 3.78 + train.position.y;
+        const aboveTrain =
+            Math.abs(train.position.z) < 6.2;
 
         if (
             sameLane &&
-            Math.abs(localZ) < 6.2 &&
+            aboveTrain &&
             previousY >= roofHeight &&
             player.position.y <= roofHeight
         ) {
@@ -2515,34 +2510,75 @@ if (jumpVelocity < 0) {
             ridingTrain = train;
             break;
         }
+    }
+}
+        const landingHeight =
+            selectedMode === "lava" ? LAVA_PLATFORM_TOP : 0;
 
-        // DÉTECTION DE LA RAMPE DES NOUVEAUX TRAINS
-        if (
-            obstacle.type === "stationaryTrain" &&
-            train.userData.ramp
-        ) {
-            const ramp = train.userData.ramp;
-
-            const rampWorldPosition = new THREE.Vector3();
-            ramp.getWorldPosition(rampWorldPosition);
-
-            const rampTop = rampWorldPosition.y +
-                Math.sin(Math.abs(ramp.rotation.x)) * 2.5;
+        if (player.position.y <= landingHeight) {
+            player.position.y = landingHeight;
+            jumping = false;
+            jumpVelocity = 0;
 
             if (
-                sameLane &&
-                Math.abs(player.position.z - rampWorldPosition.z) < 2.7 &&
-                previousY >= rampTop &&
-                player.position.y <= rampTop
+                selectedMode === "lava" &&
+                !isPlayerAboveLavaPlatform()
             ) {
-                player.position.y = rampTop;
-                jumping = false;
-                jumpVelocity = 0;
-                ridingTrain = train;
-                break;
+                endGame("Tu es tombé dans la lave !");
+                return;
             }
         }
     }
+
+    if (sliding) {
+        slideTimer--;
+        player.scale.y = 0.65;
+
+        if (slideTimer <= 0) {
+            sliding = false;
+            player.scale.y = 1;
+        }
+    }
+
+    if (selectedMode === "lava" && !jumping) {
+        player.position.y = LAVA_PLATFORM_TOP;
+    }
+
+    animateRunner();
+
+    moveEnvironment();
+    moveLavaPlatforms();
+    moveObstacles();
+   // JACKO RESTE SUR LE TRAIN TEMPORAIREMENT
+if (ridingTrain) {
+    const trainExists = obstacles.some(
+        obstacle => obstacle.object === ridingTrain
+    );
+
+    if (trainExists && ridingTrain.position.z < 6.2) {
+        player.position.y = 3.78 + ridingTrain.position.y;
+        jumping = false;
+    } else {
+        ridingTrain = null;
+        jumping = true;
+        jumpVelocity = 0;
+    }
+}
+    moveCoins();
+
+    checkCollisions();
+
+    if (!running) return;
+
+    camera.position.x +=
+        (player.position.x * 0.35 - camera.position.x) * 0.08;
+
+    camera.position.y = 5 + player.position.y * 0.3;
+
+    camera.lookAt(player.position.x * 0.25, 1.5, -20);
+
+    updateHUD();
+    renderer.render(scene, camera);
 }
 // ======================================================
 // DÉMARRER
@@ -2722,7 +2758,7 @@ startNoCoinTimer();
 
     updateHUD();
     renderer.render(scene, camera);
-}
+
     if (!animationStarted) {
         animationStarted = true;
         animate();
