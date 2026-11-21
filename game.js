@@ -1098,35 +1098,30 @@ createPlayer();
 // TRAINS SPATIAUX
 // ======================================================
 
-function createTrain(laneIndex, z) {
+function createStationaryTrain(laneIndex, z) {
 
     const train = new THREE.Group();
 
-    // 4 STYLES DE TRAINS SPATIAUX
     const styles = [
         {
-            name: "Galaxy Blue",
             body: 0x102b66,
             neon: 0x00ddff,
             windows: 0x75f5ff,
             roof: 0x183e80
         },
         {
-            name: "Nebula",
             body: 0x35105c,
             neon: 0xff35dd,
             windows: 0xffaaff,
             roof: 0x541477
         },
         {
-            name: "Cosmic Emerald",
             body: 0x092c32,
             neon: 0x00ffbb,
             windows: 0x80ffe0,
             roof: 0x12434a
         },
         {
-            name: "Solar Galaxy",
             body: 0x30200c,
             neon: 0xffaa22,
             windows: 0xffe49a,
@@ -1134,7 +1129,6 @@ function createTrain(laneIndex, z) {
         }
     ];
 
-    // CHOISIR UN STYLE AU HASARD
     const style = styles[
         Math.floor(Math.random() * styles.length)
     ];
@@ -1144,13 +1138,13 @@ function createTrain(laneIndex, z) {
     const neonMaterial = mat(style.neon, style.neon, 2);
     const windowMaterial = mat(style.windows, style.windows, 1.7);
 
-    // CORPS PRINCIPAL
+    // CORPS DU TRAIN
     box(2.55, 3.4, 13, bodyMaterial, 0, 2, 0, train);
 
-    // TOIT PLAT
+    // TOIT
     box(2.48, 0.08, 12.8, roofMaterial, 0, 3.74, 0, train);
 
-    // LIGNES LUMINEUSES SUR LE TOIT
+    // LIGNES LUMINEUSES
     for (const side of [-1, 1]) {
         box(
             0.07, 0.04, 12,
@@ -1160,7 +1154,7 @@ function createTrain(laneIndex, z) {
         );
     }
 
-    // PANNEAUX GALAXY SUR LE TOIT
+    // PANNEAUX DU TOIT
     for (let zPos = -4.5; zPos <= 4.5; zPos += 3) {
         box(
             0.75, 0.035, 1.1,
@@ -1170,21 +1164,18 @@ function createTrain(laneIndex, z) {
         );
     }
 
-    // AVANT LUMINEUX
+    // AVANT
     box(2.4, 1.1, 0.2, neonMaterial, 0, 3, 6.55, train);
     box(1.7, 0.85, 0.12, windowMaterial, 0, 2.8, 6.68, train);
 
-    // FENÊTRES LATÉRALES
+    // FENÊTRES
     for (let zPos = -5; zPos <= 4; zPos += 3) {
         box(0.08, 1, 1.5, windowMaterial, -1.3, 2.8, zPos, train);
         box(0.08, 1, 1.5, windowMaterial, 1.3, 2.8, zPos, train);
     }
 
-    const wheels = [];
-
-    // BANDES LUMINEUSES LATÉRALES
+    // BANDES LATÉRALES
     for (const side of [-1, 1]) {
-
         box(
             0.12, 0.12, 12,
             neonMaterial,
@@ -1192,10 +1183,7 @@ function createTrain(laneIndex, z) {
             train
         );
 
-        const headlight = new THREE.PointLight(
-            style.neon, 3, 25
-        );
-
+        const headlight = new THREE.PointLight(style.neon, 3, 25);
         headlight.position.set(side * 0.8, 0.8, 7);
         train.add(headlight);
 
@@ -1213,7 +1201,6 @@ function createTrain(laneIndex, z) {
     // ROUES
     for (const zPos of [-4, 4]) {
         for (const side of [-1, 1]) {
-
             const wheel = new THREE.Mesh(
                 new THREE.CylinderGeometry(0.38, 0.38, 0.25, 16),
                 mat(0x222233)
@@ -1221,74 +1208,48 @@ function createTrain(laneIndex, z) {
 
             wheel.rotation.z = Math.PI / 2;
             wheel.position.set(side * 1.35, 0.45, zPos);
-
             train.add(wheel);
-            wheels.push(wheel);
         }
     }
 
-    // ==================================
-    // RAMPE POUR MONTER SUR LE TRAIN
-    // ==================================
-
-    const rampMaterial = mat(
-        style.roof,
-        style.neon,
-        0.6
-    );
-
-    // RAMPE INCLINÉE
+    // RAMPE INCLINÉE À L'AVANT
     const ramp = new THREE.Mesh(
-        new THREE.BoxGeometry(2.4, 0.22, 6.6),
-        rampMaterial
+        new THREE.BoxGeometry(2.4, 0.22, 6.8),
+        roofMaterial
     );
 
     ramp.position.set(0, 1.9, 9.8);
-    ramp.rotation.x = Math.atan(3.6 / 6.6);
-
+    ramp.rotation.x = Math.atan(3.6 / 6.8);
     train.add(ramp);
 
-    // BANDES LUMINEUSES SUR LES CÔTÉS DE LA RAMPE
-    const rampSideMaterial = new THREE.MeshStandardMaterial({
-        color: style.neon,
-        emissive: style.neon,
-        emissiveIntensity: 1.5
-    });
-
+    // BORDS LUMINEUX DE LA RAMPE
     for (const side of [-1, 1]) {
-
         const stripe = new THREE.Mesh(
-            new THREE.BoxGeometry(0.07, 0.08, 6.5),
-            rampSideMaterial
+            new THREE.BoxGeometry(0.07, 0.08, 6.8),
+            neonMaterial
         );
 
         stripe.position.set(side * 1.12, 2, 9.8);
         stripe.rotation.x = ramp.rotation.x;
-
         train.add(stripe);
     }
 
-    // POSITION DU TRAIN
+    // POSITION FIXE
     train.position.set(lanePositions[laneIndex], 0, z);
 
-    // DONNÉES
-    train.userData.wheels = wheels;
-    train.userData.shake = Math.random() * Math.PI * 2;
-    train.userData.style = style.name;
     train.userData.stationary = true;
+    train.userData.noCoins = true;
 
     scene.add(train);
 
-    // AJOUT AUX OBSTACLES
     obstacles.push({
         object: train,
-        type: "train",
+        type: "stationaryTrain",
         lane: laneIndex
     });
 
     return train;
 }
-
 // ======================================================
 // BARRIÈRES FUTURISTES
 // ======================================================
