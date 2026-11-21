@@ -714,10 +714,9 @@ for (const side of [-1, 1]) {
 
                 windowMesh.position.set(
     x * 2,
-    y * 3 + 2,
+    -height / 2 + 2.5 + y * 3,
     6.06
 );
-
                 building.add(windowMesh);
             }
         }
