@@ -3808,7 +3808,7 @@ function createCape() {
 
     const cape = new THREE.Group();
 if (equippedCape === "rxn_white") {
-    cape.position.z = 0.25;
+    cape.position.z = 0.28;
 }
     // TISSU NOIR
     const geometry = new THREE.BufferGeometry();
