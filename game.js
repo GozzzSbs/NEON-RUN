@@ -3657,7 +3657,7 @@ function setupShopCapePreviews() {
             35, 1, 0.1, 100
         );
 
-        shopPreviewCamera.position.set(0, 0, 2.7);
+        shopPreviewCamera.position.set(0, 0, 2.4);
 
         shopPreviewScene.add(
             new THREE.AmbientLight(0xffffff, 1.5)
@@ -3765,7 +3765,7 @@ geometry.computeVertexNormals();
         });
 
         const group = new THREE.Group();
-group.position.y = -0.15;
+group.position.y = 0;
         const cloth = new THREE.Mesh(geometry, material);
         group.add(cloth);
 
