@@ -1158,11 +1158,11 @@ function selectMode(mode, button) {
     if (button) button.classList.add("active");
 
     const descriptions = {
-        classic: "Évite les trains et les barrières spatiales. Ramasse les pièces !",
-        nocoin: "Ne touche aucune pièce !",
-        lava: "La voie est devenue de la lave ! Saute de plateforme en plateforme."
-    };
-
+    classic: "🚆 Évite les trains et les barrières spatiales.\n🪙 Ramasse les pièces et bats ton record !",
+    nocoin: "🚫🪙 Ne touche aucune pièce !\n🏃 Concentre-toi sur les obstacles et bats ton record !",
+    lava: "🌋 La voie est devenue de la lave !\n⬆️ Saute de plateforme en plateforme."
+};
+description.style.whiteSpace = "pre-line";
     const description = document.getElementById("modeDescription");
 
     if (description) {
