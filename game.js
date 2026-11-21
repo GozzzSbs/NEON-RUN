@@ -3619,7 +3619,310 @@ function changeShopTab(tab) {
 // ======================================================
 // AFFICHER LES ARTICLES
 // ======================================================
+function setupShopCapePreviews() {
+    const grid = document.getElementById("shopItems");
+    if (!grid) return;
 
+    // CRÉER LE CANVAS 3D
+    let canvas = document.getElementById("shopPreview3DCanvas");
+
+    if (!canvas) {
+        canvas = document.createElement("canvas");
+        canvas.id = "shopPreview3DCanvas";
+        grid.appendChild(canvas);
+    }
+
+    // CRÉER LE MOTEUR 3D UNE SEULE FOIS
+    if (!shopPreviewRenderer) {
+        shopPreviewRenderer = new THREE.WebGLRenderer({
+            canvas: canvas,
+            alpha: true,
+            antialias: true
+        });
+
+        shopPreviewRenderer.setPixelRatio(
+            Math.min(window.devicePixelRatio || 1, 1.5)
+        );
+
+        shopPreviewRenderer.setClearColor(0x000000, 0);
+
+        shopPreviewScene = new THREE.Scene();
+
+        shopPreviewCamera = new THREE.PerspectiveCamera(
+            35, 1, 0.1, 100
+        );
+
+        shopPreviewCamera.position.set(0, 0, 4);
+
+        shopPreviewScene.add(
+            new THREE.AmbientLight(0xffffff, 1.5)
+        );
+
+        const light = new THREE.DirectionalLight(0xffffff, 2);
+        light.position.set(2, 3, 5);
+        shopPreviewScene.add(light);
+    }
+
+    // ARRÊTER L'ANCIENNE ANIMATION
+    if (shopPreviewAnimation) {
+        cancelAnimationFrame(shopPreviewAnimation);
+        shopPreviewAnimation = null;
+    }
+
+    // RECONSTRUIRE LES MINIATURES
+    shopPreviewItems = [];
+
+    grid.querySelectorAll(".neon-shop-preview[data-cape-id]").forEach(preview => {
+        const id = preview.dataset.capeId;
+        if (!id) return;
+
+        const shape = new THREE.Shape();
+
+        shape.moveTo(-0.42, 0.65);
+        shape.lineTo(0.42, 0.65);
+        shape.lineTo(0.58, -0.45);
+        shape.quadraticCurveTo(0, -0.68, -0.58, -0.45);
+        shape.closePath();
+
+        const geometry = new THREE.ShapeGeometry(shape);
+
+        const material = new THREE.MeshStandardMaterial({
+            color: id === "rxn_white" || id === "certified"
+                ? 0xffffff
+                : 0x080808,
+            side: THREE.DoubleSide,
+            roughness: 0.8
+        });
+
+        const group = new THREE.Group();
+
+        const cloth = new THREE.Mesh(geometry, material);
+        group.add(cloth);
+
+        const logoCanvas = document.createElement("canvas");
+        logoCanvas.width = 256;
+        logoCanvas.height = 256;
+
+        const texture = new THREE.CanvasTexture(logoCanvas);
+
+        const logo = new THREE.Mesh(
+            new THREE.PlaneGeometry(0.75, 0.75),
+            new THREE.MeshBasicMaterial({
+                map: texture,
+                transparent: true,
+                side: THREE.DoubleSide
+            })
+        );
+
+        logo.position.z = 0.025;
+        logo.position.y = 0.05;
+        group.add(logo);
+
+        // BADGE DE LA CAPE CERTIFIÉE
+        let ring = null;
+
+        if (id === "certified") {
+            const ctx = logoCanvas.getContext("2d");
+
+            ctx.fillStyle = "#1DA1F2";
+            ctx.beginPath();
+            ctx.arc(128, 128, 90, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = 19;
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
+            ctx.beginPath();
+            ctx.moveTo(82, 128);
+            ctx.lineTo(112, 158);
+            ctx.lineTo(177, 94);
+            ctx.stroke();
+
+            texture.needsUpdate = true;
+
+            ring = new THREE.Group();
+
+            const points = [];
+            const indices = [];
+            const segments = 168;
+
+            for (let i = 0; i < segments; i++) {
+                const a = i / segments * Math.PI * 2;
+                const outer = 0.39 + 0.025 * Math.cos(14 * a);
+                const inner = 0.32;
+
+                points.push(
+                    Math.cos(a) * outer,
+                    Math.sin(a) * outer,
+                    0
+                );
+
+                points.push(
+                    Math.cos(a) * inner,
+                    Math.sin(a) * inner,
+                    0
+                );
+
+                const next = (i + 1) % segments;
+
+                indices.push(i * 2, next * 2, i * 2 + 1);
+                indices.push(next * 2, next * 2 + 1, i * 2 + 1);
+            }
+
+            const ringGeometry = new THREE.BufferGeometry();
+
+            ringGeometry.setAttribute(
+                "position",
+                new THREE.Float32BufferAttribute(points, 3)
+            );
+
+            ringGeometry.setIndex(indices);
+            ringGeometry.computeVertexNormals();
+
+            const ringMesh = new THREE.Mesh(
+                ringGeometry,
+                new THREE.MeshBasicMaterial({
+                    color: 0x168cff,
+                    side: THREE.DoubleSide
+                })
+            );
+
+            ring.add(ringMesh);
+            ring.position.z = 0.04;
+            ring.position.y = 0.05;
+            group.add(ring);
+        }
+
+        shopPreviewScene.add(group);
+
+        shopPreviewItems.push({
+            id,
+            preview,
+            group,
+            logoCanvas,
+            texture,
+            ring,
+            lastPhase: -1
+        });
+    });
+
+    // DESSINER LES LOGOS
+    function drawPreviewLogo(item, type) {
+        const ctx = item.logoCanvas.getContext("2d");
+        const color = item.id === "rxn_white" ? "#000000" : "#ffffff";
+
+        ctx.clearRect(0, 0, 256, 256);
+        ctx.fillStyle = color;
+        ctx.textAlign = "center";
+
+        if (type === "nr") {
+            ctx.font = "bold 100px Arial";
+            ctx.fillText("NR", 128, 155);
+        }
+
+        if (type === "rxn") {
+            ctx.font = "bold 76px Arial";
+            ctx.fillText("RXN", 128, 150);
+        }
+
+        if (type === "moon") {
+            ctx.beginPath();
+            ctx.arc(128, 128, 65, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.globalCompositeOperation = "destination-out";
+            ctx.beginPath();
+            ctx.arc(155, 105, 58, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalCompositeOperation = "source-over";
+        }
+
+        item.texture.needsUpdate = true;
+    }
+
+    shopPreviewItems.forEach(item => {
+        if (item.id === "nr") {
+            drawPreviewLogo(item, "nr");
+        } else if (item.id === "rxn" || item.id === "rxn_white") {
+            drawPreviewLogo(item, "rxn");
+        }
+    });
+
+    // ANIMATION DES MINIATURES
+    function animatePreviews() {
+        if (
+            !shopElement ||
+            !shopElement.classList.contains("open") ||
+            currentShopTab !== "capes"
+        ) {
+            shopPreviewAnimation = null;
+            return;
+        }
+
+        const width = grid.clientWidth;
+        const height = grid.clientHeight;
+
+        if (width && height) {
+            shopPreviewRenderer.setSize(width, height, false);
+
+            const pixelRatio = shopPreviewRenderer.getPixelRatio();
+            const canvasRect = canvas.getBoundingClientRect();
+
+            shopPreviewRenderer.setScissorTest(true);
+
+            const time = performance.now() * 0.001;
+
+            shopPreviewItems.forEach(item => {
+                const rect = item.preview.getBoundingClientRect();
+
+                const x = (rect.left - canvasRect.left) * pixelRatio;
+                const y = (canvasRect.bottom - rect.bottom) * pixelRatio;
+                const w = rect.width * pixelRatio;
+                const h = rect.height * pixelRatio;
+
+                if (w <= 0 || h <= 0) return;
+
+                shopPreviewRenderer.setViewport(x, y, w, h);
+                shopPreviewRenderer.setScissor(x, y, w, h);
+                shopPreviewRenderer.clear(true, true, true);
+
+                item.group.rotation.y = Math.sin(time * 0.8) * 0.45;
+                item.group.rotation.z = Math.sin(time * 1.5) * 0.04;
+
+                if (item.ring) {
+                    item.ring.rotation.z = time * 1.2;
+                }
+
+                if (item.id === "rxn" || item.id === "rxn_white") {
+                    const phase = Math.floor(time) % 2;
+
+                    if (phase !== item.lastPhase) {
+                        item.lastPhase = phase;
+                        drawPreviewLogo(
+                            item,
+                            phase === 0 ? "rxn" : "moon"
+                        );
+                    }
+                }
+
+                shopPreviewCamera.aspect = rect.width / rect.height;
+                shopPreviewCamera.updateProjectionMatrix();
+
+                shopPreviewRenderer.render(
+                    shopPreviewScene,
+                    shopPreviewCamera
+                );
+            });
+
+            shopPreviewRenderer.setScissorTest(false);
+        }
+
+        shopPreviewAnimation = requestAnimationFrame(animatePreviews);
+    }
+
+    animatePreviews();
+}
 function renderShop() {
     if (!shopElement) return;
 
