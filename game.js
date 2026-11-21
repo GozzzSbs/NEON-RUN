@@ -3834,7 +3834,6 @@ function createCape() {
     });
 
     const cloth = new THREE.Mesh(geometry, capeMaterial);
-cloth.position.z = 0.65;
 cape.add(cloth);
 
     // CANVAS DU LOGO
