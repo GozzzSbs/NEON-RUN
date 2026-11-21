@@ -1580,7 +1580,23 @@ function moveEnvironment() {
         }
     });
 }
+// DÉFILEMENT DES MURS
+streetWalls.forEach(wall => {
+    wall.position.z += speed;
 
+    if (wall.position.z > 155) {
+        wall.position.z -= 240;
+    }
+});
+
+// DÉFILEMENT DES GRAFFITIS
+movingGraffiti.forEach(graffiti => {
+    graffiti.position.z += speed;
+
+    if (graffiti.position.z > 20) {
+        graffiti.position.z -= 240;
+    }
+});
 // ======================================================
 // OBSTACLES ET TRAINS
 // ======================================================
