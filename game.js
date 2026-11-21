@@ -3408,7 +3408,7 @@ function createShopStyles() {
         }
 
         .neon-shop-preview {
-    height: 110px;
+    height: 90px;
     display: flex;
     align-items: center;
     justify-content: center;
