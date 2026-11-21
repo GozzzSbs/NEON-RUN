@@ -461,6 +461,7 @@ function createStreetWalls() {
                 : -Math.PI / 2;
 
             scene.add(graffiti);
+            movingGraffiti.push(graffiti);
         }
     }
 }
