@@ -4125,7 +4125,7 @@ function animateCape() {
     shopCapeObject.rotation.x = Math.sin(time * 3) * 0.035;
 // ROTATION LENTE DE L'ANNEAU CERTIFIÉ
 if (shopCapeObject.userData.badgeRing) {
-    shopCapeObject.userData.badgeRing.rotation.z = time * 0.5;
+    shopCapeObject.userData.badgeRing.rotation.z = time * 1.2;
 }
     if (["rxn", "rxn_white"].includes(shopCapeObject.userData.capeId)) {
 
