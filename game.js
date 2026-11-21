@@ -2849,8 +2849,9 @@ const SHOP_CATALOG = {
         currency: "diamonds",
         color: 0x050505,
         description: "Cape noire animée : RXN blanc et lune blanche."
-    }
+        }
 ]
+};
 
 // ======================================================
 // SAUVEGARDE
