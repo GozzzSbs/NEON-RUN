@@ -1471,6 +1471,11 @@ const logoMaterial = (() => {
     const ctx = canvas.getContext("2d");
 
     ctx.clearRect(0, 0, 256, 256);
+    ctx.fillStyle = item.id === "rxn_white" || item.id === "certified"
+    ? "#ffffff"
+    : "#080808";
+
+ctx.fillRect(0, 0, 256, 256);
     ctx.font = "bold 110px Arial Black";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
