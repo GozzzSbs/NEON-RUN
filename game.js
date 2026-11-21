@@ -1406,39 +1406,60 @@ function createCoin(laneIndex, z, height = 1.3, onTrain = false, train = null) {
 
     const coin = new THREE.Group();
 
-    // MATÉRIAU DORÉ
+    // MATÉRIAU DORÉ MAT
     const goldMaterial = new THREE.MeshStandardMaterial({
-        color: 0xffc928,
-        metalness: 0.9,
-        roughness: 0.18,
-        emissive: 0xff9900,
-        emissiveIntensity: 0.35
+        color: 0xdba928,
+        metalness: 0.55,
+        roughness: 0.45
     });
 
-    // PIÈCE PRINCIPALE
+    // CORPS ROND DE LA PIÈCE
     const coinBody = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.48, 0.48, 0.12, 48),
+        new THREE.CylinderGeometry(0.48, 0.48, 0.12, 64),
         goldMaterial
     );
 
     coinBody.rotation.x = Math.PI / 2;
     coin.add(coinBody);
 
-    // BORDURE DE LA PIÈCE
-    const coinRing = new THREE.Mesh(
-        new THREE.TorusGeometry(0.4, 0.055, 12, 48),
+    // BORDURE EXTÉRIEURE
+    const outerRing = new THREE.Mesh(
+        new THREE.TorusGeometry(0.43, 0.045, 8, 64),
         new THREE.MeshStandardMaterial({
-            color: 0xffed91,
-            metalness: 1,
-            roughness: 0.15,
-            emissive: 0xffb700,
-            emissiveIntensity: 0.5
+            color: 0xf5cc65,
+            metalness: 0.6,
+            roughness: 0.4
         })
     );
 
-    coin.add(coinRing);
+    coin.add(outerRing);
 
-    // TEXTE NR
+    // PETITES DENTELURES SUR LES CÔTÉS
+    const toothMaterial = new THREE.MeshStandardMaterial({
+        color: 0xb98219,
+        metalness: 0.5,
+        roughness: 0.5
+    });
+
+    for (let i = 0; i < 32; i++) {
+
+        const angle = (i / 32) * Math.PI * 2;
+
+        const tooth = new THREE.Mesh(
+            new THREE.BoxGeometry(0.07, 0.07, 0.13),
+            toothMaterial
+        );
+
+        tooth.position.set(
+            Math.cos(angle) * 0.46,
+            Math.sin(angle) * 0.46,
+            0
+        );
+
+        coin.add(tooth);
+    }
+
+    // CRÉATION DU LOGO NR
     const canvas = document.createElement("canvas");
     canvas.width = 256;
     canvas.height = 256;
@@ -1447,20 +1468,17 @@ function createCoin(laneIndex, z, height = 1.3, onTrain = false, train = null) {
 
     ctx.clearRect(0, 0, 256, 256);
 
-    ctx.font = "bold 105px Arial Black";
+    ctx.font = "bold 110px Arial Black";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    ctx.lineWidth = 8;
-    ctx.strokeStyle = "#9b5700";
-    ctx.strokeText("NR", 128, 128);
-
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = "#171717";
     ctx.fillText("NR", 128, 128);
 
     const nrTexture = new THREE.CanvasTexture(canvas);
 
-    const nrText = new THREE.Mesh(
+    // FACE AVANT
+    const frontLogo = new THREE.Mesh(
         new THREE.PlaneGeometry(0.65, 0.65),
         new THREE.MeshBasicMaterial({
             map: nrTexture,
@@ -1469,13 +1487,28 @@ function createCoin(laneIndex, z, height = 1.3, onTrain = false, train = null) {
         })
     );
 
-    nrText.position.z = 0.075;
-    coin.add(nrText);
+    frontLogo.position.z = 0.066;
+    coin.add(frontLogo);
+
+    // FACE ARRIÈRE
+    const backLogo = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.65, 0.65),
+        new THREE.MeshBasicMaterial({
+            map: nrTexture,
+            transparent: true,
+            side: THREE.DoubleSide
+        })
+    );
+
+    backLogo.position.z = -0.066;
+    backLogo.rotation.y = Math.PI;
+    coin.add(backLogo);
 
     // POSITION DE LA PIÈCE
     coin.userData.onTrain = onTrain;
 
     if (onTrain && train) {
+
         coin.position.set(
             0,
             height - train.position.y,
@@ -1485,6 +1518,7 @@ function createCoin(laneIndex, z, height = 1.3, onTrain = false, train = null) {
         train.add(coin);
 
     } else {
+
         coin.position.set(
             lanePositions[laneIndex],
             height,
