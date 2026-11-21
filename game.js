@@ -446,9 +446,9 @@ function createStreetWalls() {
             });
 
             const graffiti = new THREE.Mesh(
-                new THREE.PlaneGeometry(7, 3.5)
-                graffitiMaterial
-            );
+    new THREE.PlaneGeometry(7, 3.5),
+    graffitiMaterial
+);
 
             graffiti.position.set(
                 wallX - side * 0.37,
