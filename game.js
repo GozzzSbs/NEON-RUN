@@ -2733,23 +2733,27 @@ window.startGame = startGame;
 // ======================================================
 
 function pauseGame() {
-    if (!running || gameEnded) return;
+    if (!running || gameEnded || paused) return;
 
-    paused = !paused;
+    paused = true;
 
-    document.querySelectorAll(".gameHeader button").forEach(button => {
-        if (
-            button.textContent.includes("PAUSE") ||
-            button.textContent.includes("REPRENDRE")
-        ) {
-            button.textContent = paused
-                ? "▶ REPRENDRE"
-                : "Ⅱ PAUSE";
-        }
-    });
+    const pauseMenu = document.getElementById("pauseMenu");
+    if (pauseMenu) {
+        pauseMenu.classList.remove("hidden");
+    }
+}
+
+function resumeGame() {
+    paused = false;
+
+    const pauseMenu = document.getElementById("pauseMenu");
+    if (pauseMenu) {
+        pauseMenu.classList.add("hidden");
+    }
 }
 
 window.pauseGame = pauseGame;
+window.resumeGame = resumeGame;
 
 // ======================================================
 // RETOUR MENU
