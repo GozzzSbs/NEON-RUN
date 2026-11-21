@@ -1098,30 +1098,35 @@ createPlayer();
 // TRAINS SPATIAUX
 // ======================================================
 
-function createStationaryTrain(laneIndex, z) {
+function createTrain(laneIndex, z) {
 
     const train = new THREE.Group();
 
+    // 4 STYLES DE TRAINS SPATIAUX
     const styles = [
         {
+            name: "Galaxy Blue",
             body: 0x102b66,
             neon: 0x00ddff,
             windows: 0x75f5ff,
             roof: 0x183e80
         },
         {
+            name: "Nebula",
             body: 0x35105c,
             neon: 0xff35dd,
             windows: 0xffaaff,
             roof: 0x541477
         },
         {
+            name: "Cosmic Emerald",
             body: 0x092c32,
             neon: 0x00ffbb,
             windows: 0x80ffe0,
             roof: 0x12434a
         },
         {
+            name: "Solar Galaxy",
             body: 0x30200c,
             neon: 0xffaa22,
             windows: 0xffe49a,
@@ -1138,7 +1143,7 @@ function createStationaryTrain(laneIndex, z) {
     const neonMaterial = mat(style.neon, style.neon, 2);
     const windowMaterial = mat(style.windows, style.windows, 1.7);
 
-    // CORPS DU TRAIN
+    // CORPS PRINCIPAL
     box(2.55, 3.4, 13, bodyMaterial, 0, 2, 0, train);
 
     // TOIT
@@ -1154,7 +1159,7 @@ function createStationaryTrain(laneIndex, z) {
         );
     }
 
-    // PANNEAUX DU TOIT
+    // PANNEAUX GALAXY
     for (let zPos = -4.5; zPos <= 4.5; zPos += 3) {
         box(
             0.75, 0.035, 1.1,
@@ -1164,18 +1169,21 @@ function createStationaryTrain(laneIndex, z) {
         );
     }
 
-    // AVANT
+    // AVANT LUMINEUX
     box(2.4, 1.1, 0.2, neonMaterial, 0, 3, 6.55, train);
     box(1.7, 0.85, 0.12, windowMaterial, 0, 2.8, 6.68, train);
 
-    // FENÊTRES
+    // FENÊTRES LATÉRALES
     for (let zPos = -5; zPos <= 4; zPos += 3) {
         box(0.08, 1, 1.5, windowMaterial, -1.3, 2.8, zPos, train);
         box(0.08, 1, 1.5, windowMaterial, 1.3, 2.8, zPos, train);
     }
 
-    // BANDES LATÉRALES
+    const wheels = [];
+
+    // BANDES LUMINEUSES LATÉRALES
     for (const side of [-1, 1]) {
+
         box(
             0.12, 0.12, 12,
             neonMaterial,
@@ -1183,7 +1191,10 @@ function createStationaryTrain(laneIndex, z) {
             train
         );
 
-        const headlight = new THREE.PointLight(style.neon, 3, 25);
+        const headlight = new THREE.PointLight(
+            style.neon, 3, 25
+        );
+
         headlight.position.set(side * 0.8, 0.8, 7);
         train.add(headlight);
 
@@ -1201,6 +1212,7 @@ function createStationaryTrain(laneIndex, z) {
     // ROUES
     for (const zPos of [-4, 4]) {
         for (const side of [-1, 1]) {
+
             const wheel = new THREE.Mesh(
                 new THREE.CylinderGeometry(0.38, 0.38, 0.25, 16),
                 mat(0x222233)
@@ -1208,43 +1220,25 @@ function createStationaryTrain(laneIndex, z) {
 
             wheel.rotation.z = Math.PI / 2;
             wheel.position.set(side * 1.35, 0.45, zPos);
+
             train.add(wheel);
+            wheels.push(wheel);
         }
     }
 
-    // RAMPE INCLINÉE À L'AVANT
-    const ramp = new THREE.Mesh(
-        new THREE.BoxGeometry(2.4, 0.22, 6.8),
-        roofMaterial
-    );
-
-    ramp.position.set(0, 1.9, 9.8);
-    ramp.rotation.x = Math.atan(3.6 / 6.8);
-    train.add(ramp);
-
-    // BORDS LUMINEUX DE LA RAMPE
-    for (const side of [-1, 1]) {
-        const stripe = new THREE.Mesh(
-            new THREE.BoxGeometry(0.07, 0.08, 6.8),
-            neonMaterial
-        );
-
-        stripe.position.set(side * 1.12, 2, 9.8);
-        stripe.rotation.x = ramp.rotation.x;
-        train.add(stripe);
-    }
-
-    // POSITION FIXE
+    // POSITION
     train.position.set(lanePositions[laneIndex], 0, z);
 
-    train.userData.stationary = true;
-    train.userData.noCoins = true;
+    // ANIMATION DES ANCIENS TRAINS
+    train.userData.wheels = wheels;
+    train.userData.shake = Math.random() * Math.PI * 2;
+    train.userData.style = style.name;
 
     scene.add(train);
 
     obstacles.push({
         object: train,
-        type: "stationaryTrain",
+        type: "train",
         lane: laneIndex
     });
 
