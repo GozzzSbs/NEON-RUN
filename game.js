@@ -4867,7 +4867,11 @@ async function updateGamePlayerInfo() {
     }
 }
 function openPass() {
-    alert("BIENVENUE DANS LE PASS NEON RUN !");
+    document.getElementById("neonPass").style.display = "block";
+}
+
+function closePass() {
+    document.getElementById("neonPass").style.display = "none";
 }
 async function openLeaderboard() {
 
