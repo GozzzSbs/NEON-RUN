@@ -1406,18 +1406,54 @@ const coinBodyGeometry = new THREE.CylinderGeometry(0.48, 0.48, 0.12, 32);
 const coinRingGeometry = new THREE.TorusGeometry(0.43, 0.045, 8, 32);
 const coinToothGeometry = new THREE.BoxGeometry(0.07, 0.07, 0.13);
 const coinLogoGeometry = new THREE.PlaneGeometry(0.65, 0.65);
+
+// MATÉRIAUX PARTAGÉS
+const goldMaterial = new THREE.MeshStandardMaterial({
+    color: 0xdba928,
+    metalness: 0.55,
+    roughness: 0.45
+});
+
+const ringMaterial = new THREE.MeshStandardMaterial({
+    color: 0xf5cc65,
+    metalness: 0.6,
+    roughness: 0.4
+});
+
+const toothMaterial = new THREE.MeshStandardMaterial({
+    color: 0xb98219,
+    metalness: 0.5,
+    roughness: 0.5
+});
+
+const logoMaterial = (() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 256;
+    canvas.height = 256;
+
+    const ctx = canvas.getContext("2d");
+
+    ctx.clearRect(0, 0, 256, 256);
+    ctx.font = "bold 110px Arial Black";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#171717";
+    ctx.fillText("NR", 128, 128);
+
+    const texture = new THREE.CanvasTexture(canvas);
+
+    return new THREE.MeshBasicMaterial({
+        map: texture,
+        transparent: true,
+        side: THREE.DoubleSide
+    });
+})();
+
 function createCoin(laneIndex, z, height = 1.3, onTrain = false, train = null) {
 
     const coin = new THREE.Group();
 
-    // MATÉRIAU DORÉ MAT
-    const goldMaterial = new THREE.MeshStandardMaterial({
-        color: 0xdba928,
-        metalness: 0.55,
-        roughness: 0.45
-    });
-
-    // CORPS ROND DE LA PIÈCE
+    // CORPS DE LA PIÈCE
     const coinBody = new THREE.Mesh(
         coinBodyGeometry,
         goldMaterial
@@ -1429,22 +1465,12 @@ function createCoin(laneIndex, z, height = 1.3, onTrain = false, train = null) {
     // BORDURE EXTÉRIEURE
     const outerRing = new THREE.Mesh(
         coinRingGeometry,
-        new THREE.MeshStandardMaterial({
-            color: 0xf5cc65,
-            metalness: 0.6,
-            roughness: 0.4
-        })
+        ringMaterial
     );
 
     coin.add(outerRing);
 
-    // PETITES DENTELURES SUR LES CÔTÉS
-    const toothMaterial = new THREE.MeshStandardMaterial({
-        color: 0xb98219,
-        metalness: 0.5,
-        roughness: 0.5
-    });
-
+    // DENTELURES
     for (let i = 0; i < 16; i++) {
 
         const angle = (i / 16) * Math.PI * 2;
@@ -1463,52 +1489,26 @@ function createCoin(laneIndex, z, height = 1.3, onTrain = false, train = null) {
         coin.add(tooth);
     }
 
-    // CRÉATION DU LOGO NR
-    const canvas = document.createElement("canvas");
-    canvas.width = 256;
-    canvas.height = 256;
-
-    const ctx = canvas.getContext("2d");
-
-    ctx.clearRect(0, 0, 256, 256);
-
-    ctx.font = "bold 110px Arial Black";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-
-    ctx.fillStyle = "#171717";
-    ctx.fillText("NR", 128, 128);
-
-    const nrTexture = new THREE.CanvasTexture(canvas);
-
-    // FACE AVANT
+    // LOGO NR AVANT
     const frontLogo = new THREE.Mesh(
         coinLogoGeometry,
-        new THREE.MeshBasicMaterial({
-            map: nrTexture,
-            transparent: true,
-            side: THREE.DoubleSide
-        })
+        logoMaterial
     );
 
     frontLogo.position.z = 0.066;
     coin.add(frontLogo);
 
-    // FACE ARRIÈRE
+    // LOGO NR ARRIÈRE
     const backLogo = new THREE.Mesh(
-        new THREE.PlaneGeometry(0.65, 0.65),
-        new THREE.MeshBasicMaterial({
-            map: nrTexture,
-            transparent: true,
-            side: THREE.DoubleSide
-        })
+        coinLogoGeometry,
+        logoMaterial
     );
 
     backLogo.position.z = -0.066;
     backLogo.rotation.y = Math.PI;
     coin.add(backLogo);
 
-    // POSITION DE LA PIÈCE
+    // POSITION
     coin.userData.onTrain = onTrain;
 
     if (onTrain && train) {
