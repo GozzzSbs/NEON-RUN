@@ -4394,7 +4394,7 @@ function formatNoCoinTime(time) {
         const result = document.createElement("span");
 
         result.textContent = isNoCoin
-            ? Number(joueur.time_seconds).toFixed(2) + " s"
+            ? formatNoCoinTime(joueur.time_seconds)
             : joueur.score;
 
         row.append(rank, name, result);
