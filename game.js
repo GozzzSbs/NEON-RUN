@@ -3837,9 +3837,30 @@ function animateCape() {
 
     const time = performance.now() * 0.001;
 
-    shopCapeObject.rotation.z = Math.sin(time * 4) * 0.045;
-    shopCapeObject.rotation.x = Math.sin(time * 3) * 0.035;
+    // MOUVEMENT NATUREL PENDANT LA COURSE
+    let targetX = Math.sin(time * 5) * 0.06;
+    let targetZ = Math.sin(time * 3) * 0.035;
 
+    // SAUT : LA CAPE SE SOULÈVE VERS L'ARRIÈRE
+    if (jumping) {
+        targetX = -0.65 + Math.sin(time * 8) * 0.08;
+        targetZ = Math.sin(time * 5) * 0.09;
+    }
+
+    // GLISSADE
+    if (sliding) {
+        targetX = 0.25;
+        targetZ = Math.sin(time * 8) * 0.04;
+    }
+
+    // MOUVEMENT FLUIDE
+    shopCapeObject.rotation.x +=
+        (targetX - shopCapeObject.rotation.x) * 0.12;
+
+    shopCapeObject.rotation.z +=
+        (targetZ - shopCapeObject.rotation.z) * 0.12;
+
+    // ANIMATION RXN / LUNE
     if (shopCapeObject.userData.capeId === "rxn") {
 
         const phase = Math.floor(time) % 2;
