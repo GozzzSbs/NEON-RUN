@@ -2241,9 +2241,9 @@ function moveObstacles() {
             obstacle.object.position.y =
                 Math.sin(frame * 0.25 + obstacle.object.userData.shake) * 0.025;
 
-        } else if (obstacle.type === "stationaryTrain") {
-    // Le nouveau train reste immobile
-    return;
+        } else {
+    obstacle.object.position.z += speed;
+}
 
 } else {
     obstacle.object.position.z += speed;
