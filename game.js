@@ -4912,6 +4912,19 @@ function renderPass() {
     const container = document.getElementById("passRewards");
     container.innerHTML = "";
 
+    container.style.cssText = `
+        display:flex;
+        flex-direction:row;
+        gap:15px;
+        overflow-x:auto;
+        overflow-y:hidden;
+        padding:20px 10px;
+        margin-top:25px;
+        scroll-behavior:smooth;
+        scrollbar-width:thin;
+        scrollbar-color:#00eaff #17172b;
+    `;
+
     for (let i = 0; i < 100; i++) {
         const level = i + 1;
         const reward = passRewards[i];
@@ -4921,6 +4934,9 @@ function renderPass() {
         const card = document.createElement("div");
 
         card.style.cssText = `
+            flex:0 0 140px;
+            min-height:150px;
+            box-sizing:border-box;
             background:linear-gradient(145deg,#17172b,#080820);
             border:1px solid ${unlocked ? "#00eaff" : "#444"};
             border-radius:15px;
