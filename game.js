@@ -3918,7 +3918,9 @@ function setupShopCapePreviews() {
                     shopPreviewCamera
                 );
             });
-
+shopPreviewItems.forEach(item => {
+    item.group.visible = true;
+});
             shopPreviewRenderer.setScissorTest(false);
         }
 
