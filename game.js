@@ -2486,7 +2486,10 @@ if (score % 100 === 0) {
 // DÉTECTION DE L'ATTERRISSAGE SUR UN TRAIN
 if (jumpVelocity < 0) {
     for (const obstacle of obstacles) {
-        if (obstacle.type !== "train") continue;
+        if (
+    obstacle.type !== "train" &&
+    obstacle.type !== "stationaryTrain"
+) continue;
 
         const train = obstacle.object;
         const roofHeight = 3.78 + train.position.y;
