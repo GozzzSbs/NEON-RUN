@@ -3880,27 +3880,28 @@ function createCape() {
         shopCapeObject = null;
     }
 
-    // Vérifier la cape équipée
     if (
-        !["nr", "rxn", "rxn_white"].includes(equippedCape) ||
+        !["nr", "rxn", "rxn_white", "certified"].includes(equippedCape) ||
         !ownedCapes.includes(equippedCape)
     ) {
         return;
     }
 
     const cape = new THREE.Group();
-if (equippedCape === "rxn_white") {
-    cape.position.z = 0.28;
-}
-    // TISSU NOIR
+
+    if (equippedCape === "rxn_white") {
+        cape.position.z = 0.28;
+    }
+
+    // TISSU
     const geometry = new THREE.BufferGeometry();
 
     const vertices = new Float32Array([
-    -0.38, 2.25, 0.34,
-     0.38, 2.25, 0.34,
-    -0.62, 0.25, 0.48,
-     0.62, 0.25, 0.48
-]);
+        -0.38, 2.25, 0.34,
+         0.38, 2.25, 0.34,
+        -0.62, 0.25, 0.48,
+         0.62, 0.25, 0.48
+    ]);
 
     geometry.setAttribute(
         "position",
@@ -3911,89 +3912,165 @@ if (equippedCape === "rxn_white") {
     geometry.computeVertexNormals();
 
     const capeMaterial = new THREE.MeshStandardMaterial({
-        color: equippedCape === "rxn_white" ? 0xffffff : 0x030303,
+        color: ["rxn_white", "certified"].includes(equippedCape)
+            ? 0xffffff
+            : 0x030303,
         roughness: 0.85,
         metalness: 0.1,
         side: THREE.DoubleSide
     });
 
     const cloth = new THREE.Mesh(geometry, capeMaterial);
-cape.add(cloth);
+    cape.add(cloth);
 
-    // CANVAS DU LOGO
-    const logoCanvas = document.createElement("canvas");
-    logoCanvas.width = 512;
-    logoCanvas.height = 256;
+    // BADGE CERTIFIÉ
+    if (equippedCape === "certified") {
 
-    const ctx = logoCanvas.getContext("2d");
+        const badgeCanvas = document.createElement("canvas");
+        badgeCanvas.width = 256;
+        badgeCanvas.height = 256;
 
-    function drawCapeLogo(type) {
-        ctx.clearRect(0, 0, 512, 256);
-const logoColor = equippedCape === "rxn_white"
-    ? "#000000"
-    : "#ffffff";
-        if (type === "nr") {
-            ctx.fillStyle = logoColor;
-            ctx.font = "bold 230px Arial";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText("NR", 256, 128);
-        }
+        const ctx = badgeCanvas.getContext("2d");
 
-        if (type === "rxn") {
-            ctx.fillStyle = logoColor;
-            ctx.font = "bold 190px Arial Black";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText("RXN", 256, 128);
-        }
+        ctx.fillStyle = "#1DA1F2";
+        ctx.beginPath();
+        ctx.arc(128, 128, 105, 0, Math.PI * 2);
+        ctx.fill();
 
-        if (type === "moon") {
-            // Lune blanche
-            ctx.fillStyle = logoColor;
-            ctx.beginPath();
-            ctx.arc(256, 128, 105, 0, Math.PI * 2);
-            ctx.fill();
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 22;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
 
-            // Découpe pour former un croissant
-            ctx.globalCompositeOperation = "destination-out";
+        ctx.beginPath();
+        ctx.moveTo(72, 130);
+        ctx.lineTo(110, 166);
+        ctx.lineTo(185, 85);
+        ctx.stroke();
 
-            ctx.beginPath();
-            ctx.arc(310, 85, 95, 0, Math.PI * 2);
-            ctx.fill();
+        const badgeTexture = new THREE.CanvasTexture(badgeCanvas);
 
-            ctx.globalCompositeOperation = "source-over";
-        }
+        const badge = new THREE.Mesh(
+            new THREE.PlaneGeometry(0.65, 0.65),
+            new THREE.MeshBasicMaterial({
+                map: badgeTexture,
+                transparent: true,
+                side: THREE.DoubleSide,
+                depthWrite: false
+            })
+        );
+
+        badge.position.set(0, 1.35, 0.55);
+        cape.add(badge);
+
+        // ANNEAU EXTÉRIEUR
+        const ringGroup = new THREE.Group();
+
+        const ring = new THREE.Mesh(
+            new THREE.TorusGeometry(0.39, 0.035, 8, 64),
+            new THREE.MeshBasicMaterial({
+                color: 0x168cff
+            })
+        );
+
+        ringGroup.add(ring);
+
+        // REPÈRE BLEU POUR RENDRE LA ROTATION VISIBLE
+        const marker = new THREE.Mesh(
+            new THREE.SphereGeometry(0.055, 12, 12),
+            new THREE.MeshBasicMaterial({
+                color: 0x168cff
+            })
+        );
+
+        marker.position.set(0, 0.39, 0);
+        ringGroup.add(marker);
+
+        ringGroup.position.set(0, 1.35, 0.56);
+
+        cape.add(ringGroup);
+
+        cape.userData.badgeRing = ringGroup;
+        cape.userData.badgeTexture = badgeTexture;
     }
 
-    drawCapeLogo(equippedCape === "nr" ? "nr" : "rxn");
+    // LOGOS DES AUTRES CAPES
+    else {
 
-    const texture = new THREE.CanvasTexture(logoCanvas);
+        const logoCanvas = document.createElement("canvas");
+        logoCanvas.width = 512;
+        logoCanvas.height = 256;
 
-    const logoMaterial = new THREE.MeshBasicMaterial({
-        map: texture,
-        transparent: true,
-        side: THREE.DoubleSide,
-        depthWrite: false
-    });
+        const ctx = logoCanvas.getContext("2d");
 
-    const logo = new THREE.Mesh(
-        new THREE.PlaneGeometry(0.95, 0.48),
-        logoMaterial
-    );
+        function drawCapeLogo(type) {
+            ctx.clearRect(0, 0, 512, 256);
 
-    logo.position.set(0, 1.35, 0.52);
-    cape.add(logo);
+            const logoColor = equippedCape === "rxn_white"
+                ? "#000000"
+                : "#ffffff";
 
-    // AJOUT AU PERSONNAGE
+            if (type === "nr") {
+                ctx.fillStyle = logoColor;
+                ctx.font = "bold 230px Arial";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText("NR", 256, 128);
+            }
+
+            if (type === "rxn") {
+                ctx.fillStyle = logoColor;
+                ctx.font = "bold 190px Arial Black";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText("RXN", 256, 128);
+            }
+
+            if (type === "moon") {
+                ctx.fillStyle = logoColor;
+                ctx.beginPath();
+                ctx.arc(256, 128, 105, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.globalCompositeOperation = "destination-out";
+
+                ctx.beginPath();
+                ctx.arc(310, 85, 95, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.globalCompositeOperation = "source-over";
+            }
+        }
+
+        drawCapeLogo(equippedCape === "nr" ? "nr" : "rxn");
+
+        const texture = new THREE.CanvasTexture(logoCanvas);
+
+        const logoMaterial = new THREE.MeshBasicMaterial({
+            map: texture,
+            transparent: true,
+            side: THREE.DoubleSide,
+            depthWrite: false
+        });
+
+        const logo = new THREE.Mesh(
+            new THREE.PlaneGeometry(0.95, 0.48),
+            logoMaterial
+        );
+
+        logo.position.set(0, 1.35, 0.52);
+        cape.add(logo);
+
+        cape.userData.drawCapeLogo = drawCapeLogo;
+        cape.userData.logoTexture = texture;
+    }
+
     player.add(cape);
 
     shopCapeObject = cape;
 
     shopCapeObject.userData.cloth = cloth;
     shopCapeObject.userData.capeId = equippedCape;
-    shopCapeObject.userData.drawCapeLogo = drawCapeLogo;
-    shopCapeObject.userData.logoTexture = texture;
     shopCapeObject.userData.lastPhase = -1;
 }
 // ======================================================
