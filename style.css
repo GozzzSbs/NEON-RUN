@@ -1754,8 +1754,10 @@ button:active {
 
 #noCoinTimerText {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1766,6 +1768,9 @@ button:active {
     font-family: Arial, sans-serif;
     text-shadow: 0 0 10px #00dfff;
     text-align: center;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 .snow-particles {
