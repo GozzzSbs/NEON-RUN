@@ -3001,7 +3001,12 @@ if (
 let currentShopTab = "skins";
 
 let shopElement = null;
-
+// MINIATURES 3D DE LA BOUTIQUE
+let shopPreviewRenderer = null;
+let shopPreviewScene = null;
+let shopPreviewCamera = null;
+let shopPreviewItems = [];
+let shopPreviewAnimation = null;
 
 
 // ======================================================
