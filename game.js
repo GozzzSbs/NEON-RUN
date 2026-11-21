@@ -1670,6 +1670,13 @@ movingBuildings.forEach(building => {
         building.position.z -= 240;
     }
 });
+    movingClouds.forEach(cloud => {
+    cloud.position.z += speed * 0.25;
+
+    if (cloud.position.z > 30) {
+        cloud.position.z = -270;
+    }
+});
 }
 // ======================================================
 // OBSTACLES ET TRAINS
