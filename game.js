@@ -2557,7 +2557,10 @@ if (ridingTrain) {
         obstacle => obstacle.object === ridingTrain
     );
 
-    if (trainExists && ridingTrain.position.z < 6.2) {
+    if (
+    trainExists &&
+    ridingTrain.position.z < 6.2
+) {
         player.position.y = 3.78 + ridingTrain.position.y;
         jumping = false;
     } else {
