@@ -1134,6 +1134,7 @@ function createTrain(laneIndex, z) {
         }
     ];
 
+    // Choisir un style au hasard
     const style = styles[
         Math.floor(Math.random() * styles.length)
     ];
@@ -1143,30 +1144,22 @@ function createTrain(laneIndex, z) {
     const neonMaterial = mat(style.neon, style.neon, 2);
     const windowMaterial = mat(style.windows, style.windows, 1.7);
 
-    // CORPS PRINCIPAL
+    // CORPS PRINCIPAL : dimensions conservées
     box(2.55, 3.4, 13, bodyMaterial, 0, 2, 0, train);
 
-    // TOIT
+    // TOIT PLAT ET LARGE : même forme pour garder la surface supérieure
     box(2.48, 0.08, 12.8, roofMaterial, 0, 3.74, 0, train);
 
-    // LIGNES LUMINEUSES
+    // LIGNES LUMINEUSES SUR LE TOIT
     for (const side of [-1, 1]) {
-        box(
-            0.07, 0.04, 12,
-            neonMaterial,
-            side * 1.12, 3.81, 0,
-            train
-        );
+        box(0.07, 0.04, 12, neonMaterial,
+            side * 1.12, 3.81, 0, train);
     }
 
-    // PANNEAUX GALAXY
+    // PANNEAUX GALAXY SUR LE TOIT
     for (let zPos = -4.5; zPos <= 4.5; zPos += 3) {
-        box(
-            0.75, 0.035, 1.1,
-            neonMaterial,
-            0, 3.81, zPos,
-            train
-        );
+        box(0.75, 0.035, 1.1, neonMaterial,
+            0, 3.81, zPos, train);
     }
 
     // AVANT LUMINEUX
@@ -1175,8 +1168,11 @@ function createTrain(laneIndex, z) {
 
     // FENÊTRES LATÉRALES
     for (let zPos = -5; zPos <= 4; zPos += 3) {
-        box(0.08, 1, 1.5, windowMaterial, -1.3, 2.8, zPos, train);
-        box(0.08, 1, 1.5, windowMaterial, 1.3, 2.8, zPos, train);
+        box(0.08, 1, 1.5, windowMaterial,
+            -1.3, 2.8, zPos, train);
+
+        box(0.08, 1, 1.5, windowMaterial,
+            1.3, 2.8, zPos, train);
     }
 
     const wheels = [];
@@ -1184,12 +1180,8 @@ function createTrain(laneIndex, z) {
     // BANDES LUMINEUSES LATÉRALES
     for (const side of [-1, 1]) {
 
-        box(
-            0.12, 0.12, 12,
-            neonMaterial,
-            side * 1.3, 1.2, 0,
-            train
-        );
+        box(0.12, 0.12, 12, neonMaterial,
+            side * 1.3, 1.2, 0, train);
 
         const headlight = new THREE.PointLight(
             style.neon, 3, 25
@@ -1198,12 +1190,8 @@ function createTrain(laneIndex, z) {
         headlight.position.set(side * 0.8, 0.8, 7);
         train.add(headlight);
 
-        box(
-            0.4, 0.4, 0.15,
-            style.windows,
-            side * 0.8, 0.8, 6.7,
-            train
-        );
+        box(0.4, 0.4, 0.15, style.windows,
+            side * 0.8, 0.8, 6.7, train);
     }
 
     // BAS DU TRAIN
@@ -1226,10 +1214,9 @@ function createTrain(laneIndex, z) {
         }
     }
 
-    // POSITION
     train.position.set(lanePositions[laneIndex], 0, z);
 
-    // ANIMATION DES ANCIENS TRAINS
+    // DONNÉES D'ANIMATION
     train.userData.wheels = wheels;
     train.userData.shake = Math.random() * Math.PI * 2;
     train.userData.style = style.name;
@@ -1241,57 +1228,9 @@ function createTrain(laneIndex, z) {
         type: "train",
         lane: laneIndex
     });
-
     return train;
 }
-function createStationaryTrain(laneIndex, z) {
-    const train = new THREE.Group();
 
-    const bodyMaterial = mat(0x102b66, 0x00ddff, 0.7);
-    const rampMaterial = mat(0x222233, 0x00ddff, 0.8);
-    const neonMaterial = mat(0x00ddff, 0x00ddff, 2);
-
-    // CORPS DU TRAIN
-    box(2.55, 3.4, 13, bodyMaterial, 0, 2, 0, train);
-
-    // TOIT
-    box(2.48, 0.08, 12.8, bodyMaterial, 0, 3.74, 0, train);
-
-    // LIGNES LUMINEUSES
-    for (const side of [-1, 1]) {
-        box(0.07, 0.04, 12, neonMaterial, side * 1.12, 3.81, 0, train);
-    }
-
-    // RAMPE À L'AVANT DU TRAIN
-    const ramp = new THREE.Mesh(
-        new THREE.BoxGeometry(2.4, 0.18, 5),
-        rampMaterial
-    );
-
-    ramp.position.set(0, 1.85, 8.5);
-    ramp.rotation.x = -0.55;
-    train.add(ramp);
-
-    // BANDES LUMINEUSES SUR LA RAMPE
-    for (const side of [-1, 1]) {
-        box(0.06, 0.04, 5, neonMaterial,
-            side * 1.1, 2.05, 8.5, train);
-    }
-
-    train.position.set(lanePositions[laneIndex], 0, z);
-
-    train.userData.stationary = true;
-
-    scene.add(train);
-
-    obstacles.push({
-        object: train,
-        type: "stationaryTrain",
-        lane: laneIndex
-    });
-
-    return train;
-}
 // ======================================================
 // BARRIÈRES FUTURISTES
 // ======================================================
@@ -1764,22 +1703,12 @@ function spawnObjects() {
     const laneIndex = Math.floor(Math.random() * 3);
 
     // Obstacles actuels : on ne change rien
-    const spawnRoll = Math.random();
-
-const trainSpawned = spawnRoll < 0.55;
-const stationaryTrainSpawned =
-    spawnRoll >= 0.55 && spawnRoll < 0.75;
+    const trainSpawned = Math.random() < 0.55;
 
 let spawnedTrain = null;
 
 if (trainSpawned) {
-    // ANCIEN TRAIN : mobile
     spawnedTrain = createTrain(laneIndex, -115);
-
-} else if (stationaryTrainSpawned) {
-    // NOUVEAU TRAIN : avec rampe
-    createStationaryTrain(laneIndex, -115);
-
 } else {
     createBarrier(laneIndex, -105);
 }
@@ -2230,51 +2159,48 @@ function moveObstacles() {
 
         if (obstacle.type === "train") {
 
+            // Le train fonce vers le joueur
             obstacle.object.position.z += speed * 1.8;
 
+            // Rotation des roues
             const wheels = obstacle.object.userData.wheels || [];
 
             wheels.forEach(wheel => {
                 wheel.rotation.x += speed * 0.15;
             });
 
+            // Légères vibrations du train
             obstacle.object.position.y =
                 Math.sin(frame * 0.25 + obstacle.object.userData.shake) * 0.025;
 
-                } else {
+        } else {
+
             obstacle.object.position.z += speed;
         }
     });
 
     obstacles = obstacles.filter(obstacle => {
-
-    // Garder les nouveaux trains immobiles
-    if (obstacle.type === "stationaryTrain") {
-        return true;
-    }
-
-    if (obstacle.object.position.z > 20) {
-        scene.remove(obstacle.object);
-        return false;
-    }
-
-    return true;
-});
-
-    coinObjects = coinObjects.filter(coin => {
-        const worldPosition = new THREE.Vector3();
-        coin.getWorldPosition(worldPosition);
-
-        if (worldPosition.z > 18) {
-            if (coin.parent) {
-                coin.parent.remove(coin);
-            }
+        if (obstacle.object.position.z > 20) {
+            scene.remove(obstacle.object);
             return false;
         }
 
         return true;
     });
 }
+coinObjects = coinObjects.filter(coin => {
+    const worldPosition = new THREE.Vector3();
+    coin.getWorldPosition(worldPosition);
+
+    if (worldPosition.z > 18) {
+        if (coin.parent) {
+            coin.parent.remove(coin);
+        }
+        return false;
+    }
+
+    return true;
+});
 // ======================================================
 // HUD
 // ======================================================
@@ -3917,8 +3843,8 @@ function animateCape() {
 
     // SAUT : LA CAPE SE SOULÈVE VERS L'ARRIÈRE
     if (jumping) {
-        targetX = 0.18 + Math.sin(time * 8) * 0.04;
-        targetZ = Math.sin(time * 5) * 0.05;
+        targetX = -0.65 + Math.sin(time * 8) * 0.08;
+        targetZ = Math.sin(time * 5) * 0.09;
     }
 
     // GLISSADE
