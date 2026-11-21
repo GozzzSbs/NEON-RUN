@@ -3763,13 +3763,10 @@ geometry.setIndex(indices);
 geometry.computeVertexNormals();
 
         const material = new THREE.MeshStandardMaterial({
-            color: id === "rxn_white" || id === "certified"
-                ? 0xffffff
-                : 0x080808,
-            side: THREE.DoubleSide,
-            roughness: 0.8
-        });
-
+    color: 0xffffff,
+    side: THREE.DoubleSide,
+    roughness: 0.8
+});
         const group = new THREE.Group();
 group.position.y = 0;
         const cloth = new THREE.Mesh(geometry, material);
