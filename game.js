@@ -1271,7 +1271,7 @@ function createStationaryTrain(laneIndex, z) {
     ramp.position.set(0, 1.85, 8.5);
     ramp.rotation.x = 0.55;
     train.add(ramp);
-
+train.userData.ramp = ramp;
     // BANDES LUMINEUSES SUR LA RAMPE
     for (const side of [-1, 1]) {
         box(0.06, 0.04, 5, neonMaterial,
