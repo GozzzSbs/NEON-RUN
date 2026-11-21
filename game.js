@@ -3369,11 +3369,22 @@ function createShopStyles() {
         }
 
         .neon-shop-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-            gap: 15px;
-        }
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 15px;
+    position: relative;
+}
 
+#shopPreview3DCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+        position: relative;
         .neon-shop-card {
             position: relative;
             overflow: hidden;
