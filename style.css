@@ -1654,3 +1654,18 @@ button:active {
     padding: 8px 12px;
     border-radius: 8px;
 }
+#pauseButton {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    z-index: 110;
+    width: 42px;
+    height: 42px;
+    font-size: 25px;
+    font-weight: bold;
+    border-radius: 10px;
+    background: #ff9d00;
+    color: black;
+    border: none;
+    cursor: pointer;
+}
