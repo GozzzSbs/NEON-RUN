@@ -1595,3 +1595,35 @@ button:active {
 .play-button:hover {
     transform: scale(1.13) translateY(-3px);
 }
+/* NOUVEL AFFICHAGE JOUEUR EN PARTIE */
+
+.player-game-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+#gamePlayerPseudo {
+    color: white;
+    text-transform: uppercase;
+}
+
+#gamePlayerBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background: #1DA1F2;
+    color: white;
+    font-size: 12px;
+}
+
+.game-score {
+    color: #ff9d00;
+    margin-left: 8px;
+}
