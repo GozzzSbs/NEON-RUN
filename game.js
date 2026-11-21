@@ -3920,9 +3920,7 @@ function animateCape() {
     if (!shopCapeObject || !player) return;
 
     const time = performance.now() * 0.001;
-const legSwing = Math.sin(frame * 0.14);
 
-shopCapeObject.position.z = -legSwing * 0.08;
     shopCapeObject.rotation.z = Math.sin(time * 4) * 0.045;
     shopCapeObject.rotation.x = Math.sin(time * 3) * 0.035;
 
