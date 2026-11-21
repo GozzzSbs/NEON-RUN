@@ -3857,7 +3857,7 @@ const logoColor = equippedCape === "rxn_white"
         }
 
         if (type === "rxn") {
-            ctx.fillStyle = "#ffffff";
+            ctx.fillStyle = logoColor;
             ctx.font = "bold 190px Arial Black";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
@@ -3866,7 +3866,7 @@ const logoColor = equippedCape === "rxn_white"
 
         if (type === "moon") {
             // Lune blanche
-            ctx.fillStyle = "#ffffff";
+            ctx.fillStyle = logoColor;
             ctx.beginPath();
             ctx.arc(256, 128, 105, 0, Math.PI * 2);
             ctx.fill();
