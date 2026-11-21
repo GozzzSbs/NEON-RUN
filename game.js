@@ -153,6 +153,61 @@ function createCloud(x, y, z) {
 
     movingClouds.push(cloud);
 }
+// Création des nuages
+for (let i = 0; i < 12; i++) {
+    createCloud(
+        (Math.random() - 0.5) * 100,
+        25 + Math.random() * 25,
+        -i * 25
+    );
+}
+// ======================================================
+// OISEAUX QUI VOLENT
+// ======================================================
+
+const movingBirds = [];
+
+function createBird(x, y, z) {
+    const bird = new THREE.Group();
+
+    const birdMaterial = new THREE.MeshBasicMaterial({
+        color: 0x252525
+    });
+
+    // Aile gauche
+    const leftWing = new THREE.Mesh(
+        new THREE.BoxGeometry(0.9, 0.08, 0.25),
+        birdMaterial
+    );
+
+    leftWing.position.x = -0.4;
+    leftWing.rotation.z = -0.25;
+    bird.add(leftWing);
+
+    // Aile droite
+    const rightWing = new THREE.Mesh(
+        new THREE.BoxGeometry(0.9, 0.08, 0.25),
+        birdMaterial
+    );
+
+    rightWing.position.x = 0.4;
+    rightWing.rotation.z = 0.25;
+    bird.add(rightWing);
+
+    bird.position.set(x, y, z);
+    scene.add(bird);
+
+    movingBirds.push(bird);
+}
+
+// Création des oiseaux
+for (let i = 0; i < 8; i++) {
+    createBird(
+        (Math.random() - 0.5) * 35,
+        17 + Math.random() * 12,
+        -i * 30
+    );
+}
 // ======================================================
 // VARIABLES
 // ======================================================
