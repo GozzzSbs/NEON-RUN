@@ -414,7 +414,7 @@ function createGraffitiTexture(text) {
 // ======================================================
 
 const streetWalls = [];
-
+const movingGraffiti = [];
 function createStreetWalls() {
 
     for (const side of [-1, 1]) {
