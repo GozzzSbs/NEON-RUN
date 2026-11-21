@@ -4589,14 +4589,8 @@ window.openShop = openShop;
 // ======================================================
 
 function closeShop() {
-    if (!shopElement) return;
-
-    shopElement.classList.remove("open");
-    shopElement.classList.add("hidden");
-    shopElement.style.display = "none";
-
-    const menu = document.getElementById("menu");
-    if (menu) menu.classList.remove("hidden");
+    shopElement.remove();
+    shopElement = null;
 }
 
 window.closeShop = closeShop;
