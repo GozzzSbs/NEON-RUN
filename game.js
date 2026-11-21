@@ -2588,37 +2588,24 @@ function animate() {
     moveObstacles();
 
     // JACKO RESTE SUR LE TRAIN TEMPORAIREMENT
-    if (ridingTrain) {
-        const trainExists = obstacles.some(
-            obstacle => obstacle.object === ridingTrain
-        );
+if (ridingTrain) {
+    const trainExists = obstacles.some(
+        obstacle => obstacle.object === ridingTrain
+    );
 
-        if (trainExists && ridingTrain.position.z < 6.2) {
-            player.position.y = 3.78 + ridingTrain.position.y;
-            jumping = false;
+    if (trainExists && ridingTrain.position.z < 6.2) {
+        if (ridingTrain.userData.ramp) {
+            player.position.y = 3.78;
         } else {
-            ridingTrain = null;
-            jumping = true;
-            jumpVelocity = 0;
+            player.position.y = 3.78 + ridingTrain.position.y;
         }
+
+        jumping = false;
+    } else {
+        ridingTrain = null;
+        jumping = true;
+        jumpVelocity = 0;
     }
-
-    moveCoins();
-
-    checkCollisions();
-
-    if (!running) return;
-
-    camera.position.x +=
-        (player.position.x * 0.35 - camera.position.x) * 0.08;
-
-    camera.position.y = 5 + player.position.y * 0.3;
-
-    camera.lookAt(player.position.x * 0.25, 1.5, -20);
-
-    updateHUD();
-
-    renderer.render(scene, camera);
 }
 // ======================================================
 // DÉMARRER
