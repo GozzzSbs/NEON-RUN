@@ -413,7 +413,54 @@
     </div>
 
 </div>
+<!-- PASS NEON RUN -->
+<div id="neonPass" style="
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:10000;
+    background:rgba(0,0,0,0.92);
+    color:white;
+    overflow-y:auto;
+    font-family:Arial,sans-serif;
+    padding:25px;
+">
+    <div style="max-width:850px;margin:auto;">
 
+        <button onclick="closePass()" style="float:right;">
+            ✖ FERMER
+        </button>
+
+        <h1 style="text-align:center;color:#00eaff;">
+            💎 NEON RUN PASS
+        </h1>
+
+        <h2 style="text-align:center;">
+            NIVEAU <span id="passLevel">1</span> / 100
+        </h2>
+
+        <div style="background:#333;border-radius:20px;height:18px;">
+            <div id="passXpBar" style="
+                width:0%;
+                height:100%;
+                background:#00eaff;
+                border-radius:20px;
+            "></div>
+        </div>
+
+        <p style="text-align:center;">
+            XP : <span id="passXp">0</span> / 100
+        </p>
+
+        <div id="passRewards" style="
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+            gap:12px;
+            margin-top:25px;
+        "></div>
+
+    </div>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="game.js"></script>
