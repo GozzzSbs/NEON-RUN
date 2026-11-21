@@ -1230,8 +1230,8 @@ function createPlayer() {
     // Le groupe Prince K est caché par défaut
     princeK.visible = false;
 
-    player.position.set(0, 0, 0);
-player.rotation.y = Math.PI;
+   player.position.set(0, 0, 0);
+player.rotation.y = 0;
 scene.add(player);
 }
 
