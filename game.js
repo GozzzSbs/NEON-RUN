@@ -1569,7 +1569,7 @@ function moveEnvironment() {
         }
     });
 
-    movingAliens.forEach(ship => {
+        movingAliens.forEach(ship => {
         ship.position.x += ship.userData.direction || 0.08;
         ship.position.y += Math.sin(frame * 0.025 + ship.position.z) * 0.015;
         ship.rotation.z = Math.sin(frame * 0.02 + ship.position.z) * 0.04;
@@ -1579,6 +1579,16 @@ function moveEnvironment() {
             ship.position.z = -40 - Math.random() * 180;
         }
     });
+
+    // DÉFILEMENT DES LAMPADAIRES
+    movingStreetLamps.forEach(lamp => {
+        lamp.position.z += speed;
+
+        if (lamp.position.z > 20) {
+            lamp.position.z -= 240;
+        }
+    });
+}
 
     // DÉFILEMENT DES MURS
     streetWalls.forEach(wall => {
