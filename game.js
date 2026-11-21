@@ -3765,7 +3765,7 @@ geometry.computeVertexNormals();
         });
 
         const group = new THREE.Group();
-group.position.y = -0.15;
+group.position.y = -0.25;
         const cloth = new THREE.Mesh(geometry, material);
         group.add(cloth);
 
