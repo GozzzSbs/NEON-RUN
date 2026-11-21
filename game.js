@@ -416,52 +416,46 @@ function createGraffitiTexture(text) {
 const streetWalls = [];
 const movingGraffiti = [];
 function createStreetWalls() {
-
     for (const side of [-1, 1]) {
+        for (let i = 0; i < 4; i++) {
+            const section = new THREE.Group();
 
-        const wallX = side * 8.5;
+            // Portion de mur en briques
+            const wall = new THREE.Mesh(
+                new THREE.BoxGeometry(0.7, 10, 30),
+                brickMaterial
+            );
 
-        // Mur principal
-        const wall = new THREE.Mesh(
-            new THREE.BoxGeometry(0.7, 10, 240),
-            brickMaterial
-        );
+            wall.position.y = 4.5;
+            wall.castShadow = true;
+            wall.receiveShadow = true;
+            section.add(wall);
 
-        wall.position.set(wallX, 4.5, -85);
-        wall.castShadow = true;
-        wall.receiveShadow = true;
-
-        scene.add(wall);
-        streetWalls.push(wall);
-
-        // Graffitis
-        for (let i = 0; i < 9; i++) {
-
+            // Grand graffiti
             const graffitiMaterial = new THREE.MeshBasicMaterial({
                 map: createGraffitiTexture(
-                    ["NEON RUN", "STREET", "NR 3D"][i % 3],
+                    ["NEON RUN", "STREET", "NR 3D"][i % 3]
                 ),
                 transparent: true,
                 side: THREE.DoubleSide
             });
 
             const graffiti = new THREE.Mesh(
-    new THREE.PlaneGeometry(7, 3.5),
-    graffitiMaterial
-);
-
-            graffiti.position.set(
-                wallX - side * 0.37,
-                3.5 + (i % 2) * 1.5,
-                -5 - i * 24
+                new THREE.PlaneGeometry(7, 3.5),
+                graffitiMaterial
             );
 
+            graffiti.position.set(-side * 0.37, 3.5, 0);
             graffiti.rotation.y = side === -1
                 ? Math.PI / 2
                 : -Math.PI / 2;
 
-            scene.add(graffiti);
-            movingGraffiti.push(graffiti);
+            section.add(graffiti);
+
+            section.position.set(side * 8.5, 0, -5 - i * 60);
+
+            scene.add(section);
+            streetWalls.push(section);
         }
     }
 }
