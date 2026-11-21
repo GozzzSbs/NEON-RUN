@@ -3679,15 +3679,54 @@ function setupShopCapePreviews() {
         const id = preview.dataset.capeId;
         if (!id) return;
 
-        const shape = new THREE.Shape();
+        const vertices = [];
+const indices = [];
 
-        shape.moveTo(-0.42, 0.65);
-        shape.lineTo(0.42, 0.65);
-        shape.lineTo(0.58, -0.45);
-        shape.quadraticCurveTo(0, -0.68, -0.58, -0.45);
-        shape.closePath();
+const rows = 16;
+const columns = 16;
 
-        const geometry = new THREE.ShapeGeometry(shape);
+for (let row = 0; row <= rows; row++) {
+    const v = row / rows;
+
+    for (let col = 0; col <= columns; col++) {
+        const u = col / columns;
+
+        const width = 0.42 + v * 0.16;
+
+        const x = (u * 2 - 1) * width;
+
+        const y =
+            0.65 - v * 1.1
+            + 0.08 * Math.pow(Math.abs(u * 2 - 1), 2) * v;
+
+        const z =
+            0.10 * Math.sin(v * Math.PI) *
+            Math.cos((u - 0.5) * Math.PI * 2)
+            + 0.025 * Math.sin(u * Math.PI * 4 + v * Math.PI * 3) * v;
+
+        vertices.push(x, y, z);
+    }
+}
+
+for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < columns; col++) {
+        const a = row * (columns + 1) + col;
+        const b = a + columns + 1;
+
+        indices.push(a, b, a + 1);
+        indices.push(b, b + 1, a + 1);
+    }
+}
+
+const geometry = new THREE.BufferGeometry();
+
+geometry.setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(vertices, 3)
+);
+
+geometry.setIndex(indices);
+geometry.computeVertexNormals();
 
         const material = new THREE.MeshStandardMaterial({
             color: id === "rxn_white" || id === "certified"
