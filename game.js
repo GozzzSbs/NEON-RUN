@@ -3657,7 +3657,7 @@ function setupShopCapePreviews() {
             35, 1, 0.1, 100
         );
 
-        shopPreviewCamera.position.set(0, 0, 2.4);
+        shopPreviewCamera.position.set(0, 0, 2.7);
 
         shopPreviewScene.add(
             new THREE.AmbientLight(0xffffff, 1.5)
