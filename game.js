@@ -348,7 +348,7 @@ function box(w, h, d, color, x, y, z, parent = scene) {
 
 const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(300, 350),
-    mat(0x242020)
+    mat(0x35404a)
 );
 
 floor.rotation.x = -Math.PI / 2;
@@ -358,7 +358,7 @@ scene.add(floor);
 // Route centrale
 const road = box(
     12, 0.3, 220,
-    mat(0x303030),
+    mat(0x202830),
     0, -0.25, -80
 );
 
