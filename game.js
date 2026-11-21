@@ -2338,25 +2338,22 @@ console.log("DIFFICULTÉ ENREGISTRÉE :", difficulty, window.difficulty);
 // BOUCLE PRINCIPALE
 // ======================================================
 const coinWorldPosition = new THREE.Vector3();
+
 function moveCoins() {
 
     for (let i = coinObjects.length - 1; i >= 0; i--) {
 
         const coin = coinObjects[i];
 
-        // Déplacement
         if (!coin.userData.onTrain) {
             coin.position.z += speed;
         }
 
-        // Rotation
         coin.rotation.y += 0.08;
         coin.rotation.z += 0.04;
 
-        // Position réelle dans le monde
         coin.getWorldPosition(coinWorldPosition);
 
-        // Supprimer les pièces dépassées
         if (coinWorldPosition.z > 18) {
 
             if (coin.parent) {
