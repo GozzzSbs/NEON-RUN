@@ -4270,7 +4270,33 @@ const leaderboardDifficulty = window.selectedLeaderboardDifficulty || "facile";
     const verifiedPseudos = new Set(
         (verifiedPlayers || []).map(j => j.pseudo.toLowerCase())
     );
+async function updateGamePlayerInfo() {
+    const pseudo = localStorage.getItem("neonPlayerPseudo") || "RUNNER";
 
+    const pseudoElement = document.getElementById("gamePlayerPseudo");
+    const badgeElement = document.getElementById("gamePlayerBadge");
+
+    pseudoElement.textContent = pseudo;
+    badgeElement.textContent = "";
+
+    if (!supabaseClient) return;
+
+    const { data, error } = await supabaseClient
+        .from("neon_players")
+        .select("verified")
+        .ilike("pseudo", pseudo)
+        .maybeSingle();
+
+    if (error) {
+        console.error("Erreur badge joueur :", error);
+        return;
+    }
+
+    if (data && data.verified === true) {
+        badgeElement.textContent = "✓";
+        badgeElement.title = "Joueur certifié";
+    }
+}
     function createPlayerName(pseudo) {
 
         const name = document.createElement("span");
