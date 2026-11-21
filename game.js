@@ -4572,7 +4572,8 @@ function openShop() {
     shopWallet = Number(localStorage.getItem("neonWallet") || 0);
     shopDiamonds = Number(localStorage.getItem("neonDiamonds") || 0);
 
-    shopElement.classList.add("open");
+    shopElement.classList.remove("hidden");
+shopElement.classList.add("open");
 
 renderShop();
 
