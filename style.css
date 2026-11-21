@@ -1551,3 +1551,21 @@ button:active {
         0 0 18px rgba(255, 140, 0, 0.35),
         0 4px 0 #a85a00;
 }
+.rules-panel {
+    background: linear-gradient(145deg, #252525, #151515);
+    border: 2px solid #ff8c00;
+    border-radius: 16px;
+    padding: 20px;
+    max-width: 550px;
+    margin: 25px auto;
+    box-shadow: 0 0 18px rgba(255, 140, 0, 0.15);
+    text-align: center;
+}
+
+.rules-panel p {
+    color: #eeeeee;
+    font-size: 16px;
+    line-height: 2;
+    font-weight: bold;
+    margin: 0;
+}
