@@ -3893,7 +3893,7 @@ const h = rect.height;
                 shopPreviewRenderer.setScissor(x, y, w, h);
                 shopPreviewRenderer.clear(true, true, true);
 
-                item.group.rotation.y = Math.sin(time * 0.8) * 0.45;
+                item.group.rotation.y = time * 0.7;
                 item.group.rotation.z = Math.sin(time * 1.5) * 0.04;
 
                 if (item.ring) {
