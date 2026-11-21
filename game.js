@@ -2084,14 +2084,17 @@ function startGame() {
 
     applyDifficultySettings(true);
 
-    player.position.set(0, 0, 0);
-    player.scale.set(1, 1, 1);
+    console.log("PLAYER :", player);
+console.log("PLAYER PARTS :", playerParts);
 
-    console.log("PLAYER PARTS :", playerParts);
-console.log("BODY :", playerParts.body);
-console.log("ARMS :", playerParts.arms);
-console.log("LEGS :", playerParts.legs);
-console.log("HEAD :", playerParts.head);
+if (!player || !playerParts || !playerParts.body) {
+    console.error("ERREUR : le personnage n'est pas correctement initialisé !");
+    return;
+}
+
+player.position.set(0, 0, 0);
+player.scale.set(1, 1, 1);
+playerParts.body.position.y = 1.75;
 
     obstacles.forEach(obstacle => scene.remove(obstacle.object));
     coinObjects.forEach(coin => scene.remove(coin));
