@@ -123,20 +123,24 @@ const movingClouds = [];
 function createCloud(x, y, z) {
     const cloud = new THREE.Group();
 
-    const cloudMaterial = new THREE.MeshBasicMaterial({
-        color: 0xffffff
+    const cloudMaterial = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        roughness: 1
     });
 
     const parts = [
-        [-1.5, 0, 0, 2.5],
-        [0, 0.5, 0, 3],
-        [1.5, 0, 0, 2.3],
-        [0, -0.3, 0.8, 2]
+        [-2.0, 0, 0, 3.5],
+        [-0.8, 0.7, 0, 4.2],
+        [0.8, 0.6, 0, 4.5],
+        [2.1, 0, 0, 3.4],
+        [0, -0.3, 0.7, 3.2],
+        [-1.2, -0.4, 0.8, 2.8],
+        [1.2, -0.3, 0.8, 2.8]
     ];
 
     parts.forEach(part => {
         const puff = new THREE.Mesh(
-            new THREE.SphereGeometry(part[3] / 2, 16, 16),
+            new THREE.SphereGeometry(part[3] / 2, 20, 20),
             cloudMaterial
         );
 
@@ -148,15 +152,6 @@ function createCloud(x, y, z) {
     scene.add(cloud);
 
     movingClouds.push(cloud);
-}
-
-// Création des nuages
-for (let i = 0; i < 12; i++) {
-    createCloud(
-        (Math.random() - 0.5) * 100,
-        25 + Math.random() * 25,
-        -i * 25
-    );
 }
 // ======================================================
 // VARIABLES
