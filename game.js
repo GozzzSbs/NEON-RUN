@@ -1006,141 +1006,8 @@ for (const side of [-1, 1]) {
 // ======================================================
 // PERSONNAGE
 // ======================================================
-function createBlondBoy() {
-    player = new THREE.Group();
 
-    playerParts = {
-        arms: [],
-        legs: [],
-        body: null,
-        head: null
-    };
-
-    const skin = mat(0xd99a70);
-    const hair = mat(0xf2c15e);
-    const hairDark = mat(0xc58b32);
-    const shirt = mat(0x13bfc0);
-    const red = mat(0xe52b35);
-    const yellow = mat(0xffd52a);
-    const blue = mat(0x168de0);
-    const black = mat(0x171717);
-    const white = mat(0xffffff);
-
-    function box(w, h, d, material, x, y, z, parent) {
-        const mesh = new THREE.Mesh(
-            new THREE.BoxGeometry(w, h, d),
-            material
-        );
-        mesh.position.set(x, y, z);
-        mesh.castShadow = true;
-        parent.add(mesh);
-        return mesh;
-    }
-
-    function sphere(r, material, x, y, z, parent) {
-        const mesh = new THREE.Mesh(
-            new THREE.SphereGeometry(r, 16, 16),
-            material
-        );
-        mesh.position.set(x, y, z);
-        mesh.castShadow = true;
-        parent.add(mesh);
-        return mesh;
-    }
-
-    // TORSE
-    const torso = new THREE.Group();
-    torso.position.y = 1.75;
-    player.add(torso);
-    playerParts.body = torso;
-
-    box(0.85, 1.05, 0.45, shirt, 0, 0, 0, torso);
-
-    // COLLIER
-    const necklace = new THREE.Mesh(
-        new THREE.TorusGeometry(0.19, 0.025, 8, 32),
-        yellow
-    );
-    necklace.position.set(0, 0.32, 0.235);
-    necklace.rotation.x = Math.PI / 2;
-    torso.add(necklace);
-
-    sphere(0.055, yellow, 0, 0.12, 0.29, torso);
-
-    // TÊTE
-    const head = new THREE.Group();
-    head.position.set(0, 2.65, 0);
-    player.add(head);
-    playerParts.head = head;
-
-    sphere(0.34, skin, 0, 0, 0, head);
-
-    // CHEVEUX BLONDS
-    sphere(0.36, hair, 0, 0.16, 0, head);
-    sphere(0.20, hair, -0.20, 0.20, 0.02, head);
-    sphere(0.20, hairDark, 0.18, 0.20, 0.02, head);
-    box(0.55, 0.13, 0.42, hair, 0, 0.29, 0.02, head);
-
-    // LUNETTES SUR LA TÊTE
-    box(0.48, 0.07, 0.13, black, 0, 0.39, 0.18, head);
-    box(0.18, 0.09, 0.14, blue, -0.13, 0.39, 0.23, head);
-    box(0.18, 0.09, 0.14, blue, 0.13, 0.39, 0.23, head);
-
-    // BRAS
-    for (const side of [-1, 1]) {
-        const arm = new THREE.Group();
-        arm.position.set(side * 0.49, 2.18, 0);
-        player.add(arm);
-
-        sphere(0.15, skin, 0, -0.18, 0, arm);
-        box(0.23, 0.43, 0.25, skin, 0, -0.22, 0, arm);
-
-        const elbow = new THREE.Group();
-        elbow.position.y = -0.43;
-        arm.add(elbow);
-
-        box(0.22, 0.38, 0.24, skin, 0, -0.19, 0, elbow);
-        sphere(0.13, skin, 0, -0.39, 0, elbow);
-
-        arm.userData.elbow = elbow;
-        playerParts.arms.push(arm);
-    }
-
-    // SHORT ROUGE ET JAUNE
-    for (const side of [-1, 1]) {
-        const leg = new THREE.Group();
-        leg.position.set(side * 0.23, 1.22, 0);
-        player.add(leg);
-
-        box(0.34, 0.38, 0.38, red, 0, -0.12, 0, leg);
-        box(0.34, 0.40, 0.38, skin, 0, -0.50, 0, leg);
-
-        const knee = new THREE.Group();
-        knee.position.y = -0.58;
-        leg.add(knee);
-
-        box(0.34, 0.12, 0.38, skin, 0, -0.10, 0, knee);
-
-        // SANDALE BLEUE
-        box(0.43, 0.12, 0.62, blue, 0, -0.27, -0.10, knee);
-        box(0.37, 0.07, 0.15, yellow, 0, -0.20, -0.34, knee);
-
-        leg.userData.knee = knee;
-        playerParts.legs.push(leg);
-    }
-
-    // DÉTAILS JAUNES DU SHORT
-    box(0.86, 0.12, 0.40, yellow, 0, 1.02, 0, player);
-
-    player.position.set(0, 0, 0);
-    player.rotation.y = Math.PI;
-    scene.add(player);
-}
 function createPlayer() {
-    if (equippedSkin === "blond_boy") {
-        createBlondBoy();
-        return;
-    }
     player = new THREE.Group();
 
     playerParts = {
@@ -2982,7 +2849,7 @@ window.addEventListener("resize", () => {
 // ======================================================
 
 const SHOP_CATALOG = {
-skins: [
+    skins: [
     {
         id: "default",
         name: "JACKO",
@@ -2994,18 +2861,50 @@ skins: [
     {
         id: "el_blackito",
         name: "EL BLACKITO",
-        price: 100,
+        price: 10,
         currency: "diamonds",
         color: 0x050505,
         description: "Noir absolu avec des détails blancs."
     },
     {
-        id: "blond_boy",
-        name: "SUMMER BOY",
-        price: 1000,
+        id: "electric",
+        name: "ELECTRIC",
+        price: 25,
         currency: "diamonds",
-        color: 0x13bfc0,
-        description: "Cheveux blonds, lunettes, collier et tenue d'été."
+        color: 0x00eaff,
+        description: "L'énergie électrique."
+    },
+    {
+        id: "inferno",
+        name: "INFERNO",
+        price: 40,
+        currency: "diamonds",
+        color: 0xff3300,
+        description: "Un runner venu des flammes."
+    },
+    {
+        id: "royal",
+        name: "ROYAL",
+        price: 60,
+        currency: "diamonds",
+        color: 0xffd700,
+        description: "Un style digne d'un roi."
+    },
+    {
+        id: "galaxy",
+        name: "GALAXY",
+        price: 80,
+        currency: "diamonds",
+        color: 0x8a2be2,
+        description: "La puissance de la galaxie."
+    },
+    {
+        id: "diamond",
+        name: "DIAMOND",
+        price: 120,
+        currency: "diamonds",
+        color: 0xffffff,
+        description: "Le skin ultime."
     }
 ],
 
@@ -3014,8 +2913,8 @@ skins: [
     {
         id: "nr",
         name: "CAPE NR",
-        price: 1000,
-currency: "diamonds",
+        price: 100,
+        currency: "diamonds",
         color: 0x050505,
         description: "Cape noire avec le logo NR."
     },
@@ -4258,8 +4157,6 @@ window.handleShopItem = handleShopItem;
 function applyShopSkin() {
     if (!player) return;
 
-    if (equippedSkin === "blond_boy") return;
-
     player.traverse(object => {
         if (!object.isMesh || !object.material) return;
 
@@ -4295,15 +4192,53 @@ function applyShopSkin() {
 
         return;
     }
+if (equippedSkin === "electric") {
+    originalPlayerMaterials.forEach((original, material) => {
+        material.color.set(0x00eaff);
+        if (material.emissive) material.emissive.set(0x00eaff);
+        material.emissiveIntensity = 0.6;
+    });
+}
 
+if (equippedSkin === "inferno") {
+    originalPlayerMaterials.forEach((original, material) => {
+        material.color.set(0xff3300);
+        if (material.emissive) material.emissive.set(0xff3300);
+        material.emissiveIntensity = 0.6;
+    });
+}
+
+if (equippedSkin === "royal") {
+    originalPlayerMaterials.forEach((original, material) => {
+        material.color.set(0xffd700);
+        if (material.emissive) material.emissive.set(0xffd700);
+        material.emissiveIntensity = 0.5;
+    });
+}
+
+if (equippedSkin === "galaxy") {
+    originalPlayerMaterials.forEach((original, material) => {
+        material.color.set(0x8a2be2);
+        if (material.emissive) material.emissive.set(0x8a2be2);
+        material.emissiveIntensity = 0.7;
+    });
+}
+
+if (equippedSkin === "diamond") {
+    originalPlayerMaterials.forEach((original, material) => {
+        material.color.set(0xffffff);
+        if (material.emissive) material.emissive.set(0x66ccff);
+        material.emissiveIntensity = 0.8;
+    });
+}
     if (equippedSkin === "el_blackito") {
         originalPlayerMaterials.forEach((original, material) => {
-            const c = original.color;
+            const originalColor = original.color;
 
             const isDetail =
-                c.r > 0.25 ||
-                c.g > 0.35 ||
-                c.b > 0.25;
+                originalColor.r > 0.25 ||
+                originalColor.g > 0.35 ||
+                originalColor.b > 0.25;
 
             if (isDetail) {
                 material.color.set(0xffffff);
@@ -4362,11 +4297,6 @@ function createCape() {
     }
 
     const cape = new THREE.Group();
-
-if (equippedSkin === "blond_boy") {
-    cape.position.z = 0;
-    cape.rotation.y = Math.PI;
-}
 if (equippedCape === "certified") {
     cape.position.z = 0.28;
 }
