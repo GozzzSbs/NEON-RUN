@@ -2834,16 +2834,23 @@ const SHOP_CATALOG = {
 
 
     capes: [
-        {
-            id: "nr",
-            name: "CAPE NR",
-            price: 100,
-            currency: "diamonds",
-            color: 0x050505,
-            description: "Cape noire avec le logo NR."
-        }
-    ]
-};
+    {
+        id: "nr",
+        name: "CAPE NR",
+        price: 100,
+        currency: "diamonds",
+        color: 0x050505,
+        description: "Cape noire avec le logo NR."
+    },
+    {
+        id: "rxn",
+        name: "La RXN Cape,s",
+        price: 500,
+        currency: "diamonds",
+        color: 0x050505,
+        description: "Cape noire animée : RXN blanc et lune blanche."
+    }
+]
 
 // ======================================================
 // SAUVEGARDE
