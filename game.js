@@ -324,56 +324,92 @@ const brickMaterial = new THREE.MeshStandardMaterial({
 // TEXTURE GRAFFITI
 // ======================================================
 
+```js
 function createGraffitiTexture(text) {
-
     const canvasTexture = document.createElement("canvas");
-    canvasTexture.width = 512;
-    canvasTexture.height = 256;
+    canvasTexture.width = 1024;
+    canvasTexture.height = 512;
 
     const ctx = canvasTexture.getContext("2d");
 
-    ctx.clearRect(0, 0, 512, 256);
+    ctx.clearRect(0, 0, 1024, 512);
 
     ctx.save();
+    ctx.translate(512, 245);
+    ctx.rotate(-0.10);
+    ctx.transform(1, 0, -0.18, 1, 0, 0);
 
-    ctx.translate(256, 128);
-    ctx.rotate(-0.06);
-
-    ctx.font = "900 75px Arial Black";
+    // Ombre du tag
+    ctx.font = "italic 900 145px Impact, Arial Black, sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    ctx.lineWidth = 13;
+    ctx.lineWidth = 35;
+    ctx.strokeStyle = "#171313";
+    ctx.strokeText(text, 8, 12);
+
+    // Contour extérieur rose
+    ctx.lineWidth = 22;
+    ctx.strokeStyle = "#ff329d";
+    ctx.strokeText(text, 0, 0);
+
+    // Contour intérieur noir
+    ctx.lineWidth = 10;
     ctx.strokeStyle = "#171313";
     ctx.strokeText(text, 0, 0);
 
-    ctx.fillStyle = "#ff7b00";
+    // Remplissage orange
+    const gradient = ctx.createLinearGradient(0, -100, 0, 100);
+    gradient.addColorStop(0, "#fff0a0");
+    gradient.addColorStop(0.35, "#ffad24");
+    gradient.addColorStop(1, "#ff5a00");
+
+    ctx.fillStyle = gradient;
     ctx.fillText(text, 0, 0);
 
-    ctx.lineWidth = 4;
+    // Reflet blanc
+    ctx.lineWidth = 5;
     ctx.strokeStyle = "#ffffff";
     ctx.strokeText(text, 0, 0);
 
     ctx.restore();
 
-    // Décor graffiti
-    ctx.strokeStyle = "#ff3c9e";
-    ctx.lineWidth = 9;
+    // Coulures de peinture
+    ctx.fillStyle = "#ff329d";
 
-    ctx.beginPath();
-    ctx.moveTo(60, 190);
-    ctx.lineTo(130, 210);
-    ctx.lineTo(190, 185);
-    ctx.stroke();
+    for (let i = 0; i < 7; i++) {
+        const x = 180 + i * 105;
 
-    ctx.strokeStyle = "#ff8c00";
+        ctx.beginPath();
+        ctx.moveTo(x, 325);
+        ctx.lineTo(x + 10, 325);
+        ctx.lineTo(x + 5, 370 + Math.random() * 65);
+        ctx.lineTo(x - 3, 355);
+        ctx.fill();
+    }
+
+    // Projections de peinture
+    for (let i = 0; i < 65; i++) {
+        const x = Math.random() * 1024;
+        const y = Math.random() * 512;
+
+        ctx.fillStyle = i % 2 === 0 ? "#ff8c00" : "#ff329d";
+
+        ctx.beginPath();
+        ctx.arc(x, y, 2 + Math.random() * 6, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // Trait de signature
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 8;
     ctx.beginPath();
-    ctx.arc(420, 65, 30, 0, Math.PI * 2);
+    ctx.moveTo(230, 405);
+    ctx.quadraticCurveTo(500, 470, 790, 390);
     ctx.stroke();
 
     return new THREE.CanvasTexture(canvasTexture);
 }
-
 // ======================================================
 // MURS URBAINS
 // ======================================================
@@ -411,7 +447,7 @@ function createStreetWalls() {
             });
 
             const graffiti = new THREE.Mesh(
-                new THREE.PlaneGeometry(5, 2.5),
+                new THREE.PlaneGeometry(7, 3.5)
                 graffitiMaterial
             );
 
