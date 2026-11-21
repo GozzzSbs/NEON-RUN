@@ -666,12 +666,16 @@ for (let i = 0; i < 12; i++) {
 const movingBuildings = [];
 
 const buildingColors = [
-    0xc4b49a, // Beige
-    0x536b82, // Bleu gris
-    0x8b5140, // Brique
-    0x303d4b, // Bleu nuit
-    0xd0c9b9  // Blanc cassé
+    0xc4b49a,
+    0x536b82,
+    0x8b5140,
+    0x303d4b,
+    0xd0c9b9
 ];
+
+const windowMaterial = new THREE.MeshBasicMaterial({
+    color: 0xffd98a
+});
 
 // Petits immeubles derrière les murs
 for (const side of [-1, 1]) {
@@ -679,6 +683,7 @@ for (const side of [-1, 1]) {
     for (let i = 0; i < 12; i++) {
 
         const height = 14 + Math.random() * 12;
+
         const color = buildingColors[
             Math.floor(Math.random() * buildingColors.length)
         ];
@@ -697,6 +702,25 @@ for (const side of [-1, 1]) {
         building.receiveShadow = true;
 
         movingBuildings.push(building);
+
+        // Fenêtres de l'immeuble
+        for (let y = 0; y < Math.floor(height / 3); y++) {
+            for (let x = -1; x <= 1; x++) {
+
+                const windowMesh = new THREE.Mesh(
+                    new THREE.BoxGeometry(1.1, 1.5, 0.12),
+                    windowMaterial
+                );
+
+                windowMesh.position.set(
+                    side * 16 + x * 2,
+                    y * 3 + 2,
+                    -i * 20 - 3.9
+                );
+
+                scene.add(windowMesh);
+            }
+        }
     }
 }
 
