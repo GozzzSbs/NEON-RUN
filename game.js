@@ -1716,12 +1716,22 @@ function spawnObjects() {
     const laneIndex = Math.floor(Math.random() * 3);
 
     // Obstacles actuels : on ne change rien
-    const trainSpawned = Math.random() < 0.55;
+    const spawnRoll = Math.random();
+
+const trainSpawned = spawnRoll < 0.55;
+const stationaryTrainSpawned =
+    spawnRoll >= 0.55 && spawnRoll < 0.75;
 
 let spawnedTrain = null;
 
 if (trainSpawned) {
+    // ANCIEN TRAIN : mobile
     spawnedTrain = createTrain(laneIndex, -115);
+
+} else if (stationaryTrainSpawned) {
+    // NOUVEAU TRAIN : avec rampe
+    createStationaryTrain(laneIndex, -115);
+
 } else {
     createBarrier(laneIndex, -105);
 }
