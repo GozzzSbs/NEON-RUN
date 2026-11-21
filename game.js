@@ -17,8 +17,8 @@ if (!canvas) throw new Error("Canvas #game introuvable");
 // ======================================================
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x171313);
-scene.fog = new THREE.Fog(0x171313, 55, 180);
+scene.background = new THREE.Color(0x55baff);
+scene.fog = new THREE.Fog(0x9bdcff, 100, 240);
 const camera = new THREE.PerspectiveCamera(
     65,
     (canvas.clientWidth / canvas.clientHeight) || 1,
@@ -47,9 +47,9 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 // LUMIÈRES
 // ======================================================
 
-scene.add(new THREE.HemisphereLight(0xffc49a, 0x292020, 1.2));
+scene.add(new THREE.HemisphereLight(0xffffff, 0x7189a0, 1.8));
 
-const mainLight = new THREE.DirectionalLight(0xffd0a0, 1.3);
+const mainLight = new THREE.DirectionalLight(0xffffff, 2);
 mainLight.position.set(-10, 25, 10);
 mainLight.castShadow = true;
 scene.add(mainLight);
