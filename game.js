@@ -2364,7 +2364,140 @@ function moveCoins() {
         }
     }
 }
+function animate() {
+    requestAnimationFrame(animate);
 
+    if (!running || paused || gameEnded) return;
+
+    frame++;
+
+    score++;
+if (score % 100 === 0) {
+    updateDailyChallengeProgress("score", 100);
+}
+    checkDiamondMilestones();
+
+    speedMultiplier = Math.min(
+        maxSpeedMultiplier,
+        speedMultiplier + SPEED_INCREASE
+    );
+
+    speed = baseSpeed * speedMultiplier;
+
+    spawnTimer++;
+
+    const spawnDelay = selectedMode === "nocoin"
+    ? Math.max(75, 145 - speed * 20)
+    : Math.max(48, 100 - speed * 25);
+
+    if (spawnTimer >= spawnDelay) {
+        spawnObjects();
+        spawnTimer = 0;
+    }
+
+    player.position.x += (targetX - player.position.x) * 0.18;
+
+    if (jumping) {
+        const previousY = player.position.y;
+        player.position.y += jumpVelocity;
+
+        jumpVelocity -= selectedMode === "lava" ? 0.035 : 0.012;
+// DÉTECTION DE L'ATTERRISSAGE SUR UN TRAIN
+if (jumpVelocity < 0) {
+    for (const obstacle of obstacles) {
+        if (obstacle.type !== "train") continue;
+
+        const train = obstacle.object;
+        const roofHeight = 3.78 + train.position.y;
+
+        const sameLane =
+            Math.abs(train.position.x - player.position.x) < 1.2;
+
+        const aboveTrain =
+            Math.abs(train.position.z) < 6.2;
+
+        if (
+            sameLane &&
+            aboveTrain &&
+            previousY >= roofHeight &&
+            player.position.y <= roofHeight
+        ) {
+            player.position.y = roofHeight;
+            jumping = false;
+            jumpVelocity = 0;
+            ridingTrain = train;
+            break;
+        }
+    }
+}
+        const landingHeight =
+            selectedMode === "lava" ? LAVA_PLATFORM_TOP : 0;
+
+        if (player.position.y <= landingHeight) {
+            player.position.y = landingHeight;
+            jumping = false;
+            jumpVelocity = 0;
+
+            if (
+                selectedMode === "lava" &&
+                !isPlayerAboveLavaPlatform()
+            ) {
+                endGame("Tu es tombé dans la lave !");
+                return;
+            }
+        }
+    }
+
+    if (sliding) {
+        slideTimer--;
+        player.scale.y = 0.65;
+
+        if (slideTimer <= 0) {
+            sliding = false;
+            player.scale.y = 1;
+        }
+    }
+
+    if (selectedMode === "lava" && !jumping) {
+        player.position.y = LAVA_PLATFORM_TOP;
+    }
+
+    animateRunner();
+
+    moveEnvironment();
+    moveLavaPlatforms();
+    moveObstacles();
+   // JACKO RESTE SUR LE TRAIN TEMPORAIREMENT
+if (ridingTrain) {
+    const trainExists = obstacles.some(
+        obstacle => obstacle.object === ridingTrain
+    );
+
+    if (trainExists && ridingTrain.position.z < 6.2) {
+        player.position.y = 3.78 + ridingTrain.position.y;
+        jumping = false;
+    } else {
+        ridingTrain = null;
+        jumping = true;
+        jumpVelocity = 0;
+    }
+}
+    moveCoins();
+
+    checkCollisions();
+
+    if (!running) return;
+
+    camera.position.x +=
+        (player.position.x * 0.35 - camera.position.x) * 0.08;
+
+    camera.position.y = 5 + player.position.y * 0.3;
+
+    camera.lookAt(player.position.x * 0.25, 1.5, -20);
+
+    updateHUD();
+    renderer.render(scene, camera);
+}
 // ======================================================
 // DÉMARRER
 // ======================================================
