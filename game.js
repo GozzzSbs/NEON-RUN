@@ -345,23 +345,7 @@ function box(w, h, d, color, x, y, z, parent = scene) {
 // ======================================================
 // SOL URBAIN
 // ======================================================
-const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(300, 350),
-    mat(0x35404a)
-);
 
-floor.rotation.x = -Math.PI / 2;
-floor.position.set(0, -0.48, -100);
-scene.add(floor);
-
-// Route centrale
-const road = box(
-    12, 0.3, 220,
-    mat(0x202830),
-    0, -0.25, -80
-);
-
-normalTrackMeshes.push(road);
 // SOL EN GRAVIER
 const gravelCanvas = document.createElement("canvas");
 gravelCanvas.width = 512;
@@ -396,6 +380,7 @@ gravelTexture.wrapT = THREE.RepeatWrapping;
 gravelTexture.repeat.set(12, 18);
 
 const floor = new THREE.Mesh(
+    mat(0x493027)
     new THREE.PlaneGeometry(300, 350),
     new THREE.MeshStandardMaterial({
         map: gravelTexture,
