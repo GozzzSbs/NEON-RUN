@@ -513,7 +513,6 @@ for (let i = 0; i < 12; i++) {
 // DÉCOR URBAIN SUPPLÉMENTAIRE
 // ======================================================
 const movingBuildings = [];
-const movingStreetLamps = [];
 // Petits immeubles derrière les murs
 for (const side of [-1, 1]) {
 
