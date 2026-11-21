@@ -2241,19 +2241,29 @@ function moveObstacles() {
             obstacle.object.position.y =
                 Math.sin(frame * 0.25 + obstacle.object.userData.shake) * 0.025;
 
-        } else {
-            obstacle.object.position.z += speed;
-        }
+        } else if (obstacle.type === "stationaryTrain") {
+    // Le nouveau train reste immobile
+    return;
+
+} else {
+    obstacle.object.position.z += speed;
+}
     });
 
     obstacles = obstacles.filter(obstacle => {
-        if (obstacle.object.position.z > 20) {
-            scene.remove(obstacle.object);
-            return false;
-        }
 
+    // Garder les nouveaux trains immobiles
+    if (obstacle.type === "stationaryTrain") {
         return true;
-    });
+    }
+
+    if (obstacle.object.position.z > 20) {
+        scene.remove(obstacle.object);
+        return false;
+    }
+
+    return true;
+});
 
     coinObjects = coinObjects.filter(coin => {
         const worldPosition = new THREE.Vector3();
