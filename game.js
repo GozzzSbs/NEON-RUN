@@ -517,7 +517,7 @@ for (let i = 0; i < 12; i++) {
 // ======================================================
 // DÉCOR URBAIN SUPPLÉMENTAIRE
 // ======================================================
-
+const movingBuildings = [];
 // Petits immeubles derrière les murs
 for (const side of [-1, 1]) {
 
@@ -534,6 +534,7 @@ for (const side of [-1, 1]) {
         );
 
         building.castShadow = true;
+        movingBuildings.push(building);
     }
 }
 
