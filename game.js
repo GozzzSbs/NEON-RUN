@@ -4573,8 +4573,8 @@ function openShop() {
     shopDiamonds = Number(localStorage.getItem("neonDiamonds") || 0);
 
     shopElement.classList.remove("hidden");
+shopElement.style.display = "flex";
 shopElement.classList.add("open");
-
 renderShop();
 
 if (currentShopTab === "capes") {
