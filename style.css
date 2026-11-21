@@ -1669,3 +1669,46 @@ button:active {
     border: none;
     cursor: pointer;
 }
+/* MENU PAUSE */
+#pauseMenu {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.75);
+}
+
+#pauseMenu.hidden {
+    display: none;
+}
+
+.pause-panel {
+    width: 300px;
+    padding: 30px;
+    text-align: center;
+    background: linear-gradient(145deg, #171717, #303030);
+    border: 2px solid #ff9d00;
+    border-radius: 20px;
+    box-shadow: 0 0 30px #ff9d0080;
+}
+
+.pause-panel h1 {
+    color: #ff9d00;
+    margin-bottom: 25px;
+}
+
+.pause-panel button {
+    display: block;
+    width: 100%;
+    margin-top: 15px;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: #ff9d00;
+    color: black;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
