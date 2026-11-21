@@ -3951,7 +3951,7 @@ function createCape() {
         const badgeTexture = new THREE.CanvasTexture(badgeCanvas);
 
         const badge = new THREE.Mesh(
-            new THREE.PlaneGeometry(0.65, 0.65),
+            new THREE.PlaneGeometry(0.50, 0.50),
             new THREE.MeshBasicMaterial({
                 map: badgeTexture,
                 transparent: true,
