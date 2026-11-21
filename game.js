@@ -3939,7 +3939,13 @@ function renderShop() {
     const container = document.getElementById("shopItems");
     const catalog = SHOP_CATALOG[currentShopTab];
 
-    container.innerHTML = "";
+    const oldCanvas = document.getElementById("shopPreview3DCanvas");
+
+if (oldCanvas) {
+    oldCanvas.remove();
+}
+
+container.innerHTML = "";
 
     catalog.forEach(item => {
         const isSkin = currentShopTab === "skins";
