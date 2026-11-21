@@ -3585,7 +3585,7 @@ function createShop() {
     `;
 
     document.body.appendChild(shopElement);
-
+console.log("BOUTIQUE AJOUTÉE");
     document.getElementById("shopSkinsTab").onclick = () => {
         changeShopTab("skins");
     };
