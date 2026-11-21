@@ -1231,7 +1231,8 @@ function createPlayer() {
     princeK.visible = false;
 
     player.position.set(0, 0, 0);
-    scene.add(player);
+player.rotation.y = Math.PI;
+scene.add(player);
 }
 
 createPlayer();
