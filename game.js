@@ -2230,6 +2230,7 @@ function moveObstacles() {
 
         if (obstacle.type === "train") {
 
+            // ANCIENS TRAINS : mouvement habituel
             obstacle.object.position.z += speed * 1.8;
 
             const wheels = obstacle.object.userData.wheels || [];
@@ -2241,29 +2242,27 @@ function moveObstacles() {
             obstacle.object.position.y =
                 Math.sin(frame * 0.25 + obstacle.object.userData.shake) * 0.025;
 
-        } else {
-    obstacle.object.position.z += speed;
-}
+        } else if (obstacle.type === "stationaryTrain") {
 
-} else {
-    obstacle.object.position.z += speed;
-}
+            // NOUVEAUX TRAINS : pas de secousses ni de roues animées
+            // Ils avancent vers le joueur avec le décor
+            obstacle.object.position.z += speed;
+
+        } else {
+
+            obstacle.object.position.z += speed;
+        }
     });
 
     obstacles = obstacles.filter(obstacle => {
 
-    // Garder les nouveaux trains immobiles
-    if (obstacle.type === "stationaryTrain") {
+        if (obstacle.object.position.z > 20) {
+            scene.remove(obstacle.object);
+            return false;
+        }
+
         return true;
-    }
-
-    if (obstacle.object.position.z > 20) {
-        scene.remove(obstacle.object);
-        return false;
-    }
-
-    return true;
-});
+    });
 
     coinObjects = coinObjects.filter(coin => {
         const worldPosition = new THREE.Vector3();
