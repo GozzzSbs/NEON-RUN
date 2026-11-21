@@ -1134,7 +1134,7 @@ function createTrain(laneIndex, z) {
         }
     ];
 
-    // Choisir un style au hasard
+    // CHOISIR UN STYLE AU HASARD
     const style = styles[
         Math.floor(Math.random() * styles.length)
     ];
@@ -1144,22 +1144,30 @@ function createTrain(laneIndex, z) {
     const neonMaterial = mat(style.neon, style.neon, 2);
     const windowMaterial = mat(style.windows, style.windows, 1.7);
 
-    // CORPS PRINCIPAL : dimensions conservées
+    // CORPS PRINCIPAL
     box(2.55, 3.4, 13, bodyMaterial, 0, 2, 0, train);
 
-    // TOIT PLAT ET LARGE : même forme pour garder la surface supérieure
+    // TOIT PLAT
     box(2.48, 0.08, 12.8, roofMaterial, 0, 3.74, 0, train);
 
     // LIGNES LUMINEUSES SUR LE TOIT
     for (const side of [-1, 1]) {
-        box(0.07, 0.04, 12, neonMaterial,
-            side * 1.12, 3.81, 0, train);
+        box(
+            0.07, 0.04, 12,
+            neonMaterial,
+            side * 1.12, 3.81, 0,
+            train
+        );
     }
 
     // PANNEAUX GALAXY SUR LE TOIT
     for (let zPos = -4.5; zPos <= 4.5; zPos += 3) {
-        box(0.75, 0.035, 1.1, neonMaterial,
-            0, 3.81, zPos, train);
+        box(
+            0.75, 0.035, 1.1,
+            neonMaterial,
+            0, 3.81, zPos,
+            train
+        );
     }
 
     // AVANT LUMINEUX
@@ -1168,11 +1176,8 @@ function createTrain(laneIndex, z) {
 
     // FENÊTRES LATÉRALES
     for (let zPos = -5; zPos <= 4; zPos += 3) {
-        box(0.08, 1, 1.5, windowMaterial,
-            -1.3, 2.8, zPos, train);
-
-        box(0.08, 1, 1.5, windowMaterial,
-            1.3, 2.8, zPos, train);
+        box(0.08, 1, 1.5, windowMaterial, -1.3, 2.8, zPos, train);
+        box(0.08, 1, 1.5, windowMaterial, 1.3, 2.8, zPos, train);
     }
 
     const wheels = [];
@@ -1180,8 +1185,12 @@ function createTrain(laneIndex, z) {
     // BANDES LUMINEUSES LATÉRALES
     for (const side of [-1, 1]) {
 
-        box(0.12, 0.12, 12, neonMaterial,
-            side * 1.3, 1.2, 0, train);
+        box(
+            0.12, 0.12, 12,
+            neonMaterial,
+            side * 1.3, 1.2, 0,
+            train
+        );
 
         const headlight = new THREE.PointLight(
             style.neon, 3, 25
@@ -1190,8 +1199,12 @@ function createTrain(laneIndex, z) {
         headlight.position.set(side * 0.8, 0.8, 7);
         train.add(headlight);
 
-        box(0.4, 0.4, 0.15, style.windows,
-            side * 0.8, 0.8, 6.7, train);
+        box(
+            0.4, 0.4, 0.15,
+            style.windows,
+            side * 0.8, 0.8, 6.7,
+            train
+        );
     }
 
     // BAS DU TRAIN
@@ -1214,20 +1227,65 @@ function createTrain(laneIndex, z) {
         }
     }
 
+    // ==================================
+    // RAMPE POUR MONTER SUR LE TRAIN
+    // ==================================
+
+    const rampMaterial = mat(
+        style.roof,
+        style.neon,
+        0.6
+    );
+
+    // RAMPE INCLINÉE
+    const ramp = new THREE.Mesh(
+        new THREE.BoxGeometry(2.4, 0.22, 6.6),
+        rampMaterial
+    );
+
+    ramp.position.set(0, 1.9, 9.8);
+    ramp.rotation.x = Math.atan(3.6 / 6.6);
+
+    train.add(ramp);
+
+    // BANDES LUMINEUSES SUR LES CÔTÉS DE LA RAMPE
+    const rampSideMaterial = new THREE.MeshStandardMaterial({
+        color: style.neon,
+        emissive: style.neon,
+        emissiveIntensity: 1.5
+    });
+
+    for (const side of [-1, 1]) {
+
+        const stripe = new THREE.Mesh(
+            new THREE.BoxGeometry(0.07, 0.08, 6.5),
+            rampSideMaterial
+        );
+
+        stripe.position.set(side * 1.12, 2, 9.8);
+        stripe.rotation.x = ramp.rotation.x;
+
+        train.add(stripe);
+    }
+
+    // POSITION DU TRAIN
     train.position.set(lanePositions[laneIndex], 0, z);
 
-    // DONNÉES D'ANIMATION
+    // DONNÉES
     train.userData.wheels = wheels;
     train.userData.shake = Math.random() * Math.PI * 2;
     train.userData.style = style.name;
+    train.userData.stationary = true;
 
     scene.add(train);
 
+    // AJOUT AUX OBSTACLES
     obstacles.push({
         object: train,
         type: "train",
         lane: laneIndex
     });
+
     return train;
 }
 
