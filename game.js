@@ -465,7 +465,7 @@ createStreetWalls();
 // ======================================================
 // LAMPADAIRES STREET
 // ======================================================
-
+const movingStreetLamps = [];
 function createStreetLamp(x, z) {
     const lamp = new THREE.Group();
 
