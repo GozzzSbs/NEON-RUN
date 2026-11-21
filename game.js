@@ -3408,12 +3408,12 @@ function createShopStyles() {
         }
 
         .neon-shop-preview {
-    height: 130px;
+    height: 110px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 53px;
-    margin-bottom: 8px;
+    margin-bottom: 0px;
     background: radial-gradient(circle, #303744 0%, #171d29 100%);
     border-radius: 10px;
     filter: drop-shadow(0 0 12px currentColor);
