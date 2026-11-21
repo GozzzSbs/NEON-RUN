@@ -2246,8 +2246,7 @@ function moveObstacles() {
 
             // NOUVEAUX TRAINS : pas de secousses ni de roues animées
             // Ils avancent vers le joueur avec le décor
-            obstacle.object.position.z += speed;
-
+            obstacle.object.position.z += speed * 1.8;
         } else {
 
             obstacle.object.position.z += speed;
