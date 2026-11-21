@@ -4339,7 +4339,17 @@ const leaderboardDifficulty = window.selectedLeaderboardDifficulty || "facile";
 
         return name;
     }
+function formatNoCoinTime(time) {
+    const total = Number(time) || 0;
+    const minutes = Math.floor(total / 60);
+    const seconds = Math.floor(total % 60);
 
+    if (minutes > 0) {
+        return minutes + "m" + String(seconds).padStart(2, "0");
+    }
+
+    return total.toFixed(2) + " s";
+}
     // PODIUM
     [1, 0, 2].forEach(index => {
 
