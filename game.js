@@ -4018,10 +4018,13 @@ container.innerHTML = "";
 
                 container.appendChild(card);
     });
+if (oldCanvas && !oldCanvas.isConnected) {
+    container.appendChild(oldCanvas);
+}
 
-    if (currentShopTab === "capes") {
-        setupShopCapePreviews();
-    }
+if (currentShopTab === "capes") {
+    setupShopCapePreviews();
+}
 }
 
 // ======================================================
