@@ -2993,7 +2993,7 @@ skins: [
     {
         id: "el_blackito",
         name: "EL BLACKITO",
-        price: 10,
+        price: 100,
         currency: "diamonds",
         color: 0x050505,
         description: "Noir absolu avec des détails blancs."
@@ -3001,7 +3001,7 @@ skins: [
     {
         id: "blond_boy",
         name: "SUMMER BOY",
-        price: 50,
+        price: 1000,
         currency: "diamonds",
         color: 0x13bfc0,
         description: "Cheveux blonds, lunettes, collier et tenue d'été."
