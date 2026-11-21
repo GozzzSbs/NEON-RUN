@@ -353,23 +353,17 @@
 
     <div class="gameHeader">
 
-        <div>
-            <small>GAME MODE</small>
-            <h2 id="modeName">CLASSIC RUN</h2>
-        </div>
-
-        <div class="stats">
-            <div>SCORE <b id="score">0</b></div>
-            <div>COINS <b id="coins">0</b></div>
-            <div>BEST <b id="best">0</b></div>
-        </div>
-
-        <button onclick="pauseGame()">Ⅱ PAUSE</button>
-
-        <button onclick="backToMenu()">MENU</button>
-
+    <div class="player-game-info">
+        <span id="gamePlayerPseudo">RUNNER</span>
+        <span id="gamePlayerBadge"></span>
+        <span class="game-score">SCORE : <b id="score">0</b></span>
     </div>
 
+    <button onclick="pauseGame()">Ⅱ PAUSE</button>
+
+    <button onclick="backToMenu()">MENU</button>
+
+</div>
     <!-- IMPORTANT : LE CANVAS RESTE ICI -->
 
     <canvas id="game" width="900" height="450"></canvas>
