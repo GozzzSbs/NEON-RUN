@@ -791,6 +791,8 @@ for (let y = 0; y < Math.floor(height / 6); y++) {
     support.position.set(0, balconyY - 0.2, 7.3);
     building.add(support);
 }
+        }
+    }
 // ======================================================
 // PERSONNAGE
 // ======================================================
