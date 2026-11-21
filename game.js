@@ -3969,14 +3969,14 @@ const ringGroup = new THREE.Group();
 const geometry = new THREE.BufferGeometry();
 
 const segments = 192;
-const bumps = 24;
+const bumps = 14;
 const vertices = [];
 const indices = [];
 
 for (let i = 0; i < segments; i++) {
     const angle = (i / segments) * Math.PI * 2;
 
-    const outerRadius = 0.245 + 0.012 * Math.cos(bumps * angle);
+    const outerRadius = 0.245 + 0.006 * Math.cos(bumps * angle);
     const innerRadius = 0.205;
 
     vertices.push(
