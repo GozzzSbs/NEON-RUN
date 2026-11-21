@@ -3812,8 +3812,8 @@ ctx.stroke();
 
             for (let i = 0; i < segments; i++) {
                 const a = i / segments * Math.PI * 2;
-                const outer = 0.39 + 0.025 * Math.cos(14 * a);
-const inner = 0.32;
+                const outer = 0.43 + 0.025 * Math.cos(14 * a);
+const inner = 0.36;
 
                 points.push(
                     Math.cos(a) * outer,
