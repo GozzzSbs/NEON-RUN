@@ -4893,14 +4893,14 @@ async function updateGamePlayerInfo() {
         badgeElement.title = "Joueur certifié";
     }
 }
-function openPass() {
+window.openPass = function() {
     document.getElementById("neonPass").style.display = "block";
     renderPass();
-}
+};
 
-function closePass() {
+window.closePass = function() {
     document.getElementById("neonPass").style.display = "none";
-}
+};
 
 function renderPass() {
     document.getElementById("passLevel").textContent = passLevel;
