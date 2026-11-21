@@ -3812,10 +3812,10 @@ function createCape() {
     const geometry = new THREE.BufferGeometry();
 
     const vertices = new Float32Array([
-    -0.42, 2.25, -0.28,
-     0.42, 2.25, -0.28,
-    -0.68, -0.05, -0.28,
-     0.68, -0.05, -0.28
+    -0.42, 2.25, -0.30,
+     0.42, 2.25, -0.30,
+    -0.68, -0.05, -0.30,
+     0.68, -0.05, -0.30
 ]);
 
     geometry.setAttribute(
