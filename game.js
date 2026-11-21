@@ -2088,19 +2088,11 @@ function startGame() {
     player.position.set(0, 0, 0);
     player.scale.set(1, 1, 1);
 
-    playerParts.body.position.y = 1.75;
-
-    playerParts.arms.forEach(arm => {
-        arm.rotation.set(0, 0, 0);
-        arm.userData.elbow.rotation.set(0, 0, 0);
-    });
-
-    playerParts.legs.forEach(leg => {
-        leg.rotation.set(0, 0, 0);
-        leg.userData.knee.rotation.set(0, 0, 0);
-    });
-
-    playerParts.head.rotation.set(0, 0, 0);
+    console.log("PLAYER PARTS :", playerParts);
+console.log("BODY :", playerParts.body);
+console.log("ARMS :", playerParts.arms);
+console.log("LEGS :", playerParts.legs);
+console.log("HEAD :", playerParts.head);
 
     obstacles.forEach(obstacle => scene.remove(obstacle.object));
     coinObjects.forEach(coin => scene.remove(coin));
