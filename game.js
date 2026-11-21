@@ -713,12 +713,12 @@ for (const side of [-1, 1]) {
                 );
 
                 windowMesh.position.set(
-                    side * 16 + x * 2,
-                    y * 3 + 2,
-                    -i * 20 - 3.9
-                );
+    x * 2,
+    y * 3 + 2,
+    6.06
+);
 
-                scene.add(windowMesh);
+                building.add(windowMesh);
             }
         }
     }
