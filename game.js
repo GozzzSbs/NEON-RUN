@@ -390,7 +390,8 @@ const floor = new THREE.Mesh(
 floor.rotation.x = -Math.PI / 2;
 floor.position.set(0, -0.48, -100);
 scene.add(floor);
-
+console.log("TEXTURE GRAVIER :", gravelTexture);
+console.log("SOL :", floor);
 // Route centrale
 const road = box(
     12, 0.3, 220,
