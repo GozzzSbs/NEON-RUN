@@ -348,7 +348,7 @@ function box(w, h, d, color, x, y, z, parent = scene) {
 
 const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(300, 350),
-    mat(0x35404a)
+    mat(0x493027)
 );
 
 floor.rotation.x = -Math.PI / 2;
