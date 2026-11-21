@@ -3562,6 +3562,8 @@ function renderShop() {
             ? equippedSkin === item.id
             : equippedCape === item.id;
 
+        const unavailable = item.exclusive && !owned;
+
         let buttonText = "";
         let buttonClass = "";
 
@@ -3570,6 +3572,9 @@ function renderShop() {
             buttonClass = "equipped";
         } else if (owned) {
             buttonText = "ÉQUIPER";
+        } else if (unavailable) {
+            buttonText = "INDISPONIBLE";
+            buttonClass = "unavailable";
         } else {
             buttonText = "ACHETER";
             buttonClass = "locked";
@@ -3602,14 +3607,19 @@ function renderShop() {
                 ${priceText}
             </div>
 
-            <button class="neon-shop-action ${buttonClass}">
+            <button
+                class="neon-shop-action ${buttonClass}"
+                ${unavailable ? "disabled" : ""}
+                style="${unavailable ? "background:#555;color:#aaa;border:1px solid #777;cursor:not-allowed;opacity:0.8;" : ""}">
                 ${buttonText}
             </button>
         `;
 
-        card.querySelector("button").onclick = () => {
-            handleShopItem(item, isSkin);
-        };
+        if (!unavailable) {
+            card.querySelector("button").onclick = () => {
+                handleShopItem(item, isSkin);
+            };
+        }
 
         container.appendChild(card);
     });
