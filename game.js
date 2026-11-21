@@ -1904,13 +1904,14 @@ function moveRight() {
 }
 
 function jump() {
-   if (!running || paused) return;
-if (jumping && !ridingTrain) return;
+    if (!running || paused) return;
 
-ridingTrain = null;
+    if (jumping && !ridingTrain) return;
 
+    ridingTrain = null;
     sliding = false;
     slideTimer = 0;
+
     player.scale.y = 1;
 
     jumping = true;
