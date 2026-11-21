@@ -4893,14 +4893,14 @@ async function updateGamePlayerInfo() {
         badgeElement.title = "Joueur certifié";
     }
 }
-window.openPass = function() {
+function openPass() {
     document.getElementById("neonPass").style.display = "block";
     renderPass();
-};
+}
 
-window.closePass = function() {
+function closePass() {
     document.getElementById("neonPass").style.display = "none";
-};
+}
 
 function renderPass() {
     document.getElementById("passLevel").textContent = passLevel;
@@ -4912,19 +4912,6 @@ function renderPass() {
     const container = document.getElementById("passRewards");
     container.innerHTML = "";
 
-    container.style.cssText = `
-        display:flex;
-        flex-direction:row;
-        gap:15px;
-        overflow-x:auto;
-        overflow-y:hidden;
-        padding:20px 10px;
-        margin-top:25px;
-        scroll-behavior:smooth;
-        scrollbar-width:thin;
-        scrollbar-color:#00eaff #17172b;
-    `;
-
     for (let i = 0; i < 100; i++) {
         const level = i + 1;
         const reward = passRewards[i];
@@ -4934,55 +4921,34 @@ function renderPass() {
         const card = document.createElement("div");
 
         card.style.cssText = `
-            flex:0 0 155px;
-            min-height:190px;
-            box-sizing:border-box;
-            position:relative;
-            overflow:hidden;
-            background:linear-gradient(160deg,#202044 0%,#101025 55%,#080814 100%);
-            border:2px solid ${claimed ? "#00ff88" : unlocked ? "#00eaff" : "#45455c"};
-            border-radius:18px;
-            padding:16px 12px;
+            background:linear-gradient(145deg,#17172b,#080820);
+            border:1px solid ${unlocked ? "#00eaff" : "#444"};
+            border-radius:15px;
+            padding:15px;
             text-align:center;
-            box-shadow:${claimed
-                ? "0 0 15px #00ff8844"
-                : unlocked
-                    ? "0 0 18px #00eaff55"
-                    : "0 4px 12px #00000066"};
-            transition:transform 0.25s, box-shadow 0.25s;
+            box-shadow:${unlocked ? "0 0 12px #00eaff55" : "none"};
+            transition:0.25s;
         `;
 
         card.onmouseenter = () => {
             card.style.transform = "scale(1.05)";
+            card.style.boxShadow = "0 0 20px #00eaff";
         };
 
         card.onmouseleave = () => {
             card.style.transform = "scale(1)";
+            card.style.boxShadow = unlocked ? "0 0 12px #00eaff55" : "none";
         };
 
         card.innerHTML = `
-            <div style="font-size:12px;letter-spacing:2px;color:${unlocked ? "#00eaff" : "#888"};font-weight:bold;">
-                PALIER
-            </div>
-
-            <h2 style="font-size:30px;margin:8px 0;color:white;">
-                ${level}
-            </h2>
-
-            <div style="height:1px;background:linear-gradient(90deg,transparent,#00eaff,transparent);margin:10px 0;"></div>
-
-            <div style="font-size:30px;margin:8px 0;">💎</div>
-
-            <div style="font-size:21px;font-weight:bold;color:#00eaff;margin-bottom:12px;">
-                ${reward}
-            </div>
-
+            <h3>NIVEAU ${level}</h3>
+            <p style="font-size:22px">💎 ${reward}</p>
             ${
                 claimed
-                    ? "<span style='color:#00ff88;font-weight:bold;'>✓ RÉCUPÉRÉ</span>"
+                    ? "<span style='color:#00ff88'>RÉCUPÉRÉ</span>"
                     : unlocked
                         ? `<button onclick="claimPassReward(${level})">RÉCUPÉRER</button>`
-                        : "<span style='color:#999;'>🔒 VERROUILLÉ</span>"
+                        : "<span style='color:#999'>🔒 VERROUILLÉ</span>"
             }
         `;
 
