@@ -1106,14 +1106,13 @@ function setLavaVisuals(enabled) {
     lavaGroup.visible = enabled;
 
     scene.background = new THREE.Color(
-        enabled ? 0x260b12 : 0x050313
+        enabled ? 0x260b12 : 0x55baff
     );
 
     scene.fog.color.set(
-        enabled ? 0x3b1010 : 0x09051e
+        enabled ? 0x3b1010 : 0x55baff
     );
 }
-
 // ======================================================
 // PLATEFORMES DE LAVE
 // ======================================================
