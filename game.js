@@ -1447,7 +1447,7 @@ function createCoin(laneIndex, z, height = 1.3, onTrain = false, train = null) {
 
     for (let i = 0; i < 16; i++) {
 
-        const angle = (i / 32) * Math.PI * 2;
+        const angle = (i / 16) * Math.PI * 2;
 
         const tooth = new THREE.Mesh(
             coinToothGeometry,
