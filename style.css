@@ -1712,3 +1712,23 @@ button:active {
     font-size: 16px;
     cursor: pointer;
 }
+#gameCoinCounter {
+    position: absolute;
+    top: 62px;
+    right: 15px;
+    z-index: 110;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 12px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.75);
+    border: 1px solid #ffbd35;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#gameCoinCounter .coin-icon {
+    font-size: 19px;
+}
