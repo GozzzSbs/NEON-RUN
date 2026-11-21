@@ -3661,9 +3661,13 @@ function setupShopCapePreviews() {
             new THREE.AmbientLight(0xffffff, 1.5)
         );
 
-        const light = new THREE.DirectionalLight(0xffffff, 2);
-        light.position.set(2, 3, 5);
-        shopPreviewScene.add(light);
+        const light = new THREE.DirectionalLight(0xffffff, 2.5);
+light.position.set(2, 3, 5);
+shopPreviewScene.add(light);
+
+const fillLight = new THREE.DirectionalLight(0x55bbff, 0.8);
+fillLight.position.set(-3, 1, 2);
+shopPreviewScene.add(fillLight);
     }
 
     // ARRÊTER L'ANCIENNE ANIMATION
