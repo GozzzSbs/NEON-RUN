@@ -667,13 +667,14 @@ const movingBuildings = [];
 
 // COULEURS DES IMMEUBLES
 const buildingColors = [
-    0xd69b70, // Terracotta
-    0xe8c99b, // Sable
-    0x527f83, // Bleu pétrole
-    0x91a98c, // Vert sauge
-    0x8faec4, // Bleu clair
-    0xc58b83, // Rose brique
-    0xb7a0c9  // Violet doux
+    0xe6a078, // Orange pastel
+    0xf2d19b, // Crème
+    0x78a9a5, // Turquoise
+    0x9caf88, // Vert sauge
+    0x82a9d1, // Bleu
+    0xd88989, // Rose
+    0xb39acb, // Violet
+    0xd6b45f  // Jaune doré
 ];
 
 // MATÉRIAUX DES FENÊTRES
