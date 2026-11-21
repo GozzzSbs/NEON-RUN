@@ -3784,14 +3784,14 @@ function createCape() {
             // Lune blanche
             ctx.fillStyle = "#ffffff";
             ctx.beginPath();
-            ctx.arc(256, 128, 78, 0, Math.PI * 2);
+            ctx.arc(256, 128, 105, 0, Math.PI * 2);
             ctx.fill();
 
             // Découpe pour former un croissant
             ctx.globalCompositeOperation = "destination-out";
 
             ctx.beginPath();
-            ctx.arc(292, 95, 72, 0, Math.PI * 2);
+            ctx.arc(310, 85, 95, 0, Math.PI * 2);
             ctx.fill();
 
             ctx.globalCompositeOperation = "source-over";
