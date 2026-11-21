@@ -3140,6 +3140,20 @@ function createDeveloperTools() {
             <button class="neon-dev-button" id="devUnlockAll">
                 🔓 DÉBLOQUER TOUS LES SKINS ET CAPES
             </button>
+            <div style="margin-top:22px;padding:15px;border:1px solid #3498ff;border-radius:12px;">
+    <h3 style="color:#3498ff;">🎁 CAPE CERTIFIÉE</h3>
+
+    <input
+        id="certifiedCapePseudo"
+        type="text"
+        placeholder="Pseudo du joueur"
+        style="width:90%;padding:12px;border-radius:8px;border:1px solid #3498ff;"
+    >
+
+    <button class="neon-dev-button" id="devGiveCertifiedCape">
+        🎁 OFFRIR LA CAPE
+    </button>
+</div>
 
             <button class="neon-dev-button neon-dev-close" id="devClose">
                 ✕ FERMER
@@ -3182,7 +3196,56 @@ function createDeveloperTools() {
 
         alert("👑 Tous les skins et toutes les capes sont débloqués !");
     };
+document.getElementById("devGiveCertifiedCape").onclick = async () => {
 
+    if (!isDeveloper) return;
+
+    const pseudo = document.getElementById("certifiedCapePseudo").value.trim();
+
+    if (!pseudo) {
+        alert("Entre le pseudo du joueur !");
+        return;
+    }
+
+    const { data: player, error: playerError } = await supabaseClient
+        .from("neon_players")
+        .select("id, pseudo")
+        .eq("pseudo", pseudo)
+        .maybeSingle();
+
+    if (playerError || !player) {
+        alert("❌ Joueur introuvable !");
+        return;
+    }
+
+    const { data: authData } = await supabaseClient.auth.getUser();
+
+    if (!authData.user) {
+        alert("❌ Session développeur introuvable !");
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from("neon_player_capes")
+        .insert({
+            player_id: player.id,
+            cape_id: "certified",
+            granted_by: authData.user.id
+        });
+
+    if (error) {
+        if (error.code === "23505") {
+            alert("Ce joueur possède déjà la cape certifiée !");
+        } else {
+            console.error(error);
+            alert("❌ Impossible d'offrir la cape.");
+        }
+        return;
+    }
+
+    alert("👑 Cape certifiée offerte à " + player.pseudo + " !");
+    document.getElementById("certifiedCapePseudo").value = "";
+};
     // RACCOURCI SECRET : CTRL + MAJ + D
     window.addEventListener("keydown", event => {
         if (
