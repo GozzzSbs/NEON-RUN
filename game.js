@@ -2772,7 +2772,8 @@ function backToMenu() {
         menu.classList.remove("hidden");
         menu.style.pointerEvents = "auto";
     }
-
+const devBadge = document.getElementById("neonDeveloperBadge");
+if (devBadge) devBadge.style.display = "block";
     if (gameScreen) {
         gameScreen.classList.add("hidden");
     }
