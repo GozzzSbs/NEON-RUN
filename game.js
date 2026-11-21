@@ -4602,6 +4602,9 @@ function connectShopButton() {
     const buttons = document.querySelectorAll("button");
 
     buttons.forEach(button => {
+        // Ne jamais connecter les boutons situés dans la boutique
+        if (button.closest("#neonShop")) return;
+
         const text = button.textContent.trim().toLowerCase();
 
         const isShopButton =
