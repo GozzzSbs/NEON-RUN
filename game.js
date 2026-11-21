@@ -2762,7 +2762,8 @@ function backToMenu() {
     running = false;
     paused = false;
     gameEnded = false;
-
+const pauseMenu = document.getElementById("pauseMenu");
+if (pauseMenu) pauseMenu.classList.add("hidden");
     setLavaVisuals(false);
 
     lavaPlatforms.forEach(item => scene.remove(item.object));
