@@ -1014,10 +1014,7 @@ function createPlayer() {
         arms: [],
         legs: [],
         body: null,
-        head: null,
-        princeK: null,
-        jackoHeadwear: [],
-        jackoLogo: null
+        head: null
     };
 
     const purple = mat(0x7900b8, 0x39005c, 0.3);
@@ -1025,12 +1022,6 @@ function createPlayer() {
     const lime = mat(0xb6ff19, 0x4cff00, 0.5);
     const skin = mat(0xd98a57);
     const white = mat(0xffe9d1);
-
-    function kMat(color) {
-        const material = mat(color);
-        material.userData.keepColor = true;
-        return material;
-    }
 
     function limb(w, h, d, material, x, y, z, parent) {
         const mesh = new THREE.Mesh(
@@ -1055,7 +1046,7 @@ function createPlayer() {
         return mesh;
     }
 
-    // CORPS
+    // Corps
     const torso = new THREE.Group();
     torso.position.y = 1.75;
     player.add(torso);
@@ -1064,7 +1055,7 @@ function createPlayer() {
     limb(0.9, 1.1, 0.48, black, 0, 0, 0, torso);
     limb(0.94, 0.15, 0.5, white, 0, -0.52, 0, torso);
 
-    // LOGO JACKO
+    // Logo
     const logo = new THREE.Mesh(
         new THREE.BoxGeometry(0.38, 0.28, 0.03),
         lime
@@ -1072,45 +1063,25 @@ function createPlayer() {
 
     logo.position.set(0, 0.1, 0.25);
     torso.add(logo);
-    playerParts.jackoLogo = logo;
 
-    // TÊTE
+    // Tête
     const head = new THREE.Group();
     head.position.set(0, 2.65, 0);
     player.add(head);
     playerParts.head = head;
 
     sphere(0.34, skin, 0, 0, 0, head);
+    sphere(0.35, black, 0, 0.13, 0, head);
+    sphere(0.39, purple, 0, 0.3, 0, head);
 
-    const headBlack = sphere(0.35, black, 0, 0.13, 0, head);
-    const headPurple = sphere(0.39, purple, 0, 0.3, 0, head);
-
-    const brim = limb(
-        0.74, 0.18, 0.72,
-        purple, 0, 0.17, 0, head
-    );
-
-    playerParts.jackoHeadwear.push(
-        headBlack,
-        headPurple,
-        brim
-    );
+    limb(0.74, 0.18, 0.72, purple, 0, 0.17, 0, head);
 
     for (const side of [-1, 1]) {
-        const detail1 = limb(
-            0.16, 0.38, 0.28,
-            black, side * 0.39, -0.12, 0, head
-        );
-
-        const detail2 = limb(
-            0.17, 0.15, 0.29,
-            lime, side * 0.4, -0.12, 0, head
-        );
-
-        playerParts.jackoHeadwear.push(detail1, detail2);
+        limb(0.16, 0.38, 0.28, black, side * 0.39, -0.12, 0, head);
+        limb(0.17, 0.15, 0.29, lime, side * 0.4, -0.12, 0, head);
     }
 
-    // BRAS
+    // Bras
     for (const side of [-1, 1]) {
         const arm = new THREE.Group();
         arm.position.set(side * 0.51, 2.2, 0);
@@ -1133,7 +1104,7 @@ function createPlayer() {
         playerParts.arms.push(arm);
     }
 
-    // JAMBES
+    // Jambes
     for (const side of [-1, 1]) {
         const leg = new THREE.Group();
         leg.position.set(side * 0.24, 1.22, 0);
@@ -1154,85 +1125,8 @@ function createPlayer() {
         playerParts.legs.push(leg);
     }
 
-    // ACCESSOIRES PRINCE K
-    const princeK = new THREE.Group();
-    player.add(princeK);
-    playerParts.princeK = princeK;
-
-    const beige = kMat(0xe8d5ad);
-    const cream = kMat(0xf5e8cf);
-    const brown = kMat(0x68412d);
-    const gold = kMat(0xd6a52b);
-    const dark = kMat(0x17120f);
-    const red = kMat(0xb92332);
-    const green = kMat(0x168044);
-
-    // Foulard beige
-    const scarf = sphere(0.39, beige, 0, 0.25, 0, head);
-    scarf.scale.set(1, 0.68, 1);
-
-    limb(0.72, 0.09, 0.72, gold, 0, 0.22, 0, head);
-
-    // Tissu qui retombe sur les côtés
-    limb(0.16, 0.48, 0.12, cream, -0.29, -0.03, -0.02, head);
-    limb(0.16, 0.48, 0.12, cream, 0.29, -0.03, -0.02, head);
-
-    // Lunettes de soleil
-    limb(0.25, 0.15, 0.055, gold, -0.14, 0.025, 0.315, head);
-    limb(0.25, 0.15, 0.055, gold, 0.14, 0.025, 0.315, head);
-
-    limb(0.19, 0.105, 0.035, dark, -0.14, 0.025, 0.35, head);
-    limb(0.19, 0.105, 0.035, dark, 0.14, 0.025, 0.35, head);
-    limb(0.12, 0.035, 0.035, gold, 0, 0.04, 0.35, head);
-
-    // Bandes rouges et vertes sur le haut
-    limb(0.78, 0.07, 0.025, red, 0, 0.22, 0.253, torso);
-    limb(0.78, 0.07, 0.025, green, 0, -0.05, 0.253, torso);
-
-    // Montre dorée au poignet
-    const watch = limb(
-        0.29, 0.09, 0.32,
-        gold, -0.51, 1.73, 0, princeK
-    );
-
-    // Chaussures dorées
-    for (const side of [-1, 1]) {
-        limb(
-            0.45, 0.25, 0.62,
-            gold,
-            side * 0.24, 0.14, -0.1,
-            princeK
-        );
-
-        // Chaussettes claires
-        limb(
-            0.34, 0.17, 0.39,
-            cream,
-            side * 0.24, 0.52, 0,
-            princeK
-        );
-
-        limb(
-            0.35, 0.045, 0.4,
-            green,
-            side * 0.24, 0.48, 0,
-            princeK
-        );
-
-        limb(
-            0.35, 0.045, 0.4,
-            red,
-            side * 0.24, 0.41, 0,
-            princeK
-        );
-    }
-
-    // Le groupe Prince K est caché par défaut
-    princeK.visible = false;
-
-   player.position.set(0, 0, 0);
-player.rotation.y = 0;
-scene.add(player);
+    player.position.set(0, 0, 0);
+    scene.add(player);
 }
 
 createPlayer();
@@ -2954,51 +2848,85 @@ window.addEventListener("resize", () => {
 
 const SHOP_CATALOG = {
     skins: [
-        {
-            id: "default",
-            name: "JACKO",
-            price: 0,
-            currency: "coins",
-            color: 0x7900b8,
-            description: "Le skin original."
-        },
-        {
-            id: "el_blackito",
-            name: "EL BLACKITO",
-            price: 10,
-            currency: "diamonds",
-            color: 0x050505,
-            description: "Noir absolu avec des détails blancs."
-        },
-        {
-            id: "prince_k",
-            name: "PRINCE K",
-            price: 1000,
-            currency: "diamonds",
-            color: 0xffd700,
-            description: "Un style royal légendaire."
-        }
-    ],
+    {
+        id: "default",
+        name: "JACKO",
+        price: 0,
+        currency: "coins",
+        color: 0x7900b8,
+        description: "Le runner original."
+    },
+    {
+        id: "el_blackito",
+        name: "EL BLACKITO",
+        price: 10,
+        currency: "diamonds",
+        color: 0x050505,
+        description: "Noir absolu avec des détails blancs."
+    },
+    {
+        id: "electric",
+        name: "ELECTRIC",
+        price: 25,
+        currency: "diamonds",
+        color: 0x00eaff,
+        description: "L'énergie électrique."
+    },
+    {
+        id: "inferno",
+        name: "INFERNO",
+        price: 40,
+        currency: "diamonds",
+        color: 0xff3300,
+        description: "Un runner venu des flammes."
+    },
+    {
+        id: "royal",
+        name: "ROYAL",
+        price: 60,
+        currency: "diamonds",
+        color: 0xffd700,
+        description: "Un style digne d'un roi."
+    },
+    {
+        id: "galaxy",
+        name: "GALAXY",
+        price: 80,
+        currency: "diamonds",
+        color: 0x8a2be2,
+        description: "La puissance de la galaxie."
+    },
+    {
+        id: "diamond",
+        name: "DIAMOND",
+        price: 120,
+        currency: "diamonds",
+        color: 0xffffff,
+        description: "Le skin ultime."
+    }
+],
+
 
     capes: [
-        {
-            id: "nr",
-            name: "CAPE NR",
-            price: 100,
-            currency: "diamonds",
-            color: 0x050505,
-            description: "Cape officiel avec le logo NR."
-        },
-        {
-            id: "rxn",
-            name: "La RXN Cape,s",
-            price: 500,
-            currency: "diamonds",
-            color: 0x050505,
-            description: "Cape noire animée officiel : RXN blanc et lune blanche."
+    {
+        id: "nr",
+        name: "CAPE NR",
+        price: 100,
+        currency: "diamonds",
+        color: 0x050505,
+        description: "Cape noire avec le logo NR."
+    },
+    {
+        id: "rxn",
+        name: "La RXN Cape,s",
+        price: 500,
+        currency: "diamonds",
+        color: 0x050505,
+        description: "Cape noire animée : RXN blanc et lune blanche."
         }
-    ]
+]
 };
+
 // ======================================================
 // SAUVEGARDE
 // ======================================================
@@ -3738,7 +3666,7 @@ function applyShopSkin() {
             : [object.material];
 
         materials.forEach(material => {
-            if (!material.color || material.userData.keepColor) return;
+            if (!material.color) return;
 
             if (!originalPlayerMaterials.has(material)) {
                 originalPlayerMaterials.set(material, {
@@ -3752,45 +3680,58 @@ function applyShopSkin() {
         });
     });
 
-    // Cacher les accessoires Prince K
-    if (playerParts.princeK) {
-        playerParts.princeK.visible = equippedSkin === "prince_k";
-    }
-
-    // Réinitialiser les matériaux
-    originalPlayerMaterials.forEach((original, material) => {
-        material.color.copy(original.color);
-
-        if (material.emissive && original.emissive) {
-            material.emissive.copy(original.emissive);
-        }
-
-        material.emissiveIntensity = original.emissiveIntensity;
-    });
-
-    // JACKO
     if (equippedSkin === "default") {
-        playerParts.jackoHeadwear.forEach(object => {
-            object.visible = true;
-        });
+        originalPlayerMaterials.forEach((original, material) => {
+            material.color.copy(original.color);
 
-        if (playerParts.jackoLogo) {
-            playerParts.jackoLogo.visible = true;
-        }
+            if (material.emissive && original.emissive) {
+                material.emissive.copy(original.emissive);
+            }
+
+            material.emissiveIntensity = original.emissiveIntensity;
+        });
 
         return;
     }
-
-    // Cacher les éléments JACKO pour les autres skins
-    playerParts.jackoHeadwear.forEach(object => {
-        object.visible = equippedSkin !== "prince_k";
+if (equippedSkin === "electric") {
+    originalPlayerMaterials.forEach((original, material) => {
+        material.color.set(0x00eaff);
+        if (material.emissive) material.emissive.set(0x00eaff);
+        material.emissiveIntensity = 0.6;
     });
+}
 
-    if (playerParts.jackoLogo) {
-        playerParts.jackoLogo.visible = equippedSkin !== "prince_k";
-    }
+if (equippedSkin === "inferno") {
+    originalPlayerMaterials.forEach((original, material) => {
+        material.color.set(0xff3300);
+        if (material.emissive) material.emissive.set(0xff3300);
+        material.emissiveIntensity = 0.6;
+    });
+}
 
-    // EL BLACKITO
+if (equippedSkin === "royal") {
+    originalPlayerMaterials.forEach((original, material) => {
+        material.color.set(0xffd700);
+        if (material.emissive) material.emissive.set(0xffd700);
+        material.emissiveIntensity = 0.5;
+    });
+}
+
+if (equippedSkin === "galaxy") {
+    originalPlayerMaterials.forEach((original, material) => {
+        material.color.set(0x8a2be2);
+        if (material.emissive) material.emissive.set(0x8a2be2);
+        material.emissiveIntensity = 0.7;
+    });
+}
+
+if (equippedSkin === "diamond") {
+    originalPlayerMaterials.forEach((original, material) => {
+        material.color.set(0xffffff);
+        if (material.emissive) material.emissive.set(0x66ccff);
+        material.emissiveIntensity = 0.8;
+    });
+}
     if (equippedSkin === "el_blackito") {
         originalPlayerMaterials.forEach((original, material) => {
             const originalColor = original.color;
@@ -3818,40 +3759,8 @@ function applyShopSkin() {
                 material.emissiveIntensity = 0;
             }
         });
-
-        return;
-    }
-
-    // PRINCE K
-    if (equippedSkin === "prince_k") {
-        originalPlayerMaterials.forEach((original, material) => {
-            const color = original.color;
-
-            if (
-                color.r > 0.4 &&
-                color.b > 0.3 &&
-                color.g < 0.5
-            ) {
-                material.color.set(0x68412d);
-            } else if (
-                color.r < 0.2 &&
-                color.g < 0.2 &&
-                color.b < 0.2
-            ) {
-                material.color.set(0x68412d);
-            } else if (color.g > 0.6) {
-                material.color.set(0x168044);
-            } else if (
-                color.r > 0.8 &&
-                color.g > 0.7
-            ) {
-                material.color.set(0xf5e8cf);
-            }
-        });
     }
 }
-
-window.applyShopSkin = applyShopSkin;
 
 // ======================================================
 // CRÉER LA CAPE NR
