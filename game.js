@@ -473,7 +473,7 @@ createStreetWalls();
 // ======================================================
 
 function createStreetLamp(x, z) {
-
+const movingStreetLamps = [];
     const lamp = new THREE.Group();
 
     const pole = new THREE.Mesh(
@@ -504,9 +504,9 @@ function createStreetLamp(x, z) {
     glow.position.set(x > 0 ? -1 : 1, 5.5, 0);
     lamp.add(glow);
 
-    lamp.position.set(x, 0, z);
-
-    scene.add(lamp);
+    lamp.position.set(x,0,z);
+scene.add(lamp);
+movingStreetLamps.push(lamp);
 }
 
 for (let i = 0; i < 12; i++) {
