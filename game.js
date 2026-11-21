@@ -53,11 +53,71 @@ const mainLight = new THREE.DirectionalLight(0xffffff, 2);
 mainLight.position.set(-10, 25, 10);
 mainLight.castShadow = true;
 scene.add(mainLight);
+// ======================================================
+// SOLEIL
+// ======================================================
 
+const sun = new THREE.Mesh(
+    new THREE.SphereGeometry(8, 32, 32),
+    new THREE.MeshBasicMaterial({
+        color: 0xffee88
+    })
+);
+
+sun.position.set(-35, 45, -100);
+scene.add(sun);
+
+// Halo du soleil
+const sunGlow = new THREE.PointLight(0xffe6a3, 1.5, 180);
+sunGlow.position.copy(sun.position);
+scene.add(sunGlow);
 const purpleLight = new THREE.PointLight(0x7c25ff, 2, 55);
 purpleLight.position.set(0, 8, -25);
 scene.add(purpleLight);
+// ======================================================
+// NUAGES
+// ======================================================
 
+const movingClouds = [];
+
+function createCloud(x, y, z) {
+    const cloud = new THREE.Group();
+
+    const cloudMaterial = new THREE.MeshBasicMaterial({
+        color: 0xffffff
+    });
+
+    const parts = [
+        [-1.5, 0, 0, 2.5],
+        [0, 0.5, 0, 3],
+        [1.5, 0, 0, 2.3],
+        [0, -0.3, 0.8, 2]
+    ];
+
+    parts.forEach(part => {
+        const puff = new THREE.Mesh(
+            new THREE.SphereGeometry(part[3] / 2, 16, 16),
+            cloudMaterial
+        );
+
+        puff.position.set(part[0], part[1], part[2]);
+        cloud.add(puff);
+    });
+
+    cloud.position.set(x, y, z);
+    scene.add(cloud);
+
+    movingClouds.push(cloud);
+}
+
+// Création des nuages
+for (let i = 0; i < 12; i++) {
+    createCloud(
+        (Math.random() - 0.5) * 100,
+        25 + Math.random() * 25,
+        -i * 25
+    );
+}
 // ======================================================
 // VARIABLES
 // ======================================================
