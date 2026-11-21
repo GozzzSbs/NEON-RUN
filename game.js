@@ -3709,6 +3709,7 @@ shopPreviewItems = [];
 
         const vertices = [];
 const indices = [];
+const uvs = [];
 
 const rows = 16;
 const columns = 16;
