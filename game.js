@@ -3812,10 +3812,10 @@ function createCape() {
     const geometry = new THREE.BufferGeometry();
 
     const vertices = new Float32Array([
-    -0.42, 2.25, -0.30,
-     0.42, 2.25, -0.30,
-    -0.68, -0.05, -0.30,
-     0.68, -0.05, -0.30
+    -0.38, 2.25, 0.34,
+     0.38, 2.25, 0.34,
+    -0.62, 0.25, 0.48,
+     0.62, 0.25, 0.48
 ]);
 
     geometry.setAttribute(
@@ -3898,8 +3898,7 @@ const logoColor = equippedCape === "rxn_white"
         logoMaterial
     );
 
-    logo.position.set(0, 1.35, -0.28);
-logo.rotation.y = Math.PI;
+    logo.position.set(0, 1.35, 0.52);
     cape.add(logo);
 
     // AJOUT AU PERSONNAGE
