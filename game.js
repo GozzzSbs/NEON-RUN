@@ -3874,7 +3874,11 @@ function setupShopCapePreviews() {
             const time = performance.now() * 0.001;
 
             shopPreviewItems.forEach(item => {
-                const rect = item.preview.getBoundingClientRect();
+    shopPreviewItems.forEach(other => {
+        other.group.visible = other === item;
+    });
+
+    const rect = item.preview.getBoundingClientRect();
 
                 const x = (rect.left - canvasRect.left) * pixelRatio;
                 const y = (canvasRect.bottom - rect.bottom) * pixelRatio;
