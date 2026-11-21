@@ -2246,10 +2246,12 @@ function updateHUD() {
     const scoreElement = document.getElementById("score");
     const coinElement = document.getElementById("coins");
     const bestElement = document.getElementById("best");
+    const gameCoinElement = document.getElementById("gameCoinCount");
 
     if (scoreElement) scoreElement.textContent = score;
     if (coinElement) coinElement.textContent = coins;
     if (bestElement) bestElement.textContent = best;
+    if (gameCoinElement) gameCoinElement.textContent = coins;
 }
 
 // ======================================================
