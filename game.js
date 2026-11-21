@@ -1608,6 +1608,14 @@ function moveEnvironment() {
             graffiti.position.z -= 240;
         }
     });
+// DÉFILEMENT DES IMMEUBLES
+movingBuildings.forEach(building => {
+    building.position.z += speed;
+
+    if (building.position.z > 20) {
+        building.position.z -= 240;
+    }
+});
 }
 // ======================================================
 // OBSTACLES ET TRAINS
