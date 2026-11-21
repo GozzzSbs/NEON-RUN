@@ -3898,7 +3898,8 @@ const logoColor = equippedCape === "rxn_white"
         logoMaterial
     );
 
-    logo.position.set(0, 1.35, 0.52);
+    logo.position.set(0, 1.35, -0.28);
+logo.rotation.y = Math.PI;
     cape.add(logo);
 
     // AJOUT AU PERSONNAGE
