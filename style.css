@@ -1732,3 +1732,55 @@ button:active {
 #gameCoinCounter .coin-icon {
     font-size: 19px;
 }
+/* TIMER NO COIN - STYLE GLACÉ */
+#noCoinTimer {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 190px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 2px solid #65eaff;
+    border-radius: 12px;
+    background: rgba(4, 20, 45, 0.9);
+    box-shadow: 0 0 15px #00cfff88, inset 0 0 15px #00cfff33;
+    z-index: 99999;
+    pointer-events: none;
+}
+
+#noCoinTimerText {
+    position: relative;
+    z-index: 2;
+    color: #d9faff;
+    font-size: 27px;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    text-shadow: 0 0 10px #00dfff;
+}
+
+.snow-particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+    background-image:
+        radial-gradient(circle, white 1.5px, transparent 2px),
+        radial-gradient(circle, #9ceeff 1px, transparent 2px),
+        radial-gradient(circle, white 1px, transparent 2px);
+    background-size: 35px 35px, 50px 50px, 25px 25px;
+    animation: snowFall 4s linear infinite;
+}
+
+@keyframes snowFall {
+    from {
+        background-position: 0 -60px, 15px -100px, 25px -40px;
+    }
+    to {
+        background-position: 20px 100px, 35px 100px, 0 100px;
+    }
+}
