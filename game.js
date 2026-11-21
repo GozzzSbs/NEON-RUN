@@ -4589,8 +4589,14 @@ window.openShop = openShop;
 // ======================================================
 
 function closeShop() {
-    alert("BOUTON CLIQUÉ");
+    if (!shopElement) return;
+
+    shopElement.classList.remove("open");
+    shopElement.classList.add("hidden");
     shopElement.style.display = "none";
+
+    const menu = document.getElementById("menu");
+    if (menu) menu.classList.remove("hidden");
 }
 
 window.closeShop = closeShop;
