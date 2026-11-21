@@ -666,11 +666,13 @@ for (let i = 0; i < 12; i++) {
 const movingBuildings = [];
 
 const buildingColors = [
-    0xc4b49a,
-    0x536b82,
-    0x8b5140,
-    0x303d4b,
-    0xd0c9b9
+    0xd69b70, // Terracotta
+    0xe8c99b, // Sable
+    0x527f83, // Bleu pétrole
+    0x91a98c, // Vert sauge
+    0x8faec4, // Bleu clair
+    0xc58b83, // Rose brique
+    0xb7a0c9  // Violet doux
 ];
 
 const windowMaterial = new THREE.MeshBasicMaterial({
