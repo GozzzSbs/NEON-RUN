@@ -1157,6 +1157,7 @@ function createPlayer() {
     // ACCESSOIRES PRINCE K
     const princeK = new THREE.Group();
     player.add(princeK);
+    princeK.rotation.y = Math.PI;
     playerParts.princeK = princeK;
 
     const beige = kMat(0xe8d5ad);
