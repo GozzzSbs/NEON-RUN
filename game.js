@@ -2241,13 +2241,9 @@ function moveObstacles() {
             obstacle.object.position.y =
                 Math.sin(frame * 0.25 + obstacle.object.userData.shake) * 0.025;
 
-        } else {
-    obstacle.object.position.z += speed;
-}
-
-} else {
-    obstacle.object.position.z += speed;
-}
+                } else {
+            obstacle.object.position.z += speed;
+        }
     });
 
     obstacles = obstacles.filter(obstacle => {
