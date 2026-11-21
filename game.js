@@ -4669,7 +4669,27 @@ async function loginPlayer() {
             error.textContent = "Profil joueur introuvable.";
             return;
         }
+// CHARGER LES CAPES OFFERTES DEPUIS SUPABASE
+const { data: grantedCapes, error: capesError } = await supabaseClient
+    .from("neon_player_capes")
+    .select("cape_id")
+    .eq("player_id", player.id);
 
+// La cape certifiée ne doit pas dépendre du localStorage.
+ownedCapes = ownedCapes.filter(id => id !== "certified");
+
+if (capesError) {
+    console.error("Erreur de chargement des capes :", capesError);
+} else if ((grantedCapes || []).some(cape => cape.cape_id === "certified")) {
+    ownedCapes.push("certified");
+}
+
+// Si le joueur ne possède pas la cape, on la déséquipe.
+if (!ownedCapes.includes("certified") && equippedCape === "certified") {
+    equippedCape = "";
+}
+
+saveShop();
         localStorage.setItem("neonPlayerPseudo", player.pseudo);
 
         document.getElementById("profileSetup").style.display = "none";
