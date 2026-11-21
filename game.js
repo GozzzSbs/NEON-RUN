@@ -292,10 +292,10 @@ const LAVA_PLATFORM_TOP = 0.42;
 const normalTrackMeshes = [];
 
 const DIFFICULTY_SETTINGS = {
-    facile: { base: 0.45, start: 1, max: 1.4 },
-    normal: { base: 0.55, start: 1.2, max: 1.8 },
-    difficile: { base: 0.65, start: 1.5, max: 2.1 },
-    extreme: { base: 0.75, start: 1.6, max: 2.4 }
+    facile:    { base: 0.45, start: 1,   max: 1.4 },
+    normal:    { base: 0.50, start: 1.1, max: 1.6 },
+    difficile: { base: 0.55, start: 1.2, max: 1.8 },
+    extreme:   { base: 0.65, start: 1.3, max: 2.0 }
 };
 
 function applyDifficultySettings(reset = true) {
