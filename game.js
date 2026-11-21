@@ -2520,34 +2520,39 @@ function animate() {
                 }
 
                 // DÉTECTION DE LA RAMPE
-                if (
-                    obstacle.type === "stationaryTrain" &&
-                    train.userData.ramp
-                ) {
-                    const ramp = train.userData.ramp;
+if (
+    obstacle.type === "stationaryTrain" &&
+    train.userData.ramp
+) {
+    const ramp = train.userData.ramp;
 
-                    const rampWorldPosition = new THREE.Vector3();
-                    ramp.getWorldPosition(rampWorldPosition);
+    const playerWorld = new THREE.Vector3(
+        player.position.x,
+        player.position.y,
+        player.position.z
+    );
 
-                    const rampTop =
-                        rampWorldPosition.y +
-                        Math.sin(Math.abs(ramp.rotation.x)) * 2.5;
+    const localPlayer = ramp.worldToLocal(playerWorld.clone());
 
-                    if (
-                        sameLane &&
-                        Math.abs(player.position.z - rampWorldPosition.z) < 2.7 &&
-                        previousY >= rampTop &&
-                        player.position.y <= rampTop
-                    ) {
-                        player.position.y = rampTop;
-                        jumping = false;
-                        jumpVelocity = 0;
-                        ridingTrain = train;
-                        break;
-                    }
-                }
-            }
-        }
+    const rampHalfWidth = 1.2;
+    const rampHalfLength = 2.5;
+
+    const rampTop = ramp.getWorldPosition(new THREE.Vector3()).y;
+
+    if (
+        sameLane &&
+        Math.abs(localPlayer.x) < rampHalfWidth &&
+        Math.abs(localPlayer.z) < rampHalfLength &&
+        previousY >= rampTop &&
+        player.position.y <= rampTop
+    ) {
+        player.position.y = rampTop;
+        jumping = false;
+        jumpVelocity = 0;
+        ridingTrain = train;
+        break;
+    }
+}
 
         const landingHeight =
             selectedMode === "lava" ? LAVA_PLATFORM_TOP : 0;
