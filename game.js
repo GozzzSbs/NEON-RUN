@@ -1127,6 +1127,7 @@ function createPlayer() {
 
     player.position.set(0, 0, 0);
     scene.add(player);
+    player.rotation.y = Math.PI;
 }
 
 createPlayer();
