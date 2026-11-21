@@ -2064,39 +2064,66 @@ function showDiamondMessage(amount) {
 // ======================================================
 
 function animateRunner() {
-    const movement = frame * 0.18;
+    const movement = frame * 0.14;
+    const swing = Math.sin(movement);
+    const bounce = Math.abs(Math.sin(movement * 2));
 
     if (!jumping && !sliding) {
-        const swing = Math.sin(movement);
+        // BALANCEMENT DES BRAS
+        playerParts.arms.forEach((arm, i) => {
+            const direction = i === 0 ? 1 : -1;
 
-        playerParts.arms[0].rotation.x = swing * 0.85;
-        playerParts.arms[1].rotation.x = -swing * 0.85;
+            arm.rotation.x = swing * 0.65 * direction;
+            arm.rotation.z = direction * 0.08;
 
-        playerParts.legs[0].rotation.x = -swing * 0.75;
-        playerParts.legs[1].rotation.x = swing * 0.75;
+            arm.userData.elbow.rotation.x =
+                Math.max(0, -swing * direction) * 0.65;
+        });
 
-        playerParts.legs[0].userData.knee.rotation.x =
-            Math.max(0, swing) * 0.8;
+        // MOUVEMENT DES JAMBES
+        playerParts.legs.forEach((leg, i) => {
+            const direction = i === 0 ? -1 : 1;
 
-        playerParts.legs[1].userData.knee.rotation.x =
-            Math.max(0, -swing) * 0.8;
+            leg.rotation.x = swing * 0.65 * direction;
 
-        playerParts.body.position.y =
-            1.75 + Math.abs(Math.sin(movement * 2)) * 0.06;
+            leg.userData.knee.rotation.x =
+                Math.max(0, swing * direction) * 0.9;
+        });
+
+        // MOUVEMENT DU TORSE
+        playerParts.body.position.y = 1.75 + bounce * 0.055;
+        playerParts.body.rotation.x = 0.035 + swing * 0.025;
+        playerParts.body.rotation.z = swing * 0.025;
+
+        // MOUVEMENT DE LA TÊTE
+        playerParts.head.rotation.x = -0.025 + bounce * 0.025;
+        playerParts.head.rotation.z = -swing * 0.025;
     }
 
     if (jumping) {
-        playerParts.arms[0].rotation.x = -0.9;
-        playerParts.arms[1].rotation.x = -0.9;
-        playerParts.legs[0].rotation.x = 0.45;
-        playerParts.legs[1].rotation.x = -0.45;
+        playerParts.arms.forEach(arm => {
+            arm.rotation.x = -0.8;
+            arm.rotation.z = 0;
+            arm.userData.elbow.rotation.x = -0.35;
+        });
+
+        playerParts.legs[0].rotation.x = 0.4;
+        playerParts.legs[1].rotation.x = -0.4;
+
+        playerParts.body.rotation.x = -0.12;
     }
 
     if (sliding) {
-        playerParts.arms[0].rotation.x = 0.7;
-        playerParts.arms[1].rotation.x = 0.7;
-        playerParts.legs[0].rotation.x = -0.5;
-        playerParts.legs[1].rotation.x = -0.5;
+        playerParts.arms.forEach(arm => {
+            arm.rotation.x = 0.7;
+            arm.rotation.z = 0;
+        });
+
+        playerParts.legs.forEach(leg => {
+            leg.rotation.x = -0.5;
+        });
+
+        playerParts.body.rotation.x = 0.45;
     }
 
     animateCape();
