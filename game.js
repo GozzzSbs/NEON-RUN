@@ -3388,7 +3388,6 @@ function createShopStyles() {
     outline: none !important;
     display: block;
 }
-        position: relative;
         .neon-shop-card {
             position: relative;
             overflow: hidden;
