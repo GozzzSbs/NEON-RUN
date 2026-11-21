@@ -662,23 +662,40 @@ for (let i = 0; i < 12; i++) {
 // ======================================================
 // DÉCOR URBAIN SUPPLÉMENTAIRE
 // ======================================================
+
 const movingBuildings = [];
+
+const buildingColors = [
+    0xc4b49a, // Beige
+    0x536b82, // Bleu gris
+    0x8b5140, // Brique
+    0x303d4b, // Bleu nuit
+    0xd0c9b9  // Blanc cassé
+];
+
 // Petits immeubles derrière les murs
 for (const side of [-1, 1]) {
 
     for (let i = 0; i < 12; i++) {
 
+        const height = 14 + Math.random() * 12;
+        const color = buildingColors[
+            Math.floor(Math.random() * buildingColors.length)
+        ];
+
         const building = box(
             7,
-            14 + Math.random() * 12,
+            height,
             12,
-            mat(0x292323),
+            mat(color),
             side * 16,
-            6,
+            height / 2 - 1,
             -i * 20 - 10
         );
 
         building.castShadow = true;
+        building.receiveShadow = true;
+
         movingBuildings.push(building);
     }
 }
