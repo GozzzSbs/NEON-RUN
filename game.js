@@ -3888,8 +3888,8 @@ function createCape() {
     }
 
     const cape = new THREE.Group();
-if (equippedCape === "rxn_white") {
-    cape.position.z = 0.50;
+if (equippedCape === "certified") {
+    cape.position.z = 0.28;
 }
     if (equippedCape === "rxn_white") {
         cape.position.z = 0.28;
