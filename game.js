@@ -3799,7 +3799,7 @@ function createCape() {
 
     // Vérifier la cape équipée
     if (
-        !["nr", "rxn"].includes(equippedCape) ||
+        !["nr", "rxn", "rxn_white"].includes(equippedCape) ||
         !ownedCapes.includes(equippedCape)
     ) {
         return;
