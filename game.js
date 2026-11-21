@@ -677,6 +677,17 @@ const windowMaterial = new THREE.MeshBasicMaterial({
     color: 0xffd98a
 });
 
+const balconyMaterial = new THREE.MeshStandardMaterial({
+    color: 0x424b55,
+    roughness: 0.8
+});
+
+const balconyRailMaterial = new THREE.MeshStandardMaterial({
+    color: 0x20252b,
+    metalness: 0.6,
+    roughness: 0.4
+});
+
 // Petits immeubles derrière les murs
 for (const side of [-1, 1]) {
 
@@ -703,7 +714,7 @@ for (const side of [-1, 1]) {
 
         movingBuildings.push(building);
 
-        // Fenêtres de l'immeuble
+        // FENÊTRES
         for (let y = 0; y < Math.floor(height / 3); y++) {
             for (let x = -1; x <= 1; x++) {
 
@@ -713,16 +724,47 @@ for (const side of [-1, 1]) {
                 );
 
                 windowMesh.position.set(
-    x * 2,
-    -height / 2 + 2.5 + y * 3,
-    6.06
-);
+                    x * 2,
+                    -height / 2 + 2.5 + y * 3,
+                    6.06
+                );
+
                 building.add(windowMesh);
             }
         }
+
+        // BALCONS
+        for (let y = 0; y < Math.floor(height / 6); y++) {
+
+            const balcony = new THREE.Mesh(
+                new THREE.BoxGeometry(3.2, 0.25, 1.2),
+                balconyMaterial
+            );
+
+            balcony.position.set(
+                0,
+                -height / 2 + 4 + y * 6,
+                6.5
+            );
+
+            building.add(balcony);
+
+            // RAMBARDE
+            const rail = new THREE.Mesh(
+                new THREE.BoxGeometry(3.2, 0.8, 0.12),
+                balconyRailMaterial
+            );
+
+            rail.position.set(
+                0,
+                -height / 2 + 4.5 + y * 6,
+                7.05
+            );
+
+            building.add(rail);
+        }
     }
 }
-
 // ======================================================
 // PERSONNAGE
 // ======================================================
