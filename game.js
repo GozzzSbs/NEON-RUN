@@ -2707,7 +2707,6 @@ startNoCoinTimer();
     if (menu) menu.classList.add("hidden");
     if (gameScreen) gameScreen.classList.remove("hidden");
     if (gameOver) gameOver.classList.add("hidden");
-updateGamePlayerInfo();
     const modeName = document.getElementById("modeName");
 
     if (modeName) {
