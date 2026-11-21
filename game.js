@@ -3291,8 +3291,8 @@ function createShopStyles() {
         }
 
         #neonShop.open {
-            display: flex;
-        }
+    display: flex !important;
+}
 
         .neon-shop-panel {
             position: relative;
