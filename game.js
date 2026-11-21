@@ -3881,7 +3881,14 @@ cloth.material.needsUpdate = true;
         const color = item.id === "rxn_white" ? "#000000" : "#ffffff";
 
         ctx.clearRect(0, 0, 256, 256);
-        ctx.fillStyle = color;
+
+ctx.fillStyle = item.id === "rxn_white" || item.id === "certified"
+    ? "#ffffff"
+    : "#080808";
+
+ctx.fillRect(0, 0, 256, 256);
+
+ctx.fillStyle = color;
         ctx.textAlign = "center";
 
         if (type === "nr") {
