@@ -17,9 +17,8 @@ if (!canvas) throw new Error("Canvas #game introuvable");
 // ======================================================
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x050313);
-scene.fog = new THREE.Fog(0x09051e, 65, 190);
-
+scene.background = new THREE.Color(0x171313);
+scene.fog = new THREE.Fog(0x171313, 55, 180);
 const camera = new THREE.PerspectiveCamera(
     65,
     (canvas.clientWidth / canvas.clientHeight) || 1,
