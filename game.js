@@ -2981,7 +2981,7 @@ window.addEventListener("resize", () => {
 // ======================================================
 
 const SHOP_CATALOG = {
-    skins: [
+skins: [
     {
         id: "default",
         name: "JACKO",
@@ -2999,44 +2999,12 @@ const SHOP_CATALOG = {
         description: "Noir absolu avec des détails blancs."
     },
     {
-        id: "electric",
-        name: "ELECTRIC",
-        price: 25,
+        id: "blond_boy",
+        name: "SUMMER BOY",
+        price: 50,
         currency: "diamonds",
-        color: 0x00eaff,
-        description: "L'énergie électrique."
-    },
-    {
-        id: "inferno",
-        name: "INFERNO",
-        price: 40,
-        currency: "diamonds",
-        color: 0xff3300,
-        description: "Un runner venu des flammes."
-    },
-    {
-        id: "royal",
-        name: "ROYAL",
-        price: 60,
-        currency: "diamonds",
-        color: 0xffd700,
-        description: "Un style digne d'un roi."
-    },
-    {
-        id: "galaxy",
-        name: "GALAXY",
-        price: 80,
-        currency: "diamonds",
-        color: 0x8a2be2,
-        description: "La puissance de la galaxie."
-    },
-    {
-        id: "diamond",
-        name: "DIAMOND",
-        price: 120,
-        currency: "diamonds",
-        color: 0xffffff,
-        description: "Le skin ultime."
+        color: 0x13bfc0,
+        description: "Cheveux blonds, lunettes, collier et tenue d'été."
     }
 ],
 
