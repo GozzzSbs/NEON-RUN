@@ -3826,7 +3826,7 @@ function createCape() {
     geometry.computeVertexNormals();
 
     const capeMaterial = new THREE.MeshStandardMaterial({
-        color: 0x030303,
+        color: equippedCape === "rxn_white" ? 0xffffff : 0x030303,
         roughness: 0.85,
         metalness: 0.1,
         side: THREE.DoubleSide
@@ -3844,9 +3844,11 @@ function createCape() {
 
     function drawCapeLogo(type) {
         ctx.clearRect(0, 0, 512, 256);
-
+const logoColor = equippedCape === "rxn_white"
+    ? "#000000"
+    : "#ffffff";
         if (type === "nr") {
-            ctx.fillStyle = "#ffffff";
+            ctx.fillStyle = logoColor;
             ctx.font = "bold 230px Arial";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
