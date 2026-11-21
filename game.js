@@ -467,7 +467,6 @@ createStreetWalls();
 // ======================================================
 
 function createStreetLamp(x, z) {
-const movingStreetLamps = [];
     const lamp = new THREE.Group();
 
     const pole = new THREE.Mesh(
@@ -498,11 +497,13 @@ const movingStreetLamps = [];
     glow.position.set(x > 0 ? -1 : 1, 5.5, 0);
     lamp.add(glow);
 
-    lamp.position.set(x,0,z);
-scene.add(lamp);
-movingStreetLamps.push(lamp);
+    lamp.position.set(x, 0, z);
+
+    scene.add(lamp);
+    movingStreetLamps.push(lamp);
 }
 
+// Création des lampadaires des deux côtés
 for (let i = 0; i < 12; i++) {
     createStreetLamp(-7.5, -i * 20);
     createStreetLamp(7.5, -i * 20);
