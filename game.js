@@ -665,6 +665,7 @@ for (let i = 0; i < 12; i++) {
 
 const movingBuildings = [];
 
+// COULEURS DES IMMEUBLES
 const buildingColors = [
     0xd69b70, // Terracotta
     0xe8c99b, // Sable
@@ -675,22 +676,40 @@ const buildingColors = [
     0xb7a0c9  // Violet doux
 ];
 
+// MATÉRIAUX DES FENÊTRES
 const windowMaterial = new THREE.MeshBasicMaterial({
     color: 0xffd98a
 });
 
+// MATÉRIAUX DES BALCONS
 const balconyMaterial = new THREE.MeshStandardMaterial({
-    color: 0x424b55,
+    color: 0x8c9295,
     roughness: 0.8
 });
 
 const balconyRailMaterial = new THREE.MeshStandardMaterial({
-    color: 0x20252b,
+    color: 0x303b43,
     metalness: 0.6,
     roughness: 0.4
 });
 
-// Petits immeubles derrière les murs
+const glassMaterial = new THREE.MeshStandardMaterial({
+    color: 0x9bd9e8,
+    transparent: true,
+    opacity: 0.45,
+    roughness: 0.15,
+    metalness: 0.2
+});
+
+// COULEURS DES ENSEIGNES
+const signColors = [
+    0xff6b35,
+    0x00d9ff,
+    0xff4fd8,
+    0xffd447
+];
+
+// CRÉATION DES IMMEUBLES
 for (const side of [-1, 1]) {
 
     for (let i = 0; i < 12; i++) {
@@ -716,8 +735,12 @@ for (const side of [-1, 1]) {
 
         movingBuildings.push(building);
 
+        // ======================================================
         // FENÊTRES
+        // ======================================================
+
         for (let y = 0; y < Math.floor(height / 3); y++) {
+
             for (let x = -1; x <= 1; x++) {
 
                 const windowMesh = new THREE.Mesh(
@@ -736,65 +759,120 @@ for (const side of [-1, 1]) {
         }
 
         // ======================================================
-// VRAIS BALCONS MODERNES
-// ======================================================
+        // BALCONS MODERNES
+        // ======================================================
 
-for (let y = 0; y < Math.floor(height / 6); y++) {
+        for (let y = 0; y < Math.floor(height / 6); y++) {
 
-    const balconyY = -height / 2 + 4 + y * 6;
+            const balconyY = -height / 2 + 4 + y * 6;
 
-    // Plancher du balcon
-    const balconyFloor = new THREE.Mesh(
-        new THREE.BoxGeometry(3.4, 0.25, 1.6),
-        balconyMaterial
-    );
+            // Plancher
+            const balconyFloor = new THREE.Mesh(
+                new THREE.BoxGeometry(3.4, 0.25, 1.6),
+                balconyMaterial
+            );
 
-    balconyFloor.position.set(0, balconyY, 6.8);
-    building.add(balconyFloor);
+            balconyFloor.position.set(
+                0,
+                balconyY,
+                6.8
+            );
 
-    // Rambarde en verre
-    const glassMaterial = new THREE.MeshStandardMaterial({
-        color: 0x9bd9e8,
-        transparent: true,
-        opacity: 0.45,
-        roughness: 0.15,
-        metalness: 0.2
-    });
+            building.add(balconyFloor);
 
-    const glass = new THREE.Mesh(
-        new THREE.BoxGeometry(3.4, 0.9, 0.08),
-        glassMaterial
-    );
+            // Rambarde avant en verre
+            const glass = new THREE.Mesh(
+                new THREE.BoxGeometry(3.4, 0.9, 0.08),
+                glassMaterial
+            );
 
-    glass.position.set(0, balconyY + 0.55, 7.55);
-    building.add(glass);
+            glass.position.set(
+                0,
+                balconyY + 0.55,
+                7.55
+            );
 
-    // Rambarde latérale gauche
-    const sideLeft = new THREE.Mesh(
-        new THREE.BoxGeometry(0.08, 0.9, 1.5),
-        balconyRailMaterial
-    );
+            building.add(glass);
 
-    sideLeft.position.set(-1.65, balconyY + 0.55, 6.8);
-    building.add(sideLeft);
+            // Côté gauche
+            const sideLeft = new THREE.Mesh(
+                new THREE.BoxGeometry(0.08, 0.9, 1.5),
+                balconyRailMaterial
+            );
 
-    // Rambarde latérale droite
-    const sideRight = sideLeft.clone();
+            sideLeft.position.set(
+                -1.65,
+                balconyY + 0.55,
+                6.8
+            );
 
-    sideRight.position.x = 1.65;
-    building.add(sideRight);
+            building.add(sideLeft);
 
-    // Petite structure métallique sous le balcon
-    const support = new THREE.Mesh(
-        new THREE.BoxGeometry(3.2, 0.12, 0.12),
-        balconyRailMaterial
-    );
+            // Côté droit
+            const sideRight = sideLeft.clone();
 
-    support.position.set(0, balconyY - 0.2, 7.3);
-    building.add(support);
-}
+            sideRight.position.x = 1.65;
+
+            building.add(sideRight);
+
+            // Support métallique
+            const support = new THREE.Mesh(
+                new THREE.BoxGeometry(3.2, 0.12, 0.12),
+                balconyRailMaterial
+            );
+
+            support.position.set(
+                0,
+                balconyY - 0.2,
+                7.3
+            );
+
+            building.add(support);
         }
+
+        // ======================================================
+        // ENSEIGNES LUMINEUSES
+        // ======================================================
+
+        const signColor = signColors[
+            Math.floor(Math.random() * signColors.length)
+        ];
+
+        // Panneau
+        const sign = new THREE.Mesh(
+            new THREE.BoxGeometry(3.5, 1.2, 0.2),
+            new THREE.MeshStandardMaterial({
+                color: 0x252525,
+                emissive: signColor,
+                emissiveIntensity: 1.5
+            })
+        );
+
+        sign.position.set(
+            0,
+            height / 2 - 2,
+            6.15
+        );
+
+        building.add(sign);
+
+        // Bordure lumineuse
+        const signBorder = new THREE.Mesh(
+            new THREE.BoxGeometry(3.7, 1.4, 0.08),
+            new THREE.MeshBasicMaterial({
+                color: signColor
+            })
+        );
+
+        signBorder.position.set(
+            0,
+            height / 2 - 2,
+            6.05
+        );
+
+        building.add(signBorder);
     }
+}
 // ======================================================
 // PERSONNAGE
 // ======================================================
