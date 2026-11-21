@@ -3824,7 +3824,36 @@ function createCape() {
     shopCapeObject.userData.logoTexture = texture;
     shopCapeObject.userData.lastPhase = -1;
 }
+// ======================================================
+// ANIMATION CAPE
+// ======================================================
 
+function animateCape() {
+    if (!shopCapeObject || !player) return;
+
+    const time = performance.now() * 0.001;
+
+    shopCapeObject.rotation.z = Math.sin(time * 4) * 0.045;
+    shopCapeObject.rotation.x = Math.sin(time * 3) * 0.035;
+
+    if (shopCapeObject.userData.capeId === "rxn") {
+
+        const phase = Math.floor(time) % 2;
+
+        if (phase !== shopCapeObject.userData.lastPhase) {
+
+            shopCapeObject.userData.lastPhase = phase;
+
+            if (phase === 0) {
+                shopCapeObject.userData.drawCapeLogo("rxn");
+            } else {
+                shopCapeObject.userData.drawCapeLogo("moon");
+            }
+
+            shopCapeObject.userData.logoTexture.needsUpdate = true;
+        }
+    }
+}
 // ======================================================
 // APPLIQUER LA CAPE
 // ======================================================
