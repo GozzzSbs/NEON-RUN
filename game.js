@@ -380,7 +380,6 @@ gravelTexture.wrapT = THREE.RepeatWrapping;
 gravelTexture.repeat.set(12, 18);
 
 const floor = new THREE.Mesh(
-    mat(0x493027)
     new THREE.PlaneGeometry(300, 350),
     new THREE.MeshStandardMaterial({
         map: gravelTexture,
