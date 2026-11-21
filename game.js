@@ -2896,10 +2896,13 @@ if (!validSkins.includes(equippedSkin)) {
     equippedSkin = "default";
 }
 
-// La cape ne peut être équipée que si elle a été achetée.
-if (!ownedCapes.includes("nr")) {
-    equippedCape = "";
-} else if (equippedCape !== "nr") {
+// Vérification des capes achetées et équipées
+const validCapes = SHOP_CATALOG.capes.map(cape => cape.id);
+
+if (
+    !validCapes.includes(equippedCape) ||
+    !ownedCapes.includes(equippedCape)
+) {
     equippedCape = "";
 }
 
