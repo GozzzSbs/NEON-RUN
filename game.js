@@ -3698,31 +3698,31 @@ function createCape() {
             if (object.geometry) object.geometry.dispose();
 
             if (object.material) {
-                if (Array.isArray(object.material)) {
-                    object.material.forEach(material => {
-                        if (material.map) material.map.dispose();
-                        material.dispose();
-                    });
-                } else {
-                    if (object.material.map) object.material.map.dispose();
-                    object.material.dispose();
-                }
+                const materials = Array.isArray(object.material)
+                    ? object.material
+                    : [object.material];
+
+                materials.forEach(material => {
+                    if (material.map) material.map.dispose();
+                    material.dispose();
+                });
             }
         });
 
         shopCapeObject = null;
     }
 
-    // La cape apparaît uniquement si elle est achetée et équipée.
+    // Vérifier la cape équipée
     if (
-        equippedCape !== "nr" ||
-        !ownedCapes.includes("nr")
+        !["nr", "rxn"].includes(equippedCape) ||
+        !ownedCapes.includes(equippedCape)
     ) {
         return;
     }
 
     const cape = new THREE.Group();
 
+    // TISSU NOIR
     const geometry = new THREE.BufferGeometry();
 
     const vertices = new Float32Array([
@@ -3749,20 +3749,52 @@ function createCape() {
 
     const cloth = new THREE.Mesh(geometry, capeMaterial);
     cape.add(cloth);
-cloth.position.set(0, 0, 0);
-cloth.userData.originalPosition = cloth.position.clone();
-    // Logo NR blanc
+
+    // CANVAS DU LOGO
     const logoCanvas = document.createElement("canvas");
     logoCanvas.width = 512;
     logoCanvas.height = 256;
 
     const ctx = logoCanvas.getContext("2d");
 
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 230px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("NR", 256, 128);
+    function drawCapeLogo(type) {
+        ctx.clearRect(0, 0, 512, 256);
+
+        if (type === "nr") {
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 230px Arial";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("NR", 256, 128);
+        }
+
+        if (type === "rxn") {
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 190px Arial Black";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("RXN", 256, 128);
+        }
+
+        if (type === "moon") {
+            // Lune blanche
+            ctx.fillStyle = "#ffffff";
+            ctx.beginPath();
+            ctx.arc(256, 128, 78, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Découpe pour former un croissant
+            ctx.globalCompositeOperation = "destination-out";
+
+            ctx.beginPath();
+            ctx.arc(292, 95, 72, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.globalCompositeOperation = "source-over";
+        }
+    }
+
+    drawCapeLogo(equippedCape === "rxn" ? "rxn" : "nr");
 
     const texture = new THREE.CanvasTexture(logoCanvas);
 
@@ -3781,25 +3813,16 @@ cloth.userData.originalPosition = cloth.position.clone();
     logo.position.set(0, 1.35, 0.52);
     cape.add(logo);
 
+    // AJOUT AU PERSONNAGE
     player.add(cape);
 
     shopCapeObject = cape;
 
-    // Permet à l'animation de faire bouger le tissu.
     shopCapeObject.userData.cloth = cloth;
-}
-
-// ======================================================
-// ANIMATION CAPE
-// ======================================================
-
-function animateCape() {
-    if (!shopCapeObject || !player) return;
-
-    const time = performance.now() * 0.001;
-
-    shopCapeObject.rotation.z = Math.sin(time * 4) * 0.045;
-    shopCapeObject.rotation.x = Math.sin(time * 3) * 0.035;
+    shopCapeObject.userData.capeId = equippedCape;
+    shopCapeObject.userData.drawCapeLogo = drawCapeLogo;
+    shopCapeObject.userData.logoTexture = texture;
+    shopCapeObject.userData.lastPhase = -1;
 }
 
 // ======================================================
