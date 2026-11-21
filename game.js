@@ -4368,7 +4368,7 @@ function formatNoCoinTime(time) {
             const points = document.createElement("div");
 
             points.textContent = isNoCoin
-                ? Number(joueur.time_seconds).toFixed(2) + " s"
+                ? formatNoCoinTime(joueur.time_seconds)
                 : joueur.score + " points";
 
             card.append(rank, name, points);
