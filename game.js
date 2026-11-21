@@ -1583,7 +1583,7 @@ window.difficulty = level;
 }
 
 window.setDifficulty = setDifficulty;
-
+console.log("SETDIFFICULTY DISPONIBLE :", typeof window.setDifficulty);
 // ======================================================
 // COMMANDES
 // ======================================================
