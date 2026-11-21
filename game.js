@@ -3881,7 +3881,7 @@ const logoColor = equippedCape === "rxn_white"
         }
     }
 
-    drawCapeLogo(equippedCape === "rxn" ? "rxn" : "nr");
+    drawCapeLogo(equippedCape === "nr" ? "nr" : "rxn");
 
     const texture = new THREE.CanvasTexture(logoCanvas);
 
