@@ -189,106 +189,49 @@ function box(w, h, d, color, x, y, z, parent = scene) {
 }
 
 // ======================================================
-// FOND GALAXIE
+// MAP STREET - NEON RUN
 // ======================================================
 
-const starMaterial = new THREE.MeshBasicMaterial({
-    color: 0xffffff
-});
-
-for (let i = 0; i < 900; i++) {
-    const star = new THREE.Mesh(
-        new THREE.SphereGeometry(
-            0.035 + Math.random() * 0.045,
-            5,
-            5
-        ),
-        starMaterial
-    );
-
-    star.position.set(
-        (Math.random() - 0.5) * 250,
-        5 + Math.random() * 100,
-        -Math.random() * 250
-    );
-
-    scene.add(star);
-    movingStars.push(star);
-}
-
-function createNebula(x, y, z, color, size) {
-    const cloud = new THREE.Mesh(
-        new THREE.SphereGeometry(size, 24, 24),
-        new THREE.MeshBasicMaterial({
-            color,
-            transparent: true,
-            opacity: 0.12,
-            depthWrite: false
-        })
-    );
-
-    cloud.position.set(x, y, z);
-    cloud.scale.set(1.8, 0.7, 0.3);
-    scene.add(cloud);
-}
-
-createNebula(-45, 35, -100, 0x8b22ff, 24);
-createNebula(45, 45, -130, 0x163cff, 30);
-createNebula(0, 55, -190, 0xff2299, 35);
-createNebula(-70, 25, -210, 0x13cfff, 28);
-
-// Planète géante
-const planet = new THREE.Mesh(
-    new THREE.SphereGeometry(15, 32, 32),
-    mat(0x402080, 0x210044, 0.4)
-);
-
-planet.position.set(48, 28, -115);
-scene.add(planet);
-
-// Anneau de planète
-const ring = new THREE.Mesh(
-    new THREE.TorusGeometry(20, 0.7, 8, 100),
-    mat(0x9b65ff, 0x6020ff, 1)
-);
-
-ring.position.copy(planet.position);
-ring.rotation.x = 1.2;
-scene.add(ring);
-
 // ======================================================
-// SOL SPATIAL
+// SOL URBAIN
 // ======================================================
 
 const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(300, 350),
-    mat(0x100d24)
+    mat(0x242020)
 );
 
 floor.rotation.x = -Math.PI / 2;
 floor.position.set(0, -0.48, -100);
 scene.add(floor);
 
+// Route centrale
 const road = box(
     12, 0.3, 220,
-    mat(0x25213b, 0x17103c, 0.3),
+    mat(0x303030),
     0, -0.25, -80
 );
 
 normalTrackMeshes.push(road);
 
-// Bords lumineux
+// ======================================================
+// BORDURES ORANGE
+// ======================================================
+
 for (const x of [-5.8, 5.8]) {
     const edge = box(
         0.12, 0.12, 220,
-        mat(0x9c25ff, 0x8b00ff, 1.5),
+        mat(0xff8c00, 0xff6500, 1.5),
         x, -0.05, -80
     );
 
     normalTrackMeshes.push(edge);
 }
 
-// Rails
+// ======================================================
+// RAILS
+// ======================================================
+
 function createTrack() {
     for (let i = 0; i < 3; i++) {
         const x = lanePositions[i];
@@ -296,7 +239,7 @@ function createTrack() {
         for (const side of [-0.85, 0.85]) {
             const rail = box(
                 0.12, 0.16, 220,
-                mat(0x777799, 0x2828aa, 0.4),
+                mat(0x999999, 0x333333, 0.2),
                 x + side, 0, -80
             );
 
@@ -306,7 +249,7 @@ function createTrack() {
         for (let j = 0; j < 55; j++) {
             const sleeper = box(
                 2.1, 0.18, 0.45,
-                mat(0x34304d),
+                mat(0x292323),
                 x, -0.05, 15 - j * 4
             );
 
@@ -319,82 +262,243 @@ function createTrack() {
 createTrack();
 
 // ======================================================
-// VAISSEAUX ALIENS
+// TEXTURE MURS EN BRIQUES
 // ======================================================
 
-function createAlienShip(x, y, z) {
-    const ship = new THREE.Group();
+function createBrickTexture() {
+    const canvasTexture = document.createElement("canvas");
+    canvasTexture.width = 512;
+    canvasTexture.height = 256;
 
-    const bodyMaterial = mat(0x4c4c65, 0x24244c, 0.5);
+    const ctx = canvasTexture.getContext("2d");
 
-    const glassMaterial = new THREE.MeshStandardMaterial({
-        color: 0x36eaff,
-        emissive: 0x00bfff,
-        emissiveIntensity: 1.8,
-        metalness: 0.5,
-        roughness: 0.15
-    });
+    ctx.fillStyle = "#512b25";
+    ctx.fillRect(0, 0, 512, 256);
 
-    const body = new THREE.Mesh(
-        new THREE.SphereGeometry(1, 24, 16),
-        bodyMaterial
-    );
+    const brickWidth = 64;
+    const brickHeight = 32;
 
-    body.scale.set(1.8, 0.35, 1);
-    ship.add(body);
+    for (let row = 0; row < 8; row++) {
+        for (let col = 0; col < 9; col++) {
 
-    const cockpit = new THREE.Mesh(
-        new THREE.SphereGeometry(0.65, 20, 16),
-        glassMaterial
-    );
+            const offset = row % 2 === 0 ? 0 : 32;
 
-    cockpit.position.y = 0.35;
-    cockpit.scale.set(0.9, 0.75, 0.9);
-    ship.add(cockpit);
+            const x = col * brickWidth - offset;
+            const y = row * brickHeight;
 
-    for (let i = 0; i < 8; i++) {
-        const angle = i / 8 * Math.PI * 2;
+            const shades = [
+                "#71382d",
+                "#824438",
+                "#603027",
+                "#914b3c",
+                "#78372d"
+            ];
 
-        const light = new THREE.Mesh(
-            new THREE.SphereGeometry(0.12, 8, 8),
-            mat(0x35ffb2, 0x00ff88, 2)
-        );
+            ctx.fillStyle =
+                shades[Math.floor(Math.random() * shades.length)];
 
-        light.position.set(
-            Math.cos(angle) * 1.35,
-            -0.1,
-            Math.sin(angle) * 0.7
-        );
-
-        ship.add(light);
+            ctx.fillRect(
+                x + 2,
+                y + 2,
+                brickWidth - 4,
+                brickHeight - 4
+            );
+        }
     }
 
-    const engine = new THREE.Mesh(
-        new THREE.ConeGeometry(0.35, 1.4, 12),
-        new THREE.MeshBasicMaterial({
-            color: 0x9a35ff,
-            transparent: true,
-            opacity: 0.75
-        })
-    );
+    const texture = new THREE.CanvasTexture(canvasTexture);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
 
-    engine.position.z = -1.2;
-    engine.rotation.x = Math.PI / 2;
-    ship.add(engine);
-
-    ship.position.set(x, y, z);
-    ship.userData.direction = 0.08;
-
-    scene.add(ship);
-    movingAliens.push(ship);
+    return texture;
 }
 
-for (let i = 0; i < 14; i++) {
-    createAlienShip(
-        (Math.random() - 0.5) * 100,
-        12 + Math.random() * 35,
-        -30 - i * 18
+const brickTexture = createBrickTexture();
+
+const brickMaterial = new THREE.MeshStandardMaterial({
+    map: brickTexture,
+    roughness: 0.95
+});
+
+// ======================================================
+// TEXTURE GRAFFITI
+// ======================================================
+
+function createGraffitiTexture(text) {
+
+    const canvasTexture = document.createElement("canvas");
+    canvasTexture.width = 512;
+    canvasTexture.height = 256;
+
+    const ctx = canvasTexture.getContext("2d");
+
+    ctx.clearRect(0, 0, 512, 256);
+
+    ctx.save();
+
+    ctx.translate(256, 128);
+    ctx.rotate(-0.06);
+
+    ctx.font = "900 75px Arial Black";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    ctx.lineWidth = 13;
+    ctx.strokeStyle = "#171313";
+    ctx.strokeText(text, 0, 0);
+
+    ctx.fillStyle = "#ff7b00";
+    ctx.fillText(text, 0, 0);
+
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = "#ffffff";
+    ctx.strokeText(text, 0, 0);
+
+    ctx.restore();
+
+    // Décor graffiti
+    ctx.strokeStyle = "#ff3c9e";
+    ctx.lineWidth = 9;
+
+    ctx.beginPath();
+    ctx.moveTo(60, 190);
+    ctx.lineTo(130, 210);
+    ctx.lineTo(190, 185);
+    ctx.stroke();
+
+    ctx.strokeStyle = "#ff8c00";
+    ctx.beginPath();
+    ctx.arc(420, 65, 30, 0, Math.PI * 2);
+    ctx.stroke();
+
+    return new THREE.CanvasTexture(canvasTexture);
+}
+
+// ======================================================
+// MURS URBAINS
+// ======================================================
+
+const streetWalls = [];
+
+function createStreetWalls() {
+
+    for (const side of [-1, 1]) {
+
+        const wallX = side * 8.5;
+
+        // Mur principal
+        const wall = new THREE.Mesh(
+            new THREE.BoxGeometry(0.7, 10, 240),
+            brickMaterial
+        );
+
+        wall.position.set(wallX, 4.5, -85);
+        wall.castShadow = true;
+        wall.receiveShadow = true;
+
+        scene.add(wall);
+        streetWalls.push(wall);
+
+        // Graffitis
+        for (let i = 0; i < 9; i++) {
+
+            const graffitiMaterial = new THREE.MeshBasicMaterial({
+                map: createGraffitiTexture(
+                    ["NEON RUN", "STREET", "NR 3D"][i % 3],
+                ),
+                transparent: true,
+                side: THREE.DoubleSide
+            });
+
+            const graffiti = new THREE.Mesh(
+                new THREE.PlaneGeometry(5, 2.5),
+                graffitiMaterial
+            );
+
+            graffiti.position.set(
+                wallX - side * 0.37,
+                3.5 + (i % 2) * 1.5,
+                -5 - i * 24
+            );
+
+            graffiti.rotation.y = side === -1
+                ? Math.PI / 2
+                : -Math.PI / 2;
+
+            scene.add(graffiti);
+        }
+    }
+}
+
+createStreetWalls();
+
+// ======================================================
+// LAMPADAIRES STREET
+// ======================================================
+
+function createStreetLamp(x, z) {
+
+    const lamp = new THREE.Group();
+
+    const pole = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.08, 0.12, 6, 8),
+        mat(0x292929)
     );
+
+    pole.position.y = 3;
+    lamp.add(pole);
+
+    const arm = new THREE.Mesh(
+        new THREE.BoxGeometry(1.5, 0.12, 0.12),
+        mat(0x333333)
+    );
+
+    arm.position.set(x > 0 ? -0.6 : 0.6, 5.8, 0);
+    lamp.add(arm);
+
+    const light = new THREE.Mesh(
+        new THREE.BoxGeometry(0.65, 0.18, 0.35),
+        mat(0xffa52b, 0xff8800, 2)
+    );
+
+    light.position.set(x > 0 ? -1.1 : 1.1, 5.7, 0);
+    lamp.add(light);
+
+    const glow = new THREE.PointLight(0xffa52b, 1.5, 18);
+    glow.position.set(x > 0 ? -1 : 1, 5.5, 0);
+    lamp.add(glow);
+
+    lamp.position.set(x, 0, z);
+
+    scene.add(lamp);
+}
+
+for (let i = 0; i < 12; i++) {
+    createStreetLamp(-7.5, -i * 20);
+    createStreetLamp(7.5, -i * 20);
+}
+
+// ======================================================
+// DÉCOR URBAIN SUPPLÉMENTAIRE
+// ======================================================
+
+// Petits immeubles derrière les murs
+for (const side of [-1, 1]) {
+
+    for (let i = 0; i < 12; i++) {
+
+        const building = box(
+            7,
+            14 + Math.random() * 12,
+            12,
+            mat(0x292323),
+            side * 16,
+            6,
+            -i * 20 - 10
+        );
+
+        building.castShadow = true;
+    }
 }
 
 // ======================================================
