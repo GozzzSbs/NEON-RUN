@@ -2706,6 +2706,8 @@ startNoCoinTimer();
 
     if (menu) menu.classList.add("hidden");
     if (gameScreen) gameScreen.classList.remove("hidden");
+    const devBadge = document.getElementById("neonDeveloperBadge");
+if (devBadge) devBadge.style.display = "none";
     updateGamePlayerInfo();
     if (gameOver) gameOver.classList.add("hidden");
     const modeName = document.getElementById("modeName");
