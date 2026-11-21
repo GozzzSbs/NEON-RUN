@@ -2932,7 +2932,8 @@ const SHOP_CATALOG = {
         color: 0xffffff,
         description: "Cape blanche animée : RXN noir et lune noir."
     }
-]
+    ]
+};
 
 // ======================================================
 // SAUVEGARDE
