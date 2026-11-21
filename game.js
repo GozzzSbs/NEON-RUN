@@ -3013,8 +3013,8 @@ skins: [
     {
         id: "nr",
         name: "CAPE NR",
-        price: 100,
-        currency: "diamonds",
+        price: 1000,
+currency: "diamonds",
         color: 0x050505,
         description: "Cape noire avec le logo NR."
     },
