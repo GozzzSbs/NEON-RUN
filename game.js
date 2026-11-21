@@ -1415,7 +1415,7 @@ function createCoin(laneIndex, z, height = 1.3, onTrain = false, train = null) {
 
     // CORPS ROND DE LA PIÈCE
     const coinBody = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.48, 0.48, 0.12, 64),
+        new THREE.CylinderGeometry(0.48, 0.48, 0.12, 32),
         goldMaterial
     );
 
@@ -1424,7 +1424,7 @@ function createCoin(laneIndex, z, height = 1.3, onTrain = false, train = null) {
 
     // BORDURE EXTÉRIEURE
     const outerRing = new THREE.Mesh(
-        new THREE.TorusGeometry(0.43, 0.045, 8, 64),
+        new THREE.TorusGeometry(0.43, 0.045, 6, 32),
         new THREE.MeshStandardMaterial({
             color: 0xf5cc65,
             metalness: 0.6,
