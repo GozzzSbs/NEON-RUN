@@ -47,9 +47,9 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 // LUMIÈRES
 // ======================================================
 
-scene.add(new THREE.HemisphereLight(0x7777bb, 0x171020, 1.1));
+scene.add(new THREE.HemisphereLight(0xffc49a, 0x292020, 1.2));
 
-const mainLight = new THREE.DirectionalLight(0xaaaaff, 1.2);
+const mainLight = new THREE.DirectionalLight(0xffd0a0, 1.3);
 mainLight.position.set(-10, 25, 10);
 mainLight.castShadow = true;
 scene.add(mainLight);
