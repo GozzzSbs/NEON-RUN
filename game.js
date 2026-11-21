@@ -3671,7 +3671,7 @@ function renderShop() {
         }
 
         card.innerHTML = `
-            <div class="neon-shop-preview">
+            <div class="neon-shop-preview" data-cape-id="${isSkin ? "" : item.id}">
                 ${isSkin ? "🧑" : ""}
             </div>
 
