@@ -3676,8 +3676,30 @@ shopPreviewScene.add(fillLight);
         shopPreviewAnimation = null;
     }
 
-    // RECONSTRUIRE LES MINIATURES
-    shopPreviewItems = [];
+    // NETTOYER LES ANCIENNES MINIATURES
+shopPreviewItems.forEach(item => {
+    shopPreviewScene.remove(item.group);
+
+    item.group.traverse(object => {
+        if (object.geometry) {
+            object.geometry.dispose();
+        }
+
+        if (object.material) {
+            const materials = Array.isArray(object.material)
+                ? object.material
+                : [object.material];
+
+            materials.forEach(material => {
+                if (material.map) material.map.dispose();
+                material.dispose();
+            });
+        }
+    });
+});
+
+// RECONSTRUIRE LES MINIATURES
+shopPreviewItems = [];
 
     grid.querySelectorAll(".neon-shop-preview[data-cape-id]").forEach(preview => {
         const id = preview.dataset.capeId;
