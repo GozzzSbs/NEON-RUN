@@ -3756,8 +3756,8 @@ geometry.computeVertexNormals();
             })
         );
 
-        logo.position.z = 0.025;
-        logo.position.y = 0.05;
+        logo.position.z = 0.18;
+logo.position.y = 0.05;
         group.add(logo);
 
         // BADGE DE LA CAPE CERTIFIÉE
