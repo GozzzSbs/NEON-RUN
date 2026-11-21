@@ -3408,14 +3408,16 @@ function createShopStyles() {
         }
 
         .neon-shop-preview {
-            height: 130px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 53px;
-            margin-bottom: 8px;
-            filter: drop-shadow(0 0 12px currentColor);
-        }
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 53px;
+    margin-bottom: 8px;
+    background: radial-gradient(circle, #303744 0%, #171d29 100%);
+    border-radius: 10px;
+    filter: drop-shadow(0 0 12px currentColor);
+}
 
         .neon-shop-card h3 {
             margin: 5px 0;
