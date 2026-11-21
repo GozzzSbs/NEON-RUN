@@ -346,9 +346,45 @@ function box(w, h, d, color, x, y, z, parent = scene) {
 // SOL URBAIN
 // ======================================================
 
+// SOL EN GRAVIER
+const gravelCanvas = document.createElement("canvas");
+gravelCanvas.width = 512;
+gravelCanvas.height = 512;
+
+const gravelCtx = gravelCanvas.getContext("2d");
+
+// Fond gris-brun
+gravelCtx.fillStyle = "#514943";
+gravelCtx.fillRect(0, 0, 512, 512);
+
+// Petits cailloux
+for (let i = 0; i < 3500; i++) {
+    const x = Math.random() * 512;
+    const y = Math.random() * 512;
+    const size = 1 + Math.random() * 3;
+
+    const shades = ["#77716a", "#393633", "#625b54", "#8b8177", "#45413d"];
+
+    gravelCtx.fillStyle = shades[
+        Math.floor(Math.random() * shades.length)
+    ];
+
+    gravelCtx.beginPath();
+    gravelCtx.ellipse(x, y, size, size * 0.6, Math.random(), 0, Math.PI * 2);
+    gravelCtx.fill();
+}
+
+const gravelTexture = new THREE.CanvasTexture(gravelCanvas);
+gravelTexture.wrapS = THREE.RepeatWrapping;
+gravelTexture.wrapT = THREE.RepeatWrapping;
+gravelTexture.repeat.set(12, 18);
+
 const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(300, 350),
-    mat(0x493027)
+    new THREE.MeshStandardMaterial({
+        map: gravelTexture,
+        roughness: 1
+    })
 );
 
 floor.rotation.x = -Math.PI / 2;
