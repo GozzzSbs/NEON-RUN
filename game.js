@@ -4589,16 +4589,11 @@ window.openShop = openShop;
 // ======================================================
 
 function closeShop() {
-    if (!shopElement) return;
-
-    shopElement.classList.remove("open");
+    alert("BOUTON CLIQUÉ");
     shopElement.style.display = "none";
-
-    document.getElementById("menu").classList.remove("hidden");
 }
 
 window.closeShop = closeShop;
-
 // ======================================================
 // CONNECTER LE BOUTON BOUTIQUE EXISTANT
 // ======================================================
