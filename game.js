@@ -3884,11 +3884,10 @@ function setupShopCapePreviews() {
 
     const rect = item.preview.getBoundingClientRect();
 
-                const x = (rect.left - canvasRect.left) * pixelRatio;
-                const y = (canvasRect.bottom - rect.bottom) * pixelRatio;
-                const w = rect.width * pixelRatio;
-                const h = rect.height * pixelRatio;
-
+                const x = rect.left - canvasRect.left;
+const y = canvasRect.bottom - rect.bottom;
+const w = rect.width;
+const h = rect.height;
                 if (w <= 0 || h <= 0) return;
 
                 shopPreviewRenderer.setViewport(x, y, w, h);
