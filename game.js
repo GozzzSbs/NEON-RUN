@@ -2551,14 +2551,12 @@ if (ridingTrain) {
 function startNoCoinTimer() {
     clearInterval(noCoinTimerInterval);
 
-    const timer = document.getElementById("noCoinTimer");
+    let display = document.getElementById("noCoinTimer");
 
     if (selectedMode !== "nocoin") {
-        if (timer) timer.style.display = "none";
+        if (display) display.style.display = "none";
         return;
     }
-
-    let display = timer;
 
     if (!display) {
         display = document.createElement("div");
@@ -2566,18 +2564,9 @@ function startNoCoinTimer() {
         document.body.appendChild(display);
     }
 
-    display.style.cssText = `
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        color: #00ffff;
-        font-size: 32px;
-        font-weight: bold;
-        font-family: Arial, sans-serif;
-        text-shadow: 0 0 15px #00ffff;
-        z-index: 99999;
-        pointer-events: none;
+    display.innerHTML = `
+        <div class="snow-particles"></div>
+        <span id="noCoinTimerText">0.00 s</span>
     `;
 
     display.style.display = "block";
@@ -2585,14 +2574,14 @@ function startNoCoinTimer() {
     noCoinStartTime = performance.now();
     noCoinElapsed = 0;
 
-    display.textContent = "NO COIN : 0.00 s";
-
     noCoinTimerInterval = setInterval(() => {
         noCoinElapsed = (performance.now() - noCoinStartTime) / 1000;
 
-        display.textContent =
-            "NO COIN : " + noCoinElapsed.toFixed(2) + " s";
+        const timerText = document.getElementById("noCoinTimerText");
 
+        if (timerText) {
+            timerText.textContent = noCoinElapsed.toFixed(2) + " s";
+        }
     }, 30);
 }
 
