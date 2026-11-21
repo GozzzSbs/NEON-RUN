@@ -1006,8 +1006,140 @@ for (const side of [-1, 1]) {
 // ======================================================
 // PERSONNAGE
 // ======================================================
+function createBlondBoy() {
+    player = new THREE.Group();
 
+    playerParts = {
+        arms: [],
+        legs: [],
+        body: null,
+        head: null
+    };
+
+    const skin = mat(0xd99a70);
+    const hair = mat(0xf2c15e);
+    const hairDark = mat(0xc58b32);
+    const shirt = mat(0x13bfc0);
+    const red = mat(0xe52b35);
+    const yellow = mat(0xffd52a);
+    const blue = mat(0x168de0);
+    const black = mat(0x171717);
+    const white = mat(0xffffff);
+
+    function box(w, h, d, material, x, y, z, parent) {
+        const mesh = new THREE.Mesh(
+            new THREE.BoxGeometry(w, h, d),
+            material
+        );
+        mesh.position.set(x, y, z);
+        mesh.castShadow = true;
+        parent.add(mesh);
+        return mesh;
+    }
+
+    function sphere(r, material, x, y, z, parent) {
+        const mesh = new THREE.Mesh(
+            new THREE.SphereGeometry(r, 16, 16),
+            material
+        );
+        mesh.position.set(x, y, z);
+        mesh.castShadow = true;
+        parent.add(mesh);
+        return mesh;
+    }
+
+    // TORSE
+    const torso = new THREE.Group();
+    torso.position.y = 1.75;
+    player.add(torso);
+    playerParts.body = torso;
+
+    box(0.85, 1.05, 0.45, shirt, 0, 0, 0, torso);
+
+    // COLLIER
+    const necklace = new THREE.Mesh(
+        new THREE.TorusGeometry(0.19, 0.025, 8, 32),
+        yellow
+    );
+    necklace.position.set(0, 0.32, 0.235);
+    necklace.rotation.x = Math.PI / 2;
+    torso.add(necklace);
+
+    sphere(0.055, yellow, 0, 0.12, 0.29, torso);
+
+    // TÊTE
+    const head = new THREE.Group();
+    head.position.set(0, 2.65, 0);
+    player.add(head);
+    playerParts.head = head;
+
+    sphere(0.34, skin, 0, 0, 0, head);
+
+    // CHEVEUX BLONDS
+    sphere(0.36, hair, 0, 0.16, 0, head);
+    sphere(0.20, hair, -0.20, 0.20, 0.02, head);
+    sphere(0.20, hairDark, 0.18, 0.20, 0.02, head);
+    box(0.55, 0.13, 0.42, hair, 0, 0.29, 0.02, head);
+
+    // LUNETTES SUR LA TÊTE
+    box(0.48, 0.07, 0.13, black, 0, 0.39, 0.18, head);
+    box(0.18, 0.09, 0.14, blue, -0.13, 0.39, 0.23, head);
+    box(0.18, 0.09, 0.14, blue, 0.13, 0.39, 0.23, head);
+
+    // BRAS
+    for (const side of [-1, 1]) {
+        const arm = new THREE.Group();
+        arm.position.set(side * 0.49, 2.18, 0);
+        player.add(arm);
+
+        sphere(0.15, skin, 0, -0.18, 0, arm);
+        box(0.23, 0.43, 0.25, skin, 0, -0.22, 0, arm);
+
+        const elbow = new THREE.Group();
+        elbow.position.y = -0.43;
+        arm.add(elbow);
+
+        box(0.22, 0.38, 0.24, skin, 0, -0.19, 0, elbow);
+        sphere(0.13, skin, 0, -0.39, 0, elbow);
+
+        arm.userData.elbow = elbow;
+        playerParts.arms.push(arm);
+    }
+
+    // SHORT ROUGE ET JAUNE
+    for (const side of [-1, 1]) {
+        const leg = new THREE.Group();
+        leg.position.set(side * 0.23, 1.22, 0);
+        player.add(leg);
+
+        box(0.34, 0.38, 0.38, red, 0, -0.12, 0, leg);
+        box(0.34, 0.40, 0.38, skin, 0, -0.50, 0, leg);
+
+        const knee = new THREE.Group();
+        knee.position.y = -0.58;
+        leg.add(knee);
+
+        box(0.34, 0.12, 0.38, skin, 0, -0.10, 0, knee);
+
+        // SANDALE BLEUE
+        box(0.43, 0.12, 0.62, blue, 0, -0.27, -0.10, knee);
+        box(0.37, 0.07, 0.15, yellow, 0, -0.20, -0.34, knee);
+
+        leg.userData.knee = knee;
+        playerParts.legs.push(leg);
+    }
+
+    // DÉTAILS JAUNES DU SHORT
+    box(0.86, 0.12, 0.40, yellow, 0, 1.02, 0, player);
+
+    player.position.set(0, 0, 0);
+    scene.add(player);
+}
 function createPlayer() {
+    if (equippedSkin === "blond_boy") {
+        createBlondBoy();
+        return;
+    }
     player = new THREE.Group();
 
     playerParts = {
