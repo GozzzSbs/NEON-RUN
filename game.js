@@ -915,7 +915,121 @@ building.add(roofBox);
 
             building.add(support);
         }
+// ======================================================
+// PANNEAUX PUBLICITAIRES NEON RUN
+// ======================================================
 
+const adColors = [0xff5a1f, 0x00d9ff, 0xff35c9];
+
+const adColor = adColors[
+    Math.floor(Math.random() * adColors.length)
+];
+
+// Fond du panneau
+const adPanel = new THREE.Mesh(
+    new THREE.BoxGeometry(4.5, 2.2, 0.25),
+    new THREE.MeshStandardMaterial({
+        color: 0x171717,
+        emissive: adColor,
+        emissiveIntensity: 0.5
+    })
+);
+
+adPanel.position.set(
+    0,
+    height / 2 - 5,
+    6.2
+);
+
+building.add(adPanel);
+
+// Texte NEON RUN
+const adCanvas = document.createElement("canvas");
+adCanvas.width = 512;
+adCanvas.height = 256;
+
+const ctx = adCanvas.getContext("2d");
+
+ctx.fillStyle = "#171717";
+ctx.fillRect(0, 0, 512, 256);
+
+ctx.font = "bold 76px Arial";
+ctx.textAlign = "center";
+ctx.fillStyle = "#ffffff";
+ctx.fillText("NEON RUN", 256, 115);
+
+ctx.font = "bold 38px Arial";
+ctx.fillStyle = "#ff6b24";
+ctx.fillText("3D STREET", 256, 180);
+
+const adTexture = new THREE.CanvasTexture(adCanvas);
+
+const adText = new THREE.Mesh(
+    new THREE.PlaneGeometry(4.2, 2),
+    new THREE.MeshBasicMaterial({
+        map: adTexture,
+        transparent: true
+    })
+);
+
+adText.position.set(0, height / 2 - 5, 6.34);
+
+building.add(adText);
+        // Bordure néon du panneau
+const adBorderMaterial = new THREE.MeshBasicMaterial({
+    color: adColor
+});
+
+// Haut
+const adTop = new THREE.Mesh(
+    new THREE.BoxGeometry(4.7, 0.12, 0.12),
+    adBorderMaterial
+);
+adTop.position.set(0, height / 2 - 3.85, 6.38);
+building.add(adTop);
+
+// Bas
+const adBottom = adTop.clone();
+adBottom.position.y = height / 2 - 6.15;
+building.add(adBottom);
+
+// Gauche
+const adLeft = new THREE.Mesh(
+    new THREE.BoxGeometry(0.12, 2.2, 0.12),
+    adBorderMaterial
+);
+adLeft.position.set(-2.3, height / 2 - 5, 6.38);
+building.add(adLeft);
+
+// Droite
+const adRight = adLeft.clone();
+adRight.position.x = 2.3;
+building.add(adRight);
+        // Slogan sous le panneau
+const sloganCanvas = document.createElement("canvas");
+sloganCanvas.width = 512;
+sloganCanvas.height = 128;
+
+const sloganCtx = sloganCanvas.getContext("2d");
+
+sloganCtx.clearRect(0, 0, 512, 128);
+sloganCtx.font = "bold 65px Arial";
+sloganCtx.textAlign = "center";
+sloganCtx.fillStyle = "#ff8a32";
+sloganCtx.fillText("RUN THE CITY", 256, 85);
+
+const sloganTexture = new THREE.CanvasTexture(sloganCanvas);
+
+const slogan = new THREE.Mesh(
+    new THREE.PlaneGeometry(4, 1),
+    new THREE.MeshBasicMaterial({
+        map: sloganTexture,
+        transparent: true
+    })
+);
+
+slogan.position.set(0, height / 2 - 7, 6.3);
+building.add(slogan);
         // ======================================================
         // ENSEIGNES LUMINEUSES
         // ======================================================
