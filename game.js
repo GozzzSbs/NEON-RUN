@@ -2231,7 +2231,7 @@ function moveObstacles() {
         if (obstacle.type === "train") {
 
             // ANCIENS TRAINS : mouvement habituel
-            obstacle.object.position.z += speed * 1.8;
+            obstacle.object.position.z += speed;
 
             const wheels = obstacle.object.userData.wheels || [];
 
