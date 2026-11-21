@@ -3734,6 +3734,7 @@ for (let row = 0; row <= rows; row++) {
             + 0.025 * Math.sin(u * Math.PI * 4 + v * Math.PI * 3) * v;
 
         vertices.push(x, y, z);
+        uvs.push(u, 1 - v);
     }
 }
 
@@ -3755,6 +3756,10 @@ geometry.setAttribute(
 );
 
 geometry.setIndex(indices);
+        geometry.setAttribute(
+    "uv",
+    new THREE.Float32BufferAttribute(uvs, 2)
+);
 geometry.computeVertexNormals();
 
         const material = new THREE.MeshStandardMaterial({
@@ -3775,19 +3780,9 @@ group.position.y = 0;
         logoCanvas.height = 256;
 
         const texture = new THREE.CanvasTexture(logoCanvas);
-
-        const logo = new THREE.Mesh(
-            new THREE.PlaneGeometry(0.75, 0.75),
-            new THREE.MeshBasicMaterial({
-                map: texture,
-                transparent: true,
-                side: THREE.DoubleSide
-            })
-        );
-
-        logo.position.z = 0.18;
-logo.position.y = 0.05;
-        group.add(logo);
+cloth.material.map = texture;
+cloth.material.needsUpdate = true;
+    
 
         // BADGE DE LA CAPE CERTIFIÉE
         let ring = null;
