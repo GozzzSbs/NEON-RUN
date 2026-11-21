@@ -3963,34 +3963,71 @@ function createCape() {
         badge.position.set(0, 1.35, 0.55);
         cape.add(badge);
 
-        // ANNEAU EXTÉRIEUR
-        const ringGroup = new THREE.Group();
+        // CONTOUR BLEU FESTONNÉ QUI TOURNE
+const ringGroup = new THREE.Group();
 
-        const ring = new THREE.Mesh(
-            new THREE.TorusGeometry(0.39, 0.035, 8, 64),
-            new THREE.MeshBasicMaterial({
-                color: 0x168cff
-            })
-        );
+const geometry = new THREE.BufferGeometry();
 
-        ringGroup.add(ring);
+const segments = 192;
+const bumps = 24;
+const vertices = [];
+const indices = [];
 
-        // REPÈRE BLEU POUR RENDRE LA ROTATION VISIBLE
-        const marker = new THREE.Mesh(
-            new THREE.SphereGeometry(0.055, 12, 12),
-            new THREE.MeshBasicMaterial({
-                color: 0x168cff
-            })
-        );
+for (let i = 0; i < segments; i++) {
+    const angle = (i / segments) * Math.PI * 2;
 
-        marker.position.set(0, 0.39, 0);
-        ringGroup.add(marker);
+    const outerRadius = 0.245 + 0.012 * Math.cos(bumps * angle);
+    const innerRadius = 0.205;
 
-        ringGroup.position.set(0, 1.35, 0.56);
+    vertices.push(
+        Math.cos(angle) * outerRadius,
+        Math.sin(angle) * outerRadius,
+        0
+    );
 
-        cape.add(ringGroup);
+    vertices.push(
+        Math.cos(angle) * innerRadius,
+        Math.sin(angle) * innerRadius,
+        0
+    );
 
-        cape.userData.badgeRing = ringGroup;
+    const next = (i + 1) % segments;
+
+    indices.push(
+        i * 2,
+        next * 2,
+        i * 2 + 1
+    );
+
+    indices.push(
+        next * 2,
+        next * 2 + 1,
+        i * 2 + 1
+    );
+}
+
+geometry.setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(vertices, 3)
+);
+
+geometry.setIndex(indices);
+geometry.computeVertexNormals();
+
+const lace = new THREE.Mesh(
+    geometry,
+    new THREE.MeshBasicMaterial({
+        color: 0x168cff,
+        side: THREE.DoubleSide
+    })
+);
+
+ringGroup.add(lace);
+
+ringGroup.position.set(0, 1.35, 0.56);
+cape.add(ringGroup);
+
+cape.userData.badgeRing = ringGroup;
         cape.userData.badgeTexture = badgeTexture;
     }
 
