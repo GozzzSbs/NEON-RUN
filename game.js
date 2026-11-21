@@ -1403,45 +1403,98 @@ function createBarrier(laneIndex, z) {
 // ======================================================
 
 function createCoin(laneIndex, z, height = 1.3, onTrain = false, train = null) {
+
     const coin = new THREE.Group();
 
+    // MATÉRIAU DORÉ
     const goldMaterial = new THREE.MeshStandardMaterial({
-        color: 0xffd52a,
-        metalness: 0.8,
-        roughness: 0.2,
+        color: 0xffc928,
+        metalness: 0.9,
+        roughness: 0.18,
         emissive: 0xff9900,
-        emissiveIntensity: 0.8
+        emissiveIntensity: 0.35
     });
 
-    const coinRing = new THREE.Mesh(
-        new THREE.TorusGeometry(0.4, 0.12, 12, 24),
+    // PIÈCE PRINCIPALE
+    const coinBody = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.48, 0.48, 0.12, 48),
         goldMaterial
+    );
+
+    coinBody.rotation.x = Math.PI / 2;
+    coin.add(coinBody);
+
+    // BORDURE DE LA PIÈCE
+    const coinRing = new THREE.Mesh(
+        new THREE.TorusGeometry(0.4, 0.055, 12, 48),
+        new THREE.MeshStandardMaterial({
+            color: 0xffed91,
+            metalness: 1,
+            roughness: 0.15,
+            emissive: 0xffb700,
+            emissiveIntensity: 0.5
+        })
     );
 
     coin.add(coinRing);
 
-    const center = new THREE.Mesh(
-        new THREE.SphereGeometry(0.15, 12, 12),
-        mat(0xffffff, 0xffcc00, 1.5)
+    // TEXTE NR
+    const canvas = document.createElement("canvas");
+    canvas.width = 256;
+    canvas.height = 256;
+
+    const ctx = canvas.getContext("2d");
+
+    ctx.clearRect(0, 0, 256, 256);
+
+    ctx.font = "bold 105px Arial Black";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    ctx.lineWidth = 8;
+    ctx.strokeStyle = "#9b5700";
+    ctx.strokeText("NR", 128, 128);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("NR", 128, 128);
+
+    const nrTexture = new THREE.CanvasTexture(canvas);
+
+    const nrText = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.65, 0.65),
+        new THREE.MeshBasicMaterial({
+            map: nrTexture,
+            transparent: true,
+            side: THREE.DoubleSide
+        })
     );
 
-    coin.add(center);
+    nrText.position.z = 0.075;
+    coin.add(nrText);
 
+    // POSITION DE LA PIÈCE
     coin.userData.onTrain = onTrain;
 
-if (onTrain && train) {
-    coin.position.set(
-        0,
-        height - train.position.y,
-        z - train.position.z
-    );
-    train.add(coin);
-} else {
-    coin.position.set(lanePositions[laneIndex], height, z);
-    scene.add(coin);
-}
+    if (onTrain && train) {
+        coin.position.set(
+            0,
+            height - train.position.y,
+            z - train.position.z
+        );
 
-coinObjects.push(coin);
+        train.add(coin);
+
+    } else {
+        coin.position.set(
+            lanePositions[laneIndex],
+            height,
+            z
+        );
+
+        scene.add(coin);
+    }
+
+    coinObjects.push(coin);
 }
 
 // ======================================================
