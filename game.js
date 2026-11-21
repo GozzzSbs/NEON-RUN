@@ -4364,7 +4364,7 @@ function createCape() {
     const cape = new THREE.Group();
 
 if (equippedSkin === "blond_boy") {
-    cape.scale.z = -1;
+    cape.position.z = -0.65;
 }
 if (equippedCape === "certified") {
     cape.position.z = 0.28;
