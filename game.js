@@ -3658,7 +3658,7 @@ function setupShopCapePreviews() {
         );
 
         shopPreviewCamera.position.set(0, 0, 2.7);
-
+shopPreviewCamera.lookAt(0, 0.15, 0);
         shopPreviewScene.add(
             new THREE.AmbientLight(0xffffff, 1.5)
         );
