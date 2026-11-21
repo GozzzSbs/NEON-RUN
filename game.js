@@ -4943,6 +4943,28 @@ function renderPass() {
         container.appendChild(card);
     }
 }
+function addPassXP(amount) {
+    if (passLevel >= 100) return;
+
+    passXP += amount;
+
+    while (passXP >= 100 && passLevel < 100) {
+        passXP -= 100;
+        passLevel++;
+    }
+
+    if (passLevel >= 100) {
+        passLevel = 100;
+        passXP = 0;
+    }
+
+    localStorage.setItem("neonPassLevel", passLevel);
+    localStorage.setItem("neonPassXP", passXP);
+
+    if (document.getElementById("neonPass")?.style.display === "block") {
+        renderPass();
+    }
+}
 function claimPassReward(level) {
     if (level > passLevel || level < 1 || level > 100) return;
     if (claimedPassRewards.includes(level)) return;
