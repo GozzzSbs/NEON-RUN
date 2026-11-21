@@ -2931,8 +2931,17 @@ const SHOP_CATALOG = {
         currency: "diamonds",
         color: 0xffffff,
         description: "Cape blanche animée : RXN noir et lune noir."
+    },
+    {
+        id: "certified",
+        name: "CAPE CERTIFIÉE",
+        price: 0,
+        currency: "diamonds",
+        color: 0xffffff,
+        exclusive: true,
+        description: "Cape exclusive avec badge certifié animé."
     }
-    ]
+]
 };
 
 // ======================================================
