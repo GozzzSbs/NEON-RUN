@@ -1268,8 +1268,8 @@ function createStationaryTrain(laneIndex, z) {
         rampMaterial
     );
 
-    ramp.position.set(0, 1.85, 8.5);
-    ramp.rotation.x = -0.55;
+    ramp.position.set(0, 1.85, -8.5);
+    ramp.rotation.x = 0.55;
     train.add(ramp);
 
     // BANDES LUMINEUSES SUR LA RAMPE
