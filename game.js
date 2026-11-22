@@ -1741,35 +1741,58 @@ function createTunnel(laneIndex, z) {
         metal, width / 2, height / 2, 0, tunnel);
 
     // CADRES LUMINEUX RÉPÉTÉS
-    for (let zPos = -30; zPos <= 30; zPos += 7) {
+for (let zPos = -30; zPos <= 30; zPos += 7) {
 
-        // Montants verticaux
-        for (const side of [-1, 1]) {
-            box(0.13, height, 0.18,
-                cyan, side * (width / 2 - 0.3),
-                height / 2, zPos, tunnel);
-        }
-
-        // Barre transversale au plafond
-        box(width - 0.5, 0.13, 0.18,
-            purple, 0, height - 0.35, zPos, tunnel);
-    }
-
-    // BANDES LED SUR LES MURS
+    // Montants verticaux
     for (const side of [-1, 1]) {
-        box(0.08, 0.12, length,
+        box(0.13, height, 0.18,
             cyan, side * (width / 2 - 0.3),
-            1.1, 0, tunnel);
-
-        box(0.08, 0.12, length,
-            pink, side * (width / 2 - 0.3),
-            2.8, 0, tunnel);
-
-        box(0.08, 0.12, length,
-            purple, side * (width / 2 - 0.3),
-            4.5, 0, tunnel);
+            height / 2, zPos, tunnel);
     }
 
+    // Barre transversale au plafond
+    box(width - 0.5, 0.13, 0.18,
+        purple, 0, height - 0.35, zPos, tunnel);
+}
+
+// ANNEAUX LED INTÉRIEURS
+tunnel.userData.ledRings = [];
+
+for (let zPos = -28; zPos <= 28; zPos += 8) {
+    const ring = new THREE.Group();
+
+    const ringColor = mat(0x00eaff, 0x00eaff, 3);
+
+    // Barre supérieure
+    box(6.8, 0.12, 0.12,
+        ringColor, 0, 4.9, 0, ring);
+
+    // Barres latérales
+    for (const side of [-1, 1]) {
+        box(0.12, 4.8, 0.12,
+            ringColor, side * 3.4, 2.5, 0, ring);
+    }
+
+    ring.position.z = zPos;
+    tunnel.add(ring);
+
+    tunnel.userData.ledRings.push(ring);
+}
+
+// BANDES LED SUR LES MURS
+for (const side of [-1, 1]) {
+    box(0.08, 0.12, length,
+        cyan, side * (width / 2 - 0.3),
+        1.1, 0, tunnel);
+
+    box(0.08, 0.12, length,
+        pink, side * (width / 2 - 0.3),
+        2.8, 0, tunnel);
+
+    box(0.08, 0.12, length,
+        purple, side * (width / 2 - 0.3),
+        4.5, 0, tunnel);
+}
     // LIGNES LED AU PLAFOND
     for (let x = -3; x <= 3; x += 2) {
         box(0.12, 0.08, length,
