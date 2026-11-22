@@ -386,7 +386,7 @@ const floor = new THREE.Mesh(
 );
 
 floor.rotation.x = -Math.PI / 2;
-floor.position.set(0, -0.48, -100);
+floor.position.set(0, -0.50, -100);
 scene.add(floor);
 
 // ======================================================
