@@ -4906,9 +4906,18 @@ ctx.restore();
         cape.userData.logoTexture = texture;
     }
 
-    player.add(cape);
+    const bones = player.userData.streetKingBones;
 
-    shopCapeObject = cape;
+if (equippedSkin === "street_king" && bones && bones.chest) {
+    bones.chest.add(cape);
+
+    // Position de la cape sur le dos
+    cape.position.set(0, 0.08, -0.18);
+} else {
+    player.add(cape);
+}
+
+shopCapeObject = cape;
 
     shopCapeObject.userData.cloth = cloth;
     shopCapeObject.userData.capeId = equippedCape;
