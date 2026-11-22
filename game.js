@@ -1007,13 +1007,8 @@ for (const side of [-1, 1]) {
 // PERSONNAGE 3D - STYLE CARTOON RÉALISTE
 // ======================================================
 function createGLBCharacter(fileName, skinKey) {
-
-    if (player && player.parent) {
-        player.parent.remove(player);
-    }
-
     player = new THREE.Group();
-const character = player;
+
     playerParts = {
         arms: [],
         legs: [],
@@ -1046,8 +1041,8 @@ const character = player;
                 }
             });
 
-            character.userData[skinKey + "Bones"] = bones;
-character.userData[skinKey + "Model"] = model;
+            player.userData[skinKey + "Bones"] = bones;
+            player.userData[skinKey + "Model"] = model;
 
             console.log("SQUELETTE " + skinKey + " :", Object.keys(bones));
 
@@ -1062,7 +1057,7 @@ character.userData[skinKey + "Model"] = model;
 
             model.position.x -= center.x;
             model.position.z -= center.z;
-            model.position.y -= scaledBox.min.y;
+            model.position.y -= scaledBox.min.y - 0.03;
 
             model.traverse(function (child) {
                 if (child.isMesh) {
@@ -1071,7 +1066,7 @@ character.userData[skinKey + "Model"] = model;
                 }
             });
 
-            character.add(model);
+            player.add(model);
 
             console.log(skinKey + " GLB CHARGÉ !");
         },
@@ -1086,7 +1081,7 @@ character.userData[skinKey + "Model"] = model;
    player.rotation.y = Math.PI;
 player.position.set(0, 0, 0);
 
-    scene.add(character);
+    scene.add(player);
 }
 
 function createStreetKing() {
@@ -1100,12 +1095,6 @@ function createJacko() {
     createGLBCharacter("grab3d-cozy-character%20(2).glb", "jacko");
 }
 function createPlayer() {
-
-    // SUPPRIMER L'ANCIEN PERSONNAGE
-    if (player && player.parent) {
-        player.parent.remove(player);
-    }
-
     player = new THREE.Group();
 
 if (equippedSkin === "street_king") {
