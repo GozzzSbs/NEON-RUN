@@ -3060,6 +3060,7 @@ console.log("PLAYER PARTS :", playerParts);
 if (!player || !playerParts ||
     (equippedSkin !== "street_king" &&
      equippedSkin !== "astronaut" &&
+     equippedSkin !== "default" &&
      !playerParts.body)) {
     console.error("ERREUR : le personnage n'est pas correctement initialisé !");
     return;
