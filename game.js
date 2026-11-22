@@ -1016,171 +1016,53 @@ function createStreetKing() {
         head: null
     };
 
-    const black = mat(0x171717);
-    const dark = mat(0x090909);
-    const white = mat(0xffffff);
-    const skin = mat(0xc98760);
-    const grey = mat(0x777777);
-    const pantsMat = mat(0x252525);
+    const loader = new THREE.GLTFLoader();
 
-    function sphere(parent, material, x, y, z, sx, sy, sz) {
-        const mesh = new THREE.Mesh(
-            new THREE.SphereGeometry(1, 24, 20),
-            material
-        );
-        mesh.position.set(x, y, z);
-        mesh.scale.set(sx, sy, sz);
-        mesh.castShadow = true;
-        parent.add(mesh);
-        return mesh;
-    }
+    loader.load(
+        "grab3d-cozy-characters.glb",
 
-    function limb(parent, material, radius, height, x, y, z) {
-        const mesh = new THREE.Mesh(
-            new THREE.CylinderGeometry(radius * 0.9, radius, height, 16),
-            material
-        );
-        mesh.position.set(x, y, z);
-        parent.add(mesh);
+        function (gltf) {
+            const model = gltf.scene;
 
-        sphere(parent, material, x, y + height / 2, z,
-            radius, radius, radius);
+            // Calculer la taille du modèle
+            const box = new THREE.Box3().setFromObject(model);
+            const size = box.getSize(new THREE.Vector3());
 
-        sphere(parent, material, x, y - height / 2, z,
-            radius, radius, radius);
-    }
+            // Ajuster la hauteur à 3 unités
+            const scale = 3 / size.y;
+            model.scale.setScalar(scale);
 
-    // CORPS : HOODIE
-    const torso = new THREE.Group();
-    torso.position.y = 1.75;
-    player.add(torso);
-    playerParts.body = torso;
+            // Recentrer le personnage au sol
+            const scaledBox = new THREE.Box3().setFromObject(model);
+            const center = scaledBox.getCenter(new THREE.Vector3());
 
-    sphere(torso, black, 0, 0, 0, 0.49, 0.68, 0.31);
+            model.position.x -= center.x;
+            model.position.z -= center.z;
+            model.position.y -= scaledBox.min.y;
 
-    // Poche du hoodie
-    sphere(torso, dark, 0, -0.28, 0.27, 0.29, 0.15, 0.055);
+            // Activer les ombres
+            model.traverse(function (child) {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            });
 
-    // Motif blanc
-    sphere(torso, white, 0.25, 0.15, 0.27, 0.055, 0.13, 0.025);
+            player.add(model);
 
-    // Chaîne argentée
-    const chain = new THREE.Mesh(
-        new THREE.TorusGeometry(0.19, 0.018, 8, 32, Math.PI),
-        grey
+            console.log("STREET KING GLB CHARGÉ !");
+        },
+
+        undefined,
+
+        function (error) {
+            console.error("ERREUR CHARGEMENT STREET KING :", error);
+        }
     );
-    chain.position.set(0, 0.45, 0.25);
-    chain.rotation.z = Math.PI;
-    torso.add(chain);
-
-    // TÊTE
-    const head = new THREE.Group();
-    head.position.set(0, 2.65, 0);
-    player.add(head);
-    playerParts.head = head;
-
-    sphere(head, skin, 0, 0, 0, 0.34, 0.42, 0.3);
-
-    // Cheveux
-    sphere(head, dark, 0, 0.25, -0.04, 0.35, 0.24, 0.31);
-
-    // Yeux
-    for (const side of [-1, 1]) {
-        sphere(head, white, side * 0.12, 0.04, 0.265,
-            0.065, 0.08, 0.035);
-        sphere(head, dark, side * 0.12, 0.04, 0.30,
-            0.027, 0.04, 0.018);
-    }
-
-    // CASQUETTE STREETWEAR À L'ENVERS
-
-// Couronne de la casquette
-sphere(
-    head, black,
-    0, 0.37, -0.06,
-    0.38, 0.17, 0.35
-);
-
-// Visière arrière bien visible
-sphere(
-    head, mat(0x303030),
-    0, 0.32, -0.39,
-    0.34, 0.055, 0.25
-);
-
-// Bande blanche de la casquette
-sphere(
-    head, white,
-    0, 0.27, -0.12,
-    0.29, 0.025, 0.025
-);
-
-// Logo blanc sur la casquette
-sphere(
-    head, white,
-    0, 0.43, -0.385,
-    0.09, 0.065, 0.025
-);
-
-// Petit bouton au sommet
-sphere(
-    head, grey,
-    0, 0.535, -0.04,
-    0.055, 0.025, 0.055
-);
-
-    // BRAS
-    for (const side of [-1, 1]) {
-        const arm = new THREE.Group();
-        arm.position.set(side * 0.49, 2.18, 0);
-        player.add(arm);
-
-        limb(arm, black, 0.15, 0.46, 0, -0.23, 0);
-
-        const elbow = new THREE.Group();
-        elbow.position.y = -0.46;
-        arm.add(elbow);
-
-        limb(elbow, black, 0.13, 0.4, 0, -0.2, 0);
-
-        sphere(elbow, skin, 0, -0.44, 0,
-            0.13, 0.13, 0.13);
-
-        arm.userData.elbow = elbow;
-        playerParts.arms.push(arm);
-    }
-
-    // JAMBES : CARGO
-    for (const side of [-1, 1]) {
-        const leg = new THREE.Group();
-        leg.position.set(side * 0.23, 1.22, 0);
-        player.add(leg);
-
-        limb(leg, pantsMat, 0.17, 0.55, 0, -0.28, 0);
-
-        // Poche cargo
-        sphere(leg, dark, side * 0.13, -0.3, 0.13,
-            0.09, 0.13, 0.08);
-
-        const knee = new THREE.Group();
-        knee.position.y = -0.55;
-        leg.add(knee);
-
-        limb(knee, pantsMat, 0.15, 0.4, 0, -0.19, 0);
-
-        // BASKET
-        sphere(knee, black, 0, -0.44, 0.1,
-            0.23, 0.13, 0.34);
-
-        sphere(knee, white, 0, -0.52, 0.1,
-            0.23, 0.045, 0.34);
-
-        leg.userData.knee = knee;
-        playerParts.legs.push(leg);
-    }
 
     player.rotation.y = Math.PI;
     player.position.set(0, 0, 0);
+
     scene.add(player);
 }
 function createPlayer() {
