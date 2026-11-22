@@ -1023,6 +1023,17 @@ function createStreetKing() {
 
         function (gltf) {
             const model = gltf.scene;
+            const bones = {};
+
+model.traverse(function (child) {
+    if (child.isSkinnedMesh) {
+        child.skeleton.bones.forEach(function (bone) {
+            bones[bone.name] = bone;
+        });
+    }
+});
+
+player.userData.streetKingBones = bones;
             model.traverse(function (child) {
     if (child.isSkinnedMesh) {
         console.log("SQUELETTE GLB :", child.skeleton.bones.map(b => b.name));
