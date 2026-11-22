@@ -1100,6 +1100,12 @@ function createJacko() {
     createGLBCharacter("grab3d-cozy-character%20(2).glb", "jacko");
 }
 function createPlayer() {
+
+    // SUPPRIMER L'ANCIEN PERSONNAGE
+    if (player && player.parent) {
+        player.parent.remove(player);
+    }
+
     player = new THREE.Group();
 
 if (equippedSkin === "street_king") {
