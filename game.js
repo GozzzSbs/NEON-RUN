@@ -4919,6 +4919,10 @@ if (oldCanvas && !oldCanvas.isConnected) {
 if (currentShopTab === "capes") {
     setupShopCapePreviews();
 }
+
+if (currentShopTab === "skins") {
+    setupShopSkinPreviews();
+}
 }
 
 // ======================================================
