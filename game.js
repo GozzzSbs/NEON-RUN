@@ -4912,7 +4912,7 @@ if (equippedSkin === "street_king" && bones && bones.chest) {
    bones.chest.add(cape);
 
 // Position et taille de la cape
-cape.position.set(0, -0.48, -0.18);
+cape.position.set(0, -0.35, -0.18);
 cape.scale.set(0.35, 0.22, 0.35);
 } else {
     player.add(cape);
