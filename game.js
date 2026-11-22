@@ -4624,7 +4624,7 @@ function createCape() {
     if (!player) return;
 
     if (shopCapeObject) {
-        player.remove(shopCapeObject);
+        shopCapeObject.parent.remove(shopCapeObject);
 
         shopCapeObject.traverse(object => {
             if (object.geometry) object.geometry.dispose();
