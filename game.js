@@ -3205,6 +3205,14 @@ const SHOP_CATALOG = {
             description: "Le style streetwear ultime."
         },
         {
+            id: "astronaut",
+            name: "ASTRONAUT",
+            price: 600,
+            currency: "diamonds",
+            color: 0xffffff,
+            description: "Un runner venu de l'espace."
+        },
+        {
             id: "el_blackito",
             name: "EL BLACKITO",
             price: 10,
