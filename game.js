@@ -2032,8 +2032,6 @@ const patterns = [
 
     "slides", "slides",
 
-    "tunnel", "tunnel", "tunnel",
-
     "arc",
 
     "coinZigzag",
