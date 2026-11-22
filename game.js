@@ -4737,7 +4737,7 @@ function animateCape() {
     const time = performance.now() * 0.001;
 
     shopCapeObject.rotation.z = Math.sin(time * 4) * 0.045;
-    shopCapeObject.rotation.x = Math.sin(time * 3) * 0.035;
+    shopCapeObject.rotation.x = -0.10 + Math.sin(time * 3) * 0.02;
 // ROTATION LENTE DE L'ANNEAU CERTIFIÉ
 if (shopCapeObject.userData.badgeRing) {
     shopCapeObject.userData.badgeRing.rotation.z = time * 1.2;
