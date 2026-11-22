@@ -1070,7 +1070,7 @@ function createGLBCharacter(fileName, skinKey) {
         }
     );
 
-    player.rotation.y = skinKey === "jacko" ? 0 : Math.PI;
+    player.rotation.y = skinKey === "jacko" ? Math.PI : Math.PI;
     player.position.set(0, 0, 0);
 
     scene.add(player);
