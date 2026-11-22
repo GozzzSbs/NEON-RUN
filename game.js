@@ -4717,9 +4717,10 @@ container.innerHTML = "";
         }
 
         card.innerHTML = `
-            <div class="neon-shop-preview" data-cape-id="${isSkin ? "" : item.id}">
-                ${isSkin ? "🧑" : ""}
-            </div>
+            <div class="neon-shop-preview"
+     data-preview-type="${isSkin ? "skin" : "cape"}"
+     data-preview-id="${item.id}">
+</div>
 
             <h3>${item.name}</h3>
 
