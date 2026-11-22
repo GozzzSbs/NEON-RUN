@@ -4654,7 +4654,7 @@ if (equippedCape === "certified") {
     cape.position.z = -0.10;
 }
     if (equippedCape === "rxn_white") {
-        cape.position.z = -0.10;
+        cape.position.z = 0.10;
     }
 
     // TISSU
