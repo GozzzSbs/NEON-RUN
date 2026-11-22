@@ -4573,7 +4573,7 @@ if (equippedCape === "certified") {
             })
         );
 
-        badge.position.set(0, 1.35, 0.55);
+        badge.position.set(0, 1.35, -0.55);
         cape.add(badge);
 
         // CONTOUR BLEU FESTONNÉ QUI TOURNE
@@ -4637,7 +4637,7 @@ const lace = new THREE.Mesh(
 
 ringGroup.add(lace);
 
-ringGroup.position.set(0, 1.35, 0.56);
+ringGroup.position.set(0, 1.35, -0.56);
 cape.add(ringGroup);
 
 cape.userData.badgeRing = ringGroup;
@@ -4708,7 +4708,7 @@ cape.userData.badgeRing = ringGroup;
             logoMaterial
         );
 
-        logo.position.set(0, 1.35, 0.52);
+        logo.position.set(0, 1.35, -0.52);
         cape.add(logo);
 
         cape.userData.drawCapeLogo = drawCapeLogo;
