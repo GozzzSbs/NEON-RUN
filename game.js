@@ -2369,7 +2369,7 @@ function animateRunner() {
             model.position.y = bounce * 0.055;
 
             if (bones) {
-                const run = swing * 0.40;
+                const run = swing * 0.55;
                 const armSwing = swing * 0.65;
 
                 // BRAS GAUCHE
