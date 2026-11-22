@@ -2047,7 +2047,10 @@ if (trainSpawned && Math.random() < 0.5) {
         createCoin(safeLane, -65 - i * 3);
     }
 }
-const patterns = [0, 1, 1, 1, 1, 1, 2, 3, 3, 3, 4, 4, 5, 5];
+const patterns = [
+    0, 1, 1, 1, 1, 1, 2, 3, 3, 3, 4, 4, 5, 5,
+    6
+];
 const pattern = patterns[Math.floor(Math.random() * patterns.length)];
 
     // 1. DOUBLE RANGÉE
@@ -2089,7 +2092,14 @@ if (pattern === 5) {
     if (laneA !== laneIndex) {
         createCoin(laneA, -65 - i * 3);
     }
-
+// 6. FORMATION RARE : 3 LIGNES DE PIÈCES
+if (pattern === 6) {
+    for (let i = 0; i < 5; i++) {
+        createCoin(0, -65 - i * 3);
+        createCoin(1, -65 - i * 3);
+        createCoin(2, -65 - i * 3);
+    }
+}
     if (laneB !== laneIndex) {
         createCoin(laneB, -65 - i * 3);
     }
