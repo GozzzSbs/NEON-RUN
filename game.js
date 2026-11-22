@@ -4688,14 +4688,7 @@ function createCape() {
     }
 
     const cape = new THREE.Group();
-    // CORRECTION ORIENTATION DES CAPES SUR LES PERSONNAGES GLB
-if (
-    equippedSkin === "street_king" ||
-    equippedSkin === "astronaut" ||
-    equippedSkin === "default"
-) {
-    cape.rotation.y = Math.PI;
-}
+
     cape.position.set(0, 0, 0);
     cape.scale.set(1, 0.85, 1);
 if (equippedCape === "certified") {
