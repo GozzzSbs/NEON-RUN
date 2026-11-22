@@ -4544,7 +4544,8 @@ if (equippedCape === "certified") {
         badgeCanvas.height = 256;
 
         const ctx = badgeCanvas.getContext("2d");
-
+ctx.translate(256, 0);
+ctx.scale(-1, 1);
         ctx.fillStyle = "#1DA1F2";
         ctx.beginPath();
         ctx.arc(128, 128, 105, 0, Math.PI * 2);
@@ -4560,7 +4561,7 @@ if (equippedCape === "certified") {
         ctx.lineTo(110, 166);
         ctx.lineTo(185, 85);
         ctx.stroke();
-
+ctx.restore();
         const badgeTexture = new THREE.CanvasTexture(badgeCanvas);
 
         const badge = new THREE.Mesh(
