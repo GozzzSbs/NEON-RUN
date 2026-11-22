@@ -2354,10 +2354,7 @@ if (pattern === "jumps") {
 // VRAIS TUNNELS FUTURISTES
 // =====================================
 
-if (pattern === "tunnel") {
-    createTunnel(1, -115);
-    return;
-}
+
 
 // =====================================
 // PIÈCES EN ARC
