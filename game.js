@@ -2109,7 +2109,7 @@ if (pattern === 5) {
 
 // 6. FORMATION RARE : 3 LIGNES DE PIÈCES
 if (pattern === 6) {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 8; i++) {
         createCoin(0, -65 - i * 3);
         createCoin(1, -65 - i * 3);
         createCoin(2, -65 - i * 3);
