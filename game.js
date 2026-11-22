@@ -2015,117 +2015,187 @@ function isPlayerAboveLavaPlatform() {
 function spawnObjects() {
     const laneIndex = Math.floor(Math.random() * 3);
 
-    // Obstacles actuels : on ne change rien
-    const trainSpawned = Math.random() < 0.55;
+    // CHOIX DU PARCOURS
+    const patterns = [
+        "single", "single",
+        "double", "double",
+        "slalom", "slalom",
+        "sequence", "mixed"
+    ];
 
-let spawnedTrain = null;
+    const pattern = patterns[Math.floor(Math.random() * patterns.length)];
 
-if (trainSpawned) {
-    spawnedTrain = createTrain(laneIndex, -115);
-} else {
-    createBarrier(laneIndex, -105);
-}
-
-    if (selectedMode === "lava") return;
-// PIÈCES SUR LE TOIT DU TRAIN
-if (trainSpawned) {
-    const coinCount = 3 + Math.floor(Math.random() * 6);
-
-    for (let i = 0; i < coinCount; i++) {
-        createCoin(laneIndex, -110 - i * 2, 5.08, true, spawnedTrain);
+    // FONCTION POUR CRÉER UN OBSTACLE
+    function createRandomObstacle(lane, z) {
+        if (Math.random() < 0.55) {
+            return createTrain(lane, z);
+        } else {
+            createBarrier(lane, z);
+            return null;
+        }
     }
-}
-const possibleLanes = [0, 1, 2].filter(l => l !== laneIndex);
 
-const laneA = possibleLanes[0];
-const laneB = possibleLanes[1];
-// PIÈCES SUR LA VOIE LIBRE
-if (trainSpawned && Math.random() < 0.5) {
-    const safeLane = possibleLanes[Math.floor(Math.random() * 2)];
+    // PARCOURS SIMPLE
+    if (pattern === "single") {
+        const trainSpawned = Math.random() < 0.55;
+        let spawnedTrain = null;
 
-    for (let i = 0; i < 4; i++) {
-        createCoin(safeLane, -65 - i * 3);
+        if (trainSpawned) {
+            spawnedTrain = createTrain(laneIndex, -115);
+        } else {
+            createBarrier(laneIndex, -105);
+        }
+
+        if (selectedMode === "lava") return;
+
+        if (spawnedTrain) {
+            const coinCount = 3 + Math.floor(Math.random() * 6);
+
+            for (let i = 0; i < coinCount; i++) {
+                createCoin(laneIndex, -110 - i * 2, 5.08, true, spawnedTrain);
+            }
+        }
+
+        const possibleLanes = [0, 1, 2].filter(l => l !== laneIndex);
+        const laneA = possibleLanes[0];
+        const laneB = possibleLanes[1];
+
+        if (trainSpawned && Math.random() < 0.5) {
+            const safeLane = possibleLanes[Math.floor(Math.random() * 2)];
+
+            for (let i = 0; i < 4; i++) {
+                createCoin(safeLane, -65 - i * 3);
+            }
+        }
+
+        const coinPatterns = [0, 1, 1, 1, 1, 1, 2, 3, 3, 3, 4, 4, 5, 5, 6];
+        const coinPattern = coinPatterns[Math.floor(Math.random() * coinPatterns.length)];
+
+        if (coinPattern === 0) {
+            for (let i = 0; i < 6; i++) {
+                createCoin(laneA, -65 - i * 3);
+                createCoin(laneB, -65 - i * 3);
+            }
+        }
+
+        if (coinPattern === 1) {
+            const zigzag = [0, 1, 2, 1, 0, 1, 2, 1, 0, 1];
+
+            for (let i = 0; i < zigzag.length; i++) {
+                if (zigzag[i] !== laneIndex) {
+                    createCoin(zigzag[i], -65 - i * 3);
+                }
+            }
+        }
+
+        if (coinPattern === 2) {
+            for (let i = 0; i < 9; i++) {
+                createCoin(laneA, -65 - i * 3);
+                createCoin(laneB, -65 - i * 3);
+            }
+        }
+
+        if (coinPattern === 3) {
+            for (let i = 0; i < 4; i++) {
+                createCoin(laneA, -65 - i * 3);
+            }
+
+            for (let i = 0; i < 9; i++) {
+                createCoin(laneB, -65 - i * 3);
+            }
+        }
+
+        if (coinPattern === 4) {
+            for (let i = 0; i < 8; i++) {
+                createCoin(i % 2 === 0 ? laneA : laneB, -65 - i * 3);
+            }
+        }
+
+        if (coinPattern === 5) {
+            for (let i = 0; i < 4; i++) {
+                createCoin(laneA, -65 - i * 3);
+                createCoin(laneB, -65 - i * 3);
+            }
+
+            if (laneIndex !== 1) {
+                for (let i = 0; i < 4; i++) {
+                    createCoin(1, -77 - i * 3);
+                }
+            }
+        }
+
+        if (coinPattern === 6) {
+            for (let i = 0; i < 8; i++) {
+                createCoin(0, -65 - i * 3);
+                createCoin(1, -65 - i * 3);
+                createCoin(2, -65 - i * 3);
+            }
+        }
+
+        return;
     }
-}
-const patterns = [
-    0, 1, 1, 1, 1, 1, 2, 3, 3, 3, 4, 4, 5, 5,
-    6
-];
-const pattern = patterns[Math.floor(Math.random() * patterns.length)];
 
-    // 1. DOUBLE RANGÉE
-    if (pattern === 0) {
+    // MODE LAVE : ON GARDE UN OBSTACLE À LA FOIS
+    if (selectedMode === "lava") {
+        createBarrier(laneIndex, -105);
+        return;
+    }
+
+    // DEUX VOIES BLOQUÉES, UNE LIBRE
+    if (pattern === "double") {
+        const freeLane = laneIndex;
+        const blockedLanes = [0, 1, 2].filter(l => l !== freeLane);
+
+        createRandomObstacle(blockedLanes[0], -105);
+        createRandomObstacle(blockedLanes[1], -105);
+
+        for (let i = 0; i < 5; i++) {
+            createCoin(freeLane, -65 - i * 3);
+        }
+
+        return;
+    }
+
+    // SLALOM
+    if (pattern === "slalom") {
+        const lanes = [0, 1, 2];
+
+        const firstLane = Math.floor(Math.random() * 3);
+        const secondLane = (firstLane + 1) % 3;
+        const thirdLane = (firstLane + 2) % 3;
+
+        createRandomObstacle(firstLane, -105);
+        createRandomObstacle(secondLane, -145);
+        createRandomObstacle(thirdLane, -185);
+
+        return;
+    }
+
+    // ENCHAÎNEMENT
+    if (pattern === "sequence") {
+        const firstLane = Math.floor(Math.random() * 3);
+        const secondLane = (firstLane + 1) % 3;
+        const thirdLane = (firstLane + 2) % 3;
+
+        createRandomObstacle(firstLane, -105);
+        createRandomObstacle(secondLane, -165);
+        createRandomObstacle(firstLane, -225);
+
+        return;
+    }
+
+    // PARCOURS MIXTE
+    if (pattern === "mixed") {
+        const firstLane = Math.floor(Math.random() * 3);
+        const secondLane = (firstLane + 2) % 3;
+
+        createTrain(firstLane, -115);
+        createBarrier(secondLane, -175);
+
         for (let i = 0; i < 6; i++) {
-            createCoin(laneA, -65 - i * 3);
-            createCoin(laneB, -65 - i * 3);
+            createCoin(1, -65 - i * 3);
         }
     }
-
-    // 2. ZIGZAG SUR LES 3 VOIES
-if (pattern === 1) {
-    const zigzag = [0, 1, 2, 1, 0, 1, 2, 1, 0, 1];
-
-    for (let i = 0; i < zigzag.length; i++) {
-        if (zigzag[i] !== laneIndex) {
-            createCoin(zigzag[i], -65 - i * 3);
-        }
-    }
-}
-// ZIGZAG ENTRE DEUX VOIES
-if (pattern === 4) {
-    for (let i = 0; i < 8; i++) {
-        const lane = i % 2 === 0 ? laneA : laneB;
-        createCoin(lane, -65 - i * 3);
-    }
-}
-
-    // 3. TUNNEL DE PIÈCES
-    if (pattern === 2) {
-        for (let i = 0; i < 9; i++) {
-            createCoin(laneA, -65 - i * 3);
-            createCoin(laneB, -65 - i * 3);
-        }
-    }
-// 5. DEUX CHEMINS QUI REJOIGNENT LE CENTRE
-if (pattern === 5) {
-    for (let i = 0; i < 4; i++) {
-        if (laneA !== laneIndex) {
-            createCoin(laneA, -65 - i * 3);
-        }
-
-        if (laneB !== laneIndex) {
-            createCoin(laneB, -65 - i * 3);
-        }
-    }
-
-    const centerLane = 1;
-
-    if (centerLane !== laneIndex) {
-        for (let i = 0; i < 4; i++) {
-            createCoin(centerLane, -77 - i * 3);
-        }
-    }
-}
-
-// 6. FORMATION RARE : 3 LIGNES DE PIÈCES
-if (pattern === 6) {
-    for (let i = 0; i < 8; i++) {
-        createCoin(0, -65 - i * 3);
-        createCoin(1, -65 - i * 3);
-        createCoin(2, -65 - i * 3);
-    }
-}
-
-// 4. CHOIX ENTRE DEUX PARCOURS
-if (pattern === 3) {
-    for (let i = 0; i < 4; i++) {
-        createCoin(laneA, -65 - i * 3);
-    }
-
-    for (let i = 0; i < 9; i++) {
-        createCoin(laneB, -65 - i * 3);
-    }
-}
 }
 // ======================================================
 // MODES
