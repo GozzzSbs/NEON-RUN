@@ -4665,6 +4665,165 @@ shopPreviewItems.forEach(item => {
 
     animatePreviews();
 }
+function setupShopSkinPreviews() {
+    const grid = document.getElementById("shopItems");
+    if (!grid) return;
+
+    let canvas = document.getElementById("shopSkinPreview3DCanvas");
+
+    if (!canvas) {
+        canvas = document.createElement("canvas");
+        canvas.id = "shopSkinPreview3DCanvas";
+        canvas.style.position = "absolute";
+        canvas.style.top = "0";
+        canvas.style.left = "0";
+        canvas.style.width = "100%";
+        canvas.style.height = "100%";
+        canvas.style.pointerEvents = "none";
+        canvas.style.zIndex = "2";
+        grid.appendChild(canvas);
+    }
+
+    if (!shopSkinRenderer) {
+        shopSkinRenderer = new THREE.WebGLRenderer({
+            canvas: canvas,
+            alpha: true,
+            antialias: true
+        });
+
+        shopSkinRenderer.setPixelRatio(
+            Math.min(window.devicePixelRatio || 1, 1.5)
+        );
+        shopSkinRenderer.setClearColor(0x000000, 0);
+
+        shopSkinScene = new THREE.Scene();
+
+        shopSkinCamera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+        shopSkinCamera.position.set(0, 1.2, 7);
+        shopSkinCamera.lookAt(0, 1.2, 0);
+
+        shopSkinScene.add(new THREE.AmbientLight(0xffffff, 1.5));
+
+        const light = new THREE.DirectionalLight(0xffffff, 2.5);
+        light.position.set(2, 3, 5);
+        shopSkinScene.add(light);
+    }
+
+    if (shopSkinAnimation) {
+        cancelAnimationFrame(shopSkinAnimation);
+        shopSkinAnimation = null;
+    }
+
+    shopSkinItems.forEach(item => {
+        shopSkinScene.remove(item.group);
+    });
+    shopSkinItems = [];
+
+    const models = {
+        default: "grab3d-cozy-character%20(2).glb",
+        street_king: "grab3d-cozy-character.glb",
+        astronaut: "grab3d-cozy-character%20(1).glb"
+    };
+
+    const loader = new THREE.GLTFLoader();
+
+    grid.querySelectorAll(
+        '.neon-shop-preview[data-preview-type="skin"]'
+    ).forEach(preview => {
+        const id = preview.dataset.previewId;
+        const file = models[id];
+
+        if (!file) return;
+
+        const group = new THREE.Group();
+        shopSkinScene.add(group);
+
+        shopSkinItems.push({ id, preview, group });
+
+        loader.load(file, function(gltf) {
+            const model = gltf.scene;
+
+            if (id === "default") {
+                model.rotation.y += Math.PI;
+            }
+
+            const box = new THREE.Box3().setFromObject(model);
+            const size = box.getSize(new THREE.Vector3());
+            const scale = 2.5 / size.y;
+
+            model.scale.setScalar(scale);
+
+            const scaledBox = new THREE.Box3().setFromObject(model);
+            const center = scaledBox.getCenter(new THREE.Vector3());
+
+            model.position.x -= center.x;
+            model.position.z -= center.z;
+            model.position.y -= scaledBox.min.y;
+
+            group.add(model);
+            group.rotation.y = Math.PI;
+        });
+    });
+
+    function animateSkinPreviews() {
+        if (
+            !shopElement ||
+            !shopElement.classList.contains("open") ||
+            currentShopTab !== "skins"
+        ) {
+            shopSkinAnimation = null;
+            return;
+        }
+
+        const width = grid.clientWidth;
+        const height = grid.clientHeight;
+
+        if (width && height) {
+            shopSkinRenderer.setSize(width, height, false);
+
+            const pixelRatio = shopSkinRenderer.getPixelRatio();
+            const canvasRect = canvas.getBoundingClientRect();
+            const time = performance.now() * 0.001;
+
+            shopSkinRenderer.setScissorTest(true);
+
+            shopSkinItems.forEach(item => {
+                shopSkinItems.forEach(other => {
+                    other.group.visible = other === item;
+                });
+
+                const rect = item.preview.getBoundingClientRect();
+
+                const x = rect.left - canvasRect.left;
+                const y = canvasRect.bottom - rect.bottom;
+                const w = rect.width;
+                const h = rect.height;
+
+                if (w <= 0 || h <= 0) return;
+
+                shopSkinRenderer.setViewport(x, y, w, h);
+                shopSkinRenderer.setScissor(x, y, w, h);
+                shopSkinRenderer.clear(true, true, true);
+
+                item.group.rotation.y = Math.PI + time * 0.7;
+
+                shopSkinCamera.aspect = w / h;
+                shopSkinCamera.updateProjectionMatrix();
+
+                shopSkinRenderer.render(
+                    shopSkinScene,
+                    shopSkinCamera
+                );
+            });
+
+            shopSkinRenderer.setScissorTest(false);
+        }
+
+        shopSkinAnimation = requestAnimationFrame(animateSkinPreviews);
+    }
+
+    animateSkinPreviews();
+}
 function renderShop() {
     if (!shopElement) return;
 
