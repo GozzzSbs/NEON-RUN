@@ -3186,49 +3186,7 @@ if (jumpVelocity < 0) {
     moveEnvironment();
     moveLavaPlatforms();
     moveObstacles();
-    // ANIMATION DES LEDS DES GRANDS TUNNELS
-for (const obstacle of obstacles) {
-    if (obstacle.type !== "tunnel") continue;
-
-    const tunnel = obstacle.object;
-    const leds = tunnel.userData.leds;
-
-    if (!leds) continue;
-
-    tunnel.userData.ledAnimation += 0.04;
-
-    const pulse = (Math.sin(tunnel.userData.ledAnimation) + 1) / 2;
-
-    leds.forEach((led, index) => {
-        const colors = [
-            0x00eaff,
-            0x9b31ff,
-            0xff168f
-        ];
-
-        led.material.emissive.setHex(
-            colors[Math.floor((index + frame / 8) % colors.length)]
-        );
-
-        led.material.emissiveIntensity = 1.5 + pulse * 2;
-    });
-}
-    // DÉFILEMENT DES ANNEAUX DU TUNNEL
-for (const obstacle of obstacles) {
-    if (obstacle.type !== "tunnel") continue;
-
-    const rings = obstacle.object.userData.ledRings;
-
-    if (!rings) continue;
-
-    rings.forEach(ring => {
-        ring.position.z += speed * 1.5;
-
-        if (ring.position.z > 32) {
-            ring.position.z = -32;
-        }
-    });
-}
+    
    // JACKO RESTE SUR LE TRAIN TEMPORAIREMENT
 if (ridingTrain) {
     const trainExists = obstacles.some(
