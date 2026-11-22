@@ -2047,10 +2047,7 @@ if (trainSpawned && Math.random() < 0.5) {
         createCoin(safeLane, -65 - i * 3);
     }
 }
-const patterns = [
-    0, 1, 1, 1, 1, 1, 2, 3, 3, 3, 4, 4, 5, 5,
-    6
-];
+const patterns = [6];
 const pattern = patterns[Math.floor(Math.random() * patterns.length)];
 
     // 1. DOUBLE RANGÉE
