@@ -2240,29 +2240,15 @@ if (pattern === "jumps") {
 
     return;
 }
-    // TUNNEL AVEC CHANGEMENT DE VOIE
+    // VRAIS TUNNELS FUTURISTES
 if (pattern === "tunnel") {
     const firstLane = Math.floor(Math.random() * 3);
     const secondLane = (firstLane + 1) % 3;
     const thirdLane = (firstLane + 2) % 3;
 
-    // Premier passage
-    createBarrier(secondLane, -105);
-    createBarrier(thirdLane, -105);
-
-    // Deuxième passage décalé
-    createBarrier(firstLane, -170);
-    createBarrier(thirdLane, -170);
-
-    // Troisième passage
-    createBarrier(firstLane, -235);
-    createBarrier(secondLane, -235);
-
-    // Pièces pour suivre le parcours
-    for (let i = 0; i < 12; i++) {
-        const lane = i < 4 ? firstLane : i < 8 ? secondLane : thirdLane;
-        createCoin(lane, -65 - i * 3);
-    }
+    createTunnel(firstLane, -115);
+    createTunnel(secondLane, -195);
+    createTunnel(thirdLane, -275);
 
     return;
 }
