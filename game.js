@@ -1728,7 +1728,17 @@ function createTunnel(laneIndex, z) {
     // SOL INTÉRIEUR
     box(width, 0.15, length,
         metal, 0, 0.05, 0, tunnel);
+// LIGNES NÉON AU SOL
+for (let zPos = -30; zPos <= 30; zPos += 5) {
+    box(7.5, 0.035, 0.08,
+        cyan, 0, 0.16, zPos, tunnel);
+}
 
+// LIGNES LONGITUDINALES
+for (let x = -3; x <= 3; x += 2) {
+    box(0.08, 0.04, length,
+        purple, x, 0.17, 0, tunnel);
+}
     // PLAFOND MASSIF
     box(width, 0.5, length,
         metal, 0, height, 0, tunnel);
