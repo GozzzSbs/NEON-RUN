@@ -4679,20 +4679,22 @@ ctx.scale(-1, 1);
             }
 
             if (type === "moon") {
-                ctx.fillStyle = logoColor;
-                ctx.beginPath();
-                ctx.arc(256, 128, 105, 0, Math.PI * 2);
-                ctx.fill();
+    ctx.fillStyle = logoColor;
+    ctx.beginPath();
+    ctx.arc(256, 128, 105, 0, Math.PI * 2);
+    ctx.fill();
 
-                ctx.globalCompositeOperation = "destination-out";
+    ctx.globalCompositeOperation = "destination-out";
 
-                ctx.beginPath();
-                ctx.arc(310, 85, 95, 0, Math.PI * 2);
-                ctx.fill();
+    ctx.beginPath();
+    ctx.arc(310, 85, 95, 0, Math.PI * 2);
+    ctx.fill();
 
-                ctx.globalCompositeOperation = "source-over";
-            }
-        }
+    ctx.globalCompositeOperation = "source-over";
+}
+
+ctx.restore();
+}
 
         drawCapeLogo(equippedCape === "nr" ? "nr" : "rxn");
 
