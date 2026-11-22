@@ -1007,6 +1007,11 @@ for (const side of [-1, 1]) {
 // PERSONNAGE 3D - STYLE CARTOON RÉALISTE
 // ======================================================
 function createGLBCharacter(fileName, skinKey) {
+
+    if (player && player.parent) {
+        player.parent.remove(player);
+    }
+
     player = new THREE.Group();
 
     playerParts = {
