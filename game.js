@@ -2305,7 +2305,26 @@ function animateRunner() {
     const movement = frame * 0.14;
     const swing = Math.sin(movement);
     const bounce = Math.abs(Math.sin(movement * 2));
+// ANIMATION DU MODÈLE GLB STREET KING
+if (equippedSkin === "street_king") {
+    const model = player.userData.streetKingModel;
 
+    if (model) {
+        model.position.y = bounce * 0.055;
+
+        if (jumping) {
+            model.rotation.x = -0.12;
+        } else if (sliding) {
+            model.rotation.x = 0.45;
+        } else {
+            model.rotation.x = 0.035 + swing * 0.025;
+            model.rotation.z = swing * 0.025;
+        }
+    }
+
+    animateCape();
+    return;
+}
     if (!jumping && !sliding) {
         // BALANCEMENT DES BRAS
         playerParts.arms.forEach((arm, i) => {
