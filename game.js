@@ -2656,22 +2656,24 @@ function animateRunner() {
                 const armSwing = -swing * 0.65;
 
                 // BRAS GAUCHE
-                if (bones.upperArmL) {
-                    bones.upperArmL.rotation.set(armSwing, 0, -0.85);
-                }
+if (bones.upperArmL) {
+    const base = bones.upperArmL.userData.baseRotation;
+    bones.upperArmL.rotation.set(
+        base.x + swing * 0.65,
+        base.y,
+        base.z
+    );
+}
 
-                if (bones.lowerArmL) {
-                    bones.lowerArmL.rotation.set(-1.0, 0, 0);
-                }
-
-                // BRAS DROIT
-                if (bones.upperArmR) {
-                    bones.upperArmR.rotation.set(-armSwing, 0, 0.85);
-                }
-
-                if (bones.lowerArmR) {
-                    bones.lowerArmR.rotation.set(-1.0, 0, 0);
-                }
+// BRAS DROIT
+if (bones.upperArmR) {
+    const base = bones.upperArmR.userData.baseRotation;
+    bones.upperArmR.rotation.set(
+        base.x - swing * 0.65,
+        base.y,
+        base.z
+    );
+}
 
                 // JAMBES
                 if (bones.upperLegL) {
