@@ -378,7 +378,9 @@ const asphaltTexture = new THREE.CanvasTexture(asphaltCanvas);
 asphaltTexture.wrapS = THREE.RepeatWrapping;
 asphaltTexture.wrapT = THREE.RepeatWrapping;
 asphaltTexture.repeat.set(12, 18);
-
+asphaltTexture.offset.set(0, 0);
+asphaltTexture.matrixAutoUpdate = false;
+asphaltTexture.updateMatrix();
 const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(300, 350),
     new THREE.MeshStandardMaterial({
