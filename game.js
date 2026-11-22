@@ -1714,45 +1714,87 @@ function createBarrier(laneIndex, z) {
 function createTunnel(laneIndex, z) {
     const tunnel = new THREE.Group();
 
-    const metal = mat(0x252b49, 0x10152e, 1);
-    const cyan = mat(0x00eaff, 0x0088ff, 2);
-    const purple = mat(0x9b31ff, 0x6200ff, 2);
+    const metal = mat(0x151a35, 0x080b1c, 0.8);
+    const cyan = mat(0x00eaff, 0x00aaff, 3);
+    const purple = mat(0x9b31ff, 0x6200ff, 3);
+    const pink = mat(0xff168f, 0xaa0055, 3);
+    const white = mat(0xffffff, 0x88ddff, 2);
 
-    // Deux piliers latéraux
+    // LARGEUR DU TUNNEL : 3 VOIES
+    const width = 8.5;
+    const height = 5.5;
+    const length = 65;
+
+    // SOL INTÉRIEUR
+    box(width, 0.15, length,
+        metal, 0, 0.05, 0, tunnel);
+
+    // PLAFOND MASSIF
+    box(width, 0.5, length,
+        metal, 0, height, 0, tunnel);
+
+    // PAROIS LATÉRALES
+    box(0.45, height, length,
+        metal, -width / 2, height / 2, 0, tunnel);
+
+    box(0.45, height, length,
+        metal, width / 2, height / 2, 0, tunnel);
+
+    // CADRES LUMINEUX RÉPÉTÉS
+    for (let zPos = -30; zPos <= 30; zPos += 7) {
+
+        // Montants verticaux
+        for (const side of [-1, 1]) {
+            box(0.13, height, 0.18,
+                cyan, side * (width / 2 - 0.3),
+                height / 2, zPos, tunnel);
+        }
+
+        // Barre transversale au plafond
+        box(width - 0.5, 0.13, 0.18,
+            purple, 0, height - 0.35, zPos, tunnel);
+    }
+
+    // BANDES LED SUR LES MURS
     for (const side of [-1, 1]) {
-        box(0.35, 4, 0.6,
-            metal, side * 1.15, 2, 0, tunnel);
+        box(0.08, 0.12, length,
+            cyan, side * (width / 2 - 0.3),
+            1.1, 0, tunnel);
 
-        box(0.12, 3.8, 0.12,
-            cyan, side * 0.95, 2, 0.35, tunnel);
+        box(0.08, 0.12, length,
+            pink, side * (width / 2 - 0.3),
+            2.8, 0, tunnel);
+
+        box(0.08, 0.12, length,
+            purple, side * (width / 2 - 0.3),
+            4.5, 0, tunnel);
     }
 
-    // Plafond du tunnel
-    box(2.65, 0.4, 0.7,
-        metal, 0, 4, 0, tunnel);
-
-    // Bande lumineuse
-    box(2.5, 0.1, 0.75,
-        cyan, 0, 3.75, 0, tunnel);
-
-    // Détails lumineux
-    for (let i = -1; i <= 1; i++) {
-        box(0.12, 0.08, 0.72,
-            purple, i * 0.7, 3.65, 0, tunnel);
+    // LIGNES LED AU PLAFOND
+    for (let x = -3; x <= 3; x += 2) {
+        box(0.12, 0.08, length,
+            x % 2 === 0 ? cyan : purple,
+            x, height - 0.28, 0, tunnel);
     }
 
-    tunnel.position.set(
-        lanePositions[laneIndex],
-        0,
-        z
-    );
+    // PANNEAUX GÉOMÉTRIQUES
+    for (let zPos = -25; zPos <= 25; zPos += 12) {
+        box(1.1, 0.12, 0.12,
+            white, -2.5, 4.8, zPos, tunnel);
+
+        box(1.1, 0.12, 0.12,
+            white, 2.5, 4.8, zPos, tunnel);
+    }
+
+    // POSITION DU GRAND TUNNEL
+    tunnel.position.set(0, 0, z);
 
     scene.add(tunnel);
 
     obstacles.push({
         object: tunnel,
         type: "tunnel",
-        lane: laneIndex
+        lane: -1
     });
 }
 // ======================================================
