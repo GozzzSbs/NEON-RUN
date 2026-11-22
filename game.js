@@ -4953,6 +4953,7 @@ shopCapeObject = cape;
 shopCapeObject.userData.cloth = cloth;
 shopCapeObject.userData.capeId = equippedCape;
 shopCapeObject.userData.lastPhase = -1;
+    }
 // ======================================================
 // ANIMATION CAPE
 // ======================================================
