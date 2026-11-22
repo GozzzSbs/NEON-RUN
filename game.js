@@ -3118,7 +3118,14 @@ if (score % 100 === 0) {
 
     spawnTimer++;
 
-    const spawnDelay = Math.ceil(210 / speed);
+    const spawnDelay = selectedMode === "nocoin"
+    ? Math.max(150, 220 - speed * 20)
+    : Math.max(130, 200 - speed * 25);
+
+    if (spawnTimer >= spawnDelay) {
+    spawnObjects();
+    spawnTimer = 0;
+}
 
     player.position.x += (targetX - player.position.x) * 0.18;
 
