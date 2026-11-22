@@ -1085,8 +1085,14 @@ function createAstronaut() {
 }
 function createPlayer() {
     player = new THREE.Group();
+
 if (equippedSkin === "street_king") {
     createStreetKing();
+    return;
+}
+
+if (equippedSkin === "astronaut") {
+    createAstronaut();
     return;
 }
     playerParts = {
