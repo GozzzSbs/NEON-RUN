@@ -2376,13 +2376,29 @@ if (bones.lowerArmR) {
     }
 
     if (jumping) {
-        model.rotation.x = -0.12;
-    } else if (sliding) {
-        model.rotation.x = 0.45;
-    } else {
-        model.rotation.x = 0.035 + swing * 0.025;
-        model.rotation.z = swing * 0.025;
-    }
+    model.rotation.x = -0.12;
+    model.position.y = bounce * 0.055;
+    model.position.z = 0;
+
+} else if (sliding) {
+
+    const progress = 1 - slideTimer / 50;
+    const angle = progress * Math.PI * 2;
+
+    // Roulade complète
+    model.rotation.x = angle;
+
+    // Garder le personnage centré pendant la rotation
+    model.position.y = 1.5 - 1.5 * Math.cos(angle);
+    model.position.z = -1.5 * Math.sin(angle);
+
+} else {
+    model.rotation.x = 0.035 + swing * 0.025;
+    model.rotation.z = swing * 0.025;
+
+    model.position.y = bounce * 0.055;
+    model.position.z = 0;
+}
 }
 
     animateCape();
