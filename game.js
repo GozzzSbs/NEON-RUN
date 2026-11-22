@@ -2439,7 +2439,7 @@ function animateRunner() {
                 const angle = progress * Math.PI * 2;
 
                 model.rotation.x = angle;
-
+shopCapeObject.rotation.x = angle;
                 model.position.y = 1.5 - 1.5 * Math.cos(angle);
                 model.position.z = -1.5 * Math.sin(angle);
             }
