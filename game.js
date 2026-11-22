@@ -2062,13 +2062,32 @@ function spawnObjects() {
     // CHOIX DU PARCOURS
 const patterns = [
     "single", "single",
-    "double", "double",
+
+    "double", "double", "double",
+
     "slalom", "slalom", "slalom",
-    "sequence", "mixed",
-    "jumps", "slides",
-    "tunnel", "arc", "coinZigzag",
-    "complex", "rare",
-    "fakePassage", "longSequence"
+
+    "sequence", "sequence", "sequence",
+
+    "mixed", "mixed", "mixed",
+
+    "jumps", "jumps",
+
+    "slides", "slides",
+
+    "tunnel", "tunnel", "tunnel",
+
+    "arc",
+
+    "coinZigzag",
+
+    "complex", "complex",
+
+    "rare",
+
+    "fakePassage", "fakePassage",
+
+    "longSequence", "longSequence"
 ];
 
 const pattern = patterns[Math.floor(Math.random() * patterns.length)];
