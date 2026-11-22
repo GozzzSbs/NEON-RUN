@@ -4958,9 +4958,9 @@ if (
     bones &&
     bones.chest
 ) {
-    bones.chest.add(cape);
+    player.add(cape);
 
-    cape.position.set(0, 0.00, 0.18);
+    cape.position.set(0, 1.2, -0.5);
     cape.rotation.y = 0;
     cape.scale.set(0.35, 0.22, 0.35);
 
