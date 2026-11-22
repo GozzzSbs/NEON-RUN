@@ -1023,6 +1023,9 @@ function createGLBCharacter(fileName, skinKey) {
 
         function (gltf) {
             const model = gltf.scene;
+            if (skinKey === "jacko") {
+    model.rotation.y += Math.PI;
+}
             const bones = {};
 
             model.traverse(function (child) {
@@ -1070,8 +1073,8 @@ function createGLBCharacter(fileName, skinKey) {
         }
     );
 
-    player.rotation.y = Math.PI;
-    player.position.set(0, 0, 0);
+   player.rotation.y = Math.PI;
+player.position.set(0, 0, 0);
 
     scene.add(player);
 }
@@ -1083,6 +1086,9 @@ function createStreetKing() {
 function createAstronaut() {
     createGLBCharacter("grab3d-cozy-character%20(1).glb", "astronaut");
 }
+function createJacko() {
+    createGLBCharacter("grab3d-cozy-character%20(2).glb", "jacko");
+}
 function createPlayer() {
     player = new THREE.Group();
 
@@ -1090,7 +1096,10 @@ if (equippedSkin === "street_king") {
     createStreetKing();
     return;
 }
-
+if (equippedSkin === "default") {
+    createJacko();
+    return;
+}
 if (equippedSkin === "astronaut") {
     createAstronaut();
     return;
@@ -2331,11 +2340,16 @@ function animateRunner() {
     const bounce = Math.abs(Math.sin(movement * 2));
 
     // ANIMATION DES MODÈLES GLB
-    if (equippedSkin === "street_king" || equippedSkin === "astronaut") {
-
+    if (
+    equippedSkin === "street_king" ||
+    equippedSkin === "astronaut" ||
+    equippedSkin === "default"
+) {
         const skinKey = equippedSkin === "street_king"
-            ? "streetKing"
-            : "astronaut";
+    ? "streetKing"
+    : equippedSkin === "astronaut"
+        ? "astronaut"
+        : "jacko";
 
         const model = player.userData[skinKey + "Model"];
         const bones = player.userData[skinKey + "Bones"];
@@ -3049,6 +3063,7 @@ console.log("PLAYER PARTS :", playerParts);
 if (!player || !playerParts ||
     (equippedSkin !== "street_king" &&
      equippedSkin !== "astronaut" &&
+     equippedSkin !== "default" &&
      !playerParts.body)) {
     console.error("ERREUR : le personnage n'est pas correctement initialisé !");
     return;
