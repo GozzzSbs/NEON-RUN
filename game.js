@@ -4651,10 +4651,10 @@ function createCape() {
     const cape = new THREE.Group();
     cape.scale.set(1, 0.85, 1);
 if (equippedCape === "certified") {
-    cape.position.z = -0.28;
+    cape.position.z = -0.10;
 }
     if (equippedCape === "rxn_white") {
-        cape.position.z = -0.28;
+        cape.position.z = -0.10;
     }
 
     // TISSU
