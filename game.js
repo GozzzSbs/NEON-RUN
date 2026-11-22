@@ -2017,11 +2017,11 @@ function spawnObjects() {
 
     // CHOIX DU PARCOURS
     const patterns = [
-        "single", "single",
-        "double", "double",
-        "slalom", "slalom",
-        "sequence", "mixed"
-    ];
+    "single", "single",
+    "double", "double",
+    "slalom", "slalom", "slalom",
+    "sequence", "mixed"
+];
 
     const pattern = patterns[Math.floor(Math.random() * patterns.length)];
 
