@@ -4510,10 +4510,10 @@ if (equippedCape === "certified") {
     const geometry = new THREE.BufferGeometry();
 
    const vertices = new Float32Array([
-    -0.38, 2.25, -0.55,
-     0.38, 2.25, -0.55,
-    -0.62, 0.25, -0.75,
-     0.62, 0.25, -0.75
+    -0.38, 2.25, -0.34,
+     0.38, 2.25, -0.34,
+    -0.62, 0.25, -0.48,
+     0.62, 0.25, -0.48
 ]);
 
     geometry.setAttribute(
