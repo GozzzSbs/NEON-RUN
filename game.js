@@ -357,7 +357,7 @@ asphaltCanvas.height = 512;
 const asphaltCtx = asphaltCanvas.getContext("2d");
 
 // Fond bitume
-asphaltCtx.fillStyle = "#24282d";
+asphaltCtx.fillStyle = "#59402e";
 asphaltCtx.fillRect(0, 0, 512, 512);
 
 // Texture légèrement usée
@@ -366,7 +366,7 @@ for (let i = 0; i < 5000; i++) {
     const y = Math.random() * 512;
     const size = Math.random() * 2 + 0.5;
 
-    const shades = ["#30353a", "#1b1f23", "#393e43", "#292e33"];
+    const shades = ["#70543c", "#493323", "#806044", "#5e422e"];
     asphaltCtx.fillStyle = shades[Math.floor(Math.random() * shades.length)];
 
     asphaltCtx.beginPath();
