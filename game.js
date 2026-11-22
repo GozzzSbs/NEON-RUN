@@ -1139,39 +1139,39 @@ function createTrain(laneIndex, z) {
 
     const train = new THREE.Group();
 
-    // 4 STYLES DE TRAINS SPATIAUX
+    // 4 STYLES DE TRAINS URBAINS
     const styles = [
         {
-            name: "Galaxy Blue",
-            body: 0x102b66,
-            neon: 0x00ddff,
-            windows: 0x75f5ff,
-            roof: 0x183e80
+            name: "Urban Blue",
+            body: 0x151b29,
+            neon: 0x00ccff,
+            windows: 0x397b99,
+            roof: 0x252c3b
         },
         {
-            name: "Nebula",
-            body: 0x35105c,
-            neon: 0xff35dd,
-            windows: 0xffaaff,
-            roof: 0x541477
+            name: "Street Purple",
+            body: 0x211426,
+            neon: 0xd52bff,
+            windows: 0x75418c,
+            roof: 0x35203e
         },
         {
-            name: "Cosmic Emerald",
-            body: 0x092c32,
-            neon: 0x00ffbb,
-            windows: 0x80ffe0,
-            roof: 0x12434a
+            name: "Graffiti Green",
+            body: 0x17251f,
+            neon: 0x39ff88,
+            windows: 0x49866b,
+            roof: 0x293b30
         },
         {
-            name: "Solar Galaxy",
-            body: 0x30200c,
-            neon: 0xffaa22,
-            windows: 0xffe49a,
-            roof: 0x50300d
+            name: "Urban Orange",
+            body: 0x29201b,
+            neon: 0xff792b,
+            windows: 0x9b6845,
+            roof: 0x403027
         }
     ];
 
-    // Choisir un style au hasard
+    // CHOISIR UN STYLE AU HASARD
     const style = styles[
         Math.floor(Math.random() * styles.length)
     ];
@@ -1181,10 +1181,10 @@ function createTrain(laneIndex, z) {
     const neonMaterial = mat(style.neon, style.neon, 2);
     const windowMaterial = mat(style.windows, style.windows, 1.7);
 
-    // CORPS PRINCIPAL : dimensions conservées
+    // CORPS PRINCIPAL
     box(2.55, 3.4, 13, bodyMaterial, 0, 2, 0, train);
 
-    // TOIT PLAT ET LARGE : même forme pour garder la surface supérieure
+    // TOIT
     box(2.48, 0.08, 12.8, roofMaterial, 0, 3.74, 0, train);
 
     // LIGNES LUMINEUSES SUR LE TOIT
@@ -1193,7 +1193,7 @@ function createTrain(laneIndex, z) {
             side * 1.12, 3.81, 0, train);
     }
 
-    // PANNEAUX GALAXY SUR LE TOIT
+    // PANNEAUX SUR LE TOIT
     for (let zPos = -4.5; zPos <= 4.5; zPos += 3) {
         box(0.75, 0.035, 1.1, neonMaterial,
             0, 3.81, zPos, train);
@@ -1205,6 +1205,7 @@ function createTrain(laneIndex, z) {
 
     // FENÊTRES LATÉRALES
     for (let zPos = -5; zPos <= 4; zPos += 3) {
+
         box(0.08, 1, 1.5, windowMaterial,
             -1.3, 2.8, zPos, train);
 
@@ -1214,7 +1215,7 @@ function createTrain(laneIndex, z) {
 
     const wheels = [];
 
-    // BANDES LUMINEUSES LATÉRALES
+    // BANDES LUMINEUSES ET PHARES LATÉRAUX
     for (const side of [-1, 1]) {
 
         box(0.12, 0.12, 12, neonMaterial,
@@ -1231,11 +1232,114 @@ function createTrain(laneIndex, z) {
             side * 0.8, 0.8, 6.7, train);
     }
 
+    // GRAFFITIS STREET ART
+    const graffitiColors = [
+        0xff27d5,
+        0x00eaff,
+        0x9dff00,
+        0xff8a00
+    ];
+
+    for (const side of [-1, 1]) {
+
+        const graffitiColor = graffitiColors[
+            Math.floor(Math.random() * graffitiColors.length)
+        ];
+
+        const graffitiMaterial = new THREE.MeshStandardMaterial({
+            color: graffitiColor,
+            emissive: graffitiColor,
+            emissiveIntensity: 0.6,
+            metalness: 0.3,
+            roughness: 0.6
+        });
+
+        box(0.045, 0.55, 2.1, graffitiMaterial,
+            side * 1.31, 1.85, 0, train);
+
+        box(0.05, 0.12, 1.2, graffitiMaterial,
+            side * 1.32, 1.45, -2.5, train);
+
+        box(0.05, 0.12, 1.2, graffitiMaterial,
+            side * 1.32, 2.25, 2.5, train);
+    }
+
+    // PORTES AUTOMATIQUES DU MÉTRO
+    const doorMaterial = mat(0x090d18, style.neon, 0.25);
+    const doorGlass = mat(0x26394d, style.neon, 0.7);
+
+    for (const side of [-1, 1]) {
+
+        for (const zPos of [-3.5, 3.5]) {
+
+            box(0.07, 1.9, 1.5, doorMaterial,
+                side * 1.32, 1.9, zPos, train);
+
+            box(0.075, 1.1, 1.25, doorGlass,
+                side * 1.34, 2.15, zPos, train);
+
+            box(0.08, 1.5, 0.045, neonMaterial,
+                side * 1.36, 1.9, zPos, train);
+        }
+    }
+
+    // GRILLES DE VENTILATION SUR LE TOIT
+    const ventMaterial = mat(0x080b12);
+
+    for (const zPos of [-3.5, 0, 3.5]) {
+
+        box(1.1, 0.06, 0.65, ventMaterial,
+            0, 3.85, zPos, train);
+
+        for (let i = -2; i <= 2; i++) {
+
+            box(0.85, 0.035, 0.045, neonMaterial,
+                0, 3.89, zPos + i * 0.11, train);
+        }
+    }
+
+    // NUMÉRO DE RAME
+    const trainNumber = Math.floor(Math.random() * 900) + 100;
+
+    const numberMaterial = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        emissive: style.neon,
+        emissiveIntensity: 1.5
+    });
+
+    // PLAQUE AVANT
+    box(0.9, 0.35, 0.06, numberMaterial,
+        0, 2.15, 6.57, train);
+
+    // PARE-CHOCS AVANT
+    const bumperMaterial = mat(0x080a10);
+
+    box(2.45, 0.28, 0.3, bumperMaterial,
+        0, 0.65, 6.58, train);
+
+    // BANDES STREET ART LATÉRALES
+    for (const side of [-1, 1]) {
+
+        box(0.055, 0.32, 3.2, neonMaterial,
+            side * 1.34, 1.65, -1.5, train);
+
+        box(0.055, 0.08, 2.2, windowMaterial,
+            side * 1.35, 1.35, 2, train);
+    }
+
+    // BANDES RÉFLÉCHISSANTES
+    for (const side of [-1, 1]) {
+
+        box(0.65, 0.08, 0.035, neonMaterial,
+            side * 0.75, 0.82, 6.76, train);
+    }
+
     // BAS DU TRAIN
     box(2.3, 0.4, 11, 0x090914, 0, 0.2, 0, train);
 
     // ROUES
     for (const zPos of [-4, 4]) {
+
         for (const side of [-1, 1]) {
 
             const wheel = new THREE.Mesh(
@@ -1251,6 +1355,7 @@ function createTrain(laneIndex, z) {
         }
     }
 
+    // POSITION DU TRAIN
     train.position.set(lanePositions[laneIndex], 0, z);
 
     // DONNÉES D'ANIMATION
@@ -1265,6 +1370,7 @@ function createTrain(laneIndex, z) {
         type: "train",
         lane: laneIndex
     });
+
     return train;
 }
 
