@@ -2414,6 +2414,11 @@ if (pattern === "mixed") {
 
     return;
 }
+    if (pattern === "tunnel") {
+    const lane = Math.floor(Math.random() * 3);
+    createTunnel(lane, -100);
+    return;
+}
     }
 // ======================================================
 // MODES
