@@ -2047,7 +2047,10 @@ if (trainSpawned && Math.random() < 0.5) {
         createCoin(safeLane, -65 - i * 3);
     }
 }
-const patterns = [6];
+const patterns = [
+    0, 1, 1, 1, 1, 1, 2, 3, 3, 3, 4, 4, 5, 5,
+    6
+];
 const pattern = patterns[Math.floor(Math.random() * patterns.length)];
 
     // 1. DOUBLE RANGÉE
@@ -2086,9 +2089,24 @@ if (pattern === 4) {
 // 5. DEUX CHEMINS QUI REJOIGNENT LE CENTRE
 if (pattern === 5) {
     for (let i = 0; i < 4; i++) {
-    if (laneA !== laneIndex) {
-        createCoin(laneA, -65 - i * 3);
+        if (laneA !== laneIndex) {
+            createCoin(laneA, -65 - i * 3);
+        }
+
+        if (laneB !== laneIndex) {
+            createCoin(laneB, -65 - i * 3);
+        }
     }
+
+    const centerLane = 1;
+
+    if (centerLane !== laneIndex) {
+        for (let i = 0; i < 4; i++) {
+            createCoin(centerLane, -77 - i * 3);
+        }
+    }
+}
+
 // 6. FORMATION RARE : 3 LIGNES DE PIÈCES
 if (pattern === 6) {
     for (let i = 0; i < 5; i++) {
@@ -2097,28 +2115,15 @@ if (pattern === 6) {
         createCoin(2, -65 - i * 3);
     }
 }
-    if (laneB !== laneIndex) {
-        createCoin(laneB, -65 - i * 3);
-    }
-}
 
-    const centerLane = 1;
-
-if (centerLane !== laneIndex) {
+// 4. CHOIX ENTRE DEUX PARCOURS
+if (pattern === 3) {
     for (let i = 0; i < 4; i++) {
-        createCoin(centerLane, -77 - i * 3);
+        createCoin(laneA, -65 - i * 3);
     }
-}
-    }
-    // 4. CHOIX ENTRE DEUX PARCOURS
-    if (pattern === 3) {
-        for (let i = 0; i < 4; i++) {
-            createCoin(laneA, -65 - i * 3);
-        }
 
-        for (let i = 0; i < 9; i++) {
-            createCoin(laneB, -65 - i * 3);
-        }
+    for (let i = 0; i < 9; i++) {
+        createCoin(laneB, -65 - i * 3);
     }
 }
 
