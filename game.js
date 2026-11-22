@@ -1007,11 +1007,6 @@ for (const side of [-1, 1]) {
 // PERSONNAGE 3D - STYLE CARTOON RÉALISTE
 // ======================================================
 function createGLBCharacter(fileName, skinKey) {
-
-    if (player && player.parent) {
-        player.parent.remove(player);
-    }
-
     player = new THREE.Group();
 
     playerParts = {
@@ -1028,7 +1023,6 @@ function createGLBCharacter(fileName, skinKey) {
 
         function (gltf) {
             const model = gltf.scene;
-
             const bones = {};
 
             model.traverse(function (child) {
@@ -1089,9 +1083,6 @@ function createStreetKing() {
 function createAstronaut() {
     createGLBCharacter("grab3d-cozy-character%20(1).glb", "astronaut");
 }
-function createJacko() {
-    createGLBCharacter("grab3d-cozy-character%20(2).glb", "jacko");
-}
 function createPlayer() {
     player = new THREE.Group();
 
@@ -1099,10 +1090,7 @@ if (equippedSkin === "street_king") {
     createStreetKing();
     return;
 }
-if (equippedSkin === "default") {
-    createJacko();
-    return;
-}
+
 if (equippedSkin === "astronaut") {
     createAstronaut();
     return;
@@ -2343,16 +2331,11 @@ function animateRunner() {
     const bounce = Math.abs(Math.sin(movement * 2));
 
     // ANIMATION DES MODÈLES GLB
-    if (
-    equippedSkin === "street_king" ||
-    equippedSkin === "astronaut" ||
-    equippedSkin === "default"
-) {
+    if (equippedSkin === "street_king" || equippedSkin === "astronaut") {
+
         const skinKey = equippedSkin === "street_king"
-    ? "streetKing"
-    : equippedSkin === "astronaut"
-        ? "astronaut"
-        : "jacko";
+            ? "streetKing"
+            : "astronaut";
 
         const model = player.userData[skinKey + "Model"];
         const bones = player.userData[skinKey + "Bones"];
@@ -2362,7 +2345,7 @@ function animateRunner() {
             model.position.y = bounce * 0.055;
 
             if (bones) {
-                const run = swing * 0.40;
+                const run = swing * 0.55;
                 const armSwing = swing * 0.65;
 
                 // BRAS GAUCHE
@@ -3066,7 +3049,6 @@ console.log("PLAYER PARTS :", playerParts);
 if (!player || !playerParts ||
     (equippedSkin !== "street_king" &&
      equippedSkin !== "astronaut" &&
-     equippedSkin !== "default" &&
      !playerParts.body)) {
     console.error("ERREUR : le personnage n'est pas correctement initialisé !");
     return;
