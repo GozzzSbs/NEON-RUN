@@ -1023,6 +1023,11 @@ function createStreetKing() {
 
         function (gltf) {
             const model = gltf.scene;
+            model.traverse(function (child) {
+    if (child.isSkinnedMesh) {
+        console.log("SQUELETTE GLB :", child.skeleton.bones.map(b => b.name));
+    }
+});
 player.userData.streetKingModel = model;
             // Calculer la taille du modèle
             const box = new THREE.Box3().setFromObject(model);
