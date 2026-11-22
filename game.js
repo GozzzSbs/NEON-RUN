@@ -1019,7 +1019,7 @@ function createStreetKing() {
     const loader = new THREE.GLTFLoader();
 
     loader.load(
-        "grab3d-cozy-characters.glb",
+        "grab3d-cozy-character.glb",
 
         function (gltf) {
             const model = gltf.scene;
