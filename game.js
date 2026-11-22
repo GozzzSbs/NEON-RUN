@@ -1788,7 +1788,16 @@ function createTunnel(laneIndex, z) {
 
     // POSITION DU GRAND TUNNEL
     tunnel.position.set(0, 0, z);
+// ANIMATION DES LEDS DU TUNNEL
+tunnel.userData.leds = [];
 
+tunnel.traverse(function(child) {
+    if (child.isMesh && child.material.emissive) {
+        tunnel.userData.leds.push(child);
+    }
+});
+
+tunnel.userData.ledAnimation = 0;
     scene.add(tunnel);
 
     obstacles.push({
