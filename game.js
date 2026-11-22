@@ -346,60 +346,50 @@ function box(w, h, d, color, x, y, z, parent = scene) {
 // SOL URBAIN
 // ======================================================
 
-// SOL EN GRAVIER
-const gravelCanvas = document.createElement("canvas");
-gravelCanvas.width = 512;
-gravelCanvas.height = 512;
+// ======================================================
+// SOL URBAIN EN ASPHALTE
+// ======================================================
 
-const gravelCtx = gravelCanvas.getContext("2d");
+const asphaltCanvas = document.createElement("canvas");
+asphaltCanvas.width = 512;
+asphaltCanvas.height = 512;
 
-// Fond gris-brun
-gravelCtx.fillStyle = "#514943";
-gravelCtx.fillRect(0, 0, 512, 512);
+const asphaltCtx = asphaltCanvas.getContext("2d");
 
-// Petits cailloux
-for (let i = 0; i < 3500; i++) {
+// Fond bitume
+asphaltCtx.fillStyle = "#24282d";
+asphaltCtx.fillRect(0, 0, 512, 512);
+
+// Texture légèrement usée
+for (let i = 0; i < 5000; i++) {
     const x = Math.random() * 512;
     const y = Math.random() * 512;
-    const size = 1 + Math.random() * 3;
+    const size = Math.random() * 2 + 0.5;
 
-    const shades = ["#77716a", "#393633", "#625b54", "#8b8177", "#45413d"];
+    const shades = ["#30353a", "#1b1f23", "#393e43", "#292e33"];
+    asphaltCtx.fillStyle = shades[Math.floor(Math.random() * shades.length)];
 
-    gravelCtx.fillStyle = shades[
-        Math.floor(Math.random() * shades.length)
-    ];
-
-    gravelCtx.beginPath();
-    gravelCtx.ellipse(x, y, size, size * 0.6, Math.random(), 0, Math.PI * 2);
-    gravelCtx.fill();
+    asphaltCtx.beginPath();
+    asphaltCtx.arc(x, y, size, 0, Math.PI * 2);
+    asphaltCtx.fill();
 }
 
-const gravelTexture = new THREE.CanvasTexture(gravelCanvas);
-gravelTexture.wrapS = THREE.RepeatWrapping;
-gravelTexture.wrapT = THREE.RepeatWrapping;
-gravelTexture.repeat.set(12, 18);
+const asphaltTexture = new THREE.CanvasTexture(asphaltCanvas);
+asphaltTexture.wrapS = THREE.RepeatWrapping;
+asphaltTexture.wrapT = THREE.RepeatWrapping;
+asphaltTexture.repeat.set(12, 18);
 
 const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(300, 350),
     new THREE.MeshStandardMaterial({
-        map: gravelTexture,
-        roughness: 1
+        map: asphaltTexture,
+        roughness: 0.95
     })
 );
 
 floor.rotation.x = -Math.PI / 2;
-floor.position.set(0, -0.48, -100);
+floor.position.set(0, -0.47, -100);
 scene.add(floor);
-console.log("TEXTURE GRAVIER :", gravelTexture);
-console.log("SOL :", floor);
-// Route centrale
-const road = box(
-    12, 0.3, 220,
-    mat(0x202830),
-    0, -0.25, -80
-);
-
-normalTrackMeshes.push(road);
 
 // ======================================================
 // BORDURES ORANGE
