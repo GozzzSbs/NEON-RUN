@@ -1711,6 +1711,50 @@ function createBarrier(laneIndex, z) {
         variant: variant
     });
 }
+function createTunnel(laneIndex, z) {
+    const tunnel = new THREE.Group();
+
+    const metal = mat(0x252b49, 0x10152e, 1);
+    const cyan = mat(0x00eaff, 0x0088ff, 2);
+    const purple = mat(0x9b31ff, 0x6200ff, 2);
+
+    // Deux piliers latéraux
+    for (const side of [-1, 1]) {
+        box(0.35, 4, 0.6,
+            metal, side * 1.15, 2, 0, tunnel);
+
+        box(0.12, 3.8, 0.12,
+            cyan, side * 0.95, 2, 0.35, tunnel);
+    }
+
+    // Plafond du tunnel
+    box(2.65, 0.4, 0.7,
+        metal, 0, 4, 0, tunnel);
+
+    // Bande lumineuse
+    box(2.5, 0.1, 0.75,
+        cyan, 0, 3.75, 0, tunnel);
+
+    // Détails lumineux
+    for (let i = -1; i <= 1; i++) {
+        box(0.12, 0.08, 0.72,
+            purple, i * 0.7, 3.65, 0, tunnel);
+    }
+
+    tunnel.position.set(
+        lanePositions[laneIndex],
+        0,
+        z
+    );
+
+    scene.add(tunnel);
+
+    obstacles.push({
+        object: tunnel,
+        type: "tunnel",
+        lane: laneIndex
+    });
+}
 // ======================================================
 // PIÈCES COSMIQUES
 // ======================================================
