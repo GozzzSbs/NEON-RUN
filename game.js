@@ -1006,7 +1006,7 @@ for (const side of [-1, 1]) {
 // ======================================================
 // PERSONNAGE 3D - STYLE CARTOON RÉALISTE
 // ======================================================
-function createStreetKing() {
+function createGLBCharacter(fileName, skinKey) {
     player = new THREE.Group();
 
     playerParts = {
@@ -1019,39 +1019,31 @@ function createStreetKing() {
     const loader = new THREE.GLTFLoader();
 
     loader.load(
-        "grab3d-cozy-character.glb",
+        fileName,
 
         function (gltf) {
             const model = gltf.scene;
             const bones = {};
 
-model.traverse(function (child) {
-    if (child.isSkinnedMesh) {
-        child.skeleton.bones.forEach(function (bone) {
-            bones[bone.name] = bone;
-        });
-    }
-});
-
-player.userData.streetKingBones = bones;
-            console.log("DOS :", bones.chest.position);
-console.log("HANCHES :", bones.hips.position);
-console.log("DOS ROTATION :", bones.chest.rotation);
             model.traverse(function (child) {
-    if (child.isSkinnedMesh) {
-        console.log("SQUELETTE GLB :", child.skeleton.bones.map(b => b.name));
-    }
-});
-player.userData.streetKingModel = model;
-            // Calculer la taille du modèle
+                if (child.isSkinnedMesh) {
+                    child.skeleton.bones.forEach(function (bone) {
+                        bones[bone.name] = bone;
+                    });
+                }
+            });
+
+            player.userData[skinKey + "Bones"] = bones;
+            player.userData[skinKey + "Model"] = model;
+
+            console.log("SQUELETTE " + skinKey + " :", Object.keys(bones));
+
             const box = new THREE.Box3().setFromObject(model);
             const size = box.getSize(new THREE.Vector3());
 
-            // Ajuster la hauteur à 3 unités
             const scale = 3 / size.y;
             model.scale.setScalar(scale);
 
-            // Recentrer le personnage au sol
             const scaledBox = new THREE.Box3().setFromObject(model);
             const center = scaledBox.getCenter(new THREE.Vector3());
 
@@ -1059,7 +1051,6 @@ player.userData.streetKingModel = model;
             model.position.z -= center.z;
             model.position.y -= scaledBox.min.y;
 
-            // Activer les ombres
             model.traverse(function (child) {
                 if (child.isMesh) {
                     child.castShadow = true;
@@ -1069,13 +1060,13 @@ player.userData.streetKingModel = model;
 
             player.add(model);
 
-            console.log("STREET KING GLB CHARGÉ !");
+            console.log(skinKey + " GLB CHARGÉ !");
         },
 
         undefined,
 
         function (error) {
-            console.error("ERREUR CHARGEMENT STREET KING :", error);
+            console.error("ERREUR CHARGEMENT " + skinKey + " :", error);
         }
     );
 
@@ -1083,6 +1074,14 @@ player.userData.streetKingModel = model;
     player.position.set(0, 0, 0);
 
     scene.add(player);
+}
+
+function createStreetKing() {
+    createGLBCharacter("grab3d-cozy-character.glb", "streetKing");
+}
+
+function createAstronaut() {
+    createGLBCharacter("grab3d-cozy-character%20(1).glb", "astronaut");
 }
 function createPlayer() {
     player = new THREE.Group();
