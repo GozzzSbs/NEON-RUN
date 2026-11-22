@@ -3243,7 +3243,7 @@ document.getElementById("devGiveCertifiedCape").onclick = async () => {
 
     const { data: player, error: playerError } = await supabaseClient
         .from("neon_players")
-        .select("id, pseudo")
+        .select("id, pseudo, verified")
         .eq("pseudo", pseudo)
         .maybeSingle();
 
@@ -3252,46 +3252,27 @@ document.getElementById("devGiveCertifiedCape").onclick = async () => {
         return;
     }
 
-    const { data: authData } = await supabaseClient.auth.getUser();
-
-    if (!authData.user) {
-        alert("❌ Session développeur introuvable !");
-        return;
-    }
+    const nouvelleValeur = !player.verified;
 
     const { error } = await supabaseClient
-        .from("neon_player_capes")
-        .insert({
-            player_id: player.id,
-            cape_id: "certified",
-            granted_by: authData.user.id
-        });
+        .from("neon_players")
+        .update({ verified: nouvelleValeur })
+        .eq("id", player.id);
 
     if (error) {
-        if (error.code === "23505") {
-            alert("Ce joueur possède déjà la cape certifiée !");
-        } else {
-            console.error(error);
-            alert("❌ Impossible d'offrir la cape.");
-        }
+        console.error(error);
+        alert("❌ Impossible de modifier la certification.");
         return;
     }
 
-    alert("👑 Cape certifiée offerte à " + player.pseudo + " !");
+    alert(
+        nouvelleValeur
+            ? "✅ " + player.pseudo + " est maintenant certifié !"
+            : "❌ Certification retirée à " + player.pseudo
+    );
+
     document.getElementById("certifiedCapePseudo").value = "";
 };
-    // RACCOURCI SECRET : CTRL + MAJ + D
-    window.addEventListener("keydown", event => {
-        if (
-            event.ctrlKey &&
-            event.shiftKey &&
-            event.key.toLowerCase() === "d"
-        ) {
-            event.preventDefault();
-            openDeveloperMenu();
-        }
-    });
-}
 // ======================================================
 // STYLE DE LA BOUTIQUE
 // ======================================================
