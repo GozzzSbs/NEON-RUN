@@ -2932,15 +2932,18 @@ function startGame() {
     console.log("PLAYER :", player);
 console.log("PLAYER PARTS :", playerParts);
 
-if (!player || !playerParts || !playerParts.body) {
+if (!player || !playerParts || 
+    (equippedSkin !== "street_king" && !playerParts.body)) {
     console.error("ERREUR : le personnage n'est pas correctement initialisé !");
     return;
 }
 
 player.position.set(0, 0, 0);
 player.scale.set(1, 1, 1);
-playerParts.body.position.y = 1.75;
 
+if (playerParts.body) {
+    playerParts.body.position.y = 1.75;
+}
     obstacles.forEach(obstacle => scene.remove(obstacle.object));
     coinObjects.forEach(coin => scene.remove(coin));
 
