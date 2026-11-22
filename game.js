@@ -1070,12 +1070,7 @@ function createGLBCharacter(fileName, skinKey) {
         }
     );
 
-    player.rotation.y = Math.PI;
-
-if (skinKey === "jacko") {
-    model.rotation.y += Math.PI;
-}
-
+   player.rotation.y = Math.PI;
 player.position.set(0, 0, 0);
 
     scene.add(player);
