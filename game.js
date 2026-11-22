@@ -4364,8 +4364,8 @@ shopPreviewItems.forEach(item => {
 // RECONSTRUIRE LES MINIATURES
 shopPreviewItems = [];
 
-    grid.querySelectorAll(".neon-shop-preview[data-cape-id]").forEach(preview => {
-        const id = preview.dataset.capeId;
+    grid.querySelectorAll('.neon-shop-preview[data-preview-type="cape"]').forEach(preview => {
+    const id = preview.dataset.previewId;
         if (!id) return;
 
         const vertices = [];
