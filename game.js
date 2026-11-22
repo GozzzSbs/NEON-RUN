@@ -2671,6 +2671,8 @@ function checkCollisions() {
             // GRAND TUNNEL : AUCUNE COLLISION
 // Le joueur peut courir normalement à l'intérieur.
 
+    }
+
 
     // Ramassage des pièces
     for (let i = coinObjects.length - 1; i >= 0; i--) {
