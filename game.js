@@ -1092,16 +1092,42 @@ function createStreetKing() {
             0.027, 0.04, 0.018);
     }
 
-    // CASQUETTE À L'ENVERS
-    sphere(head, black, 0, 0.37, -0.08,
-        0.37, 0.14, 0.34);
+    // CASQUETTE STREETWEAR À L'ENVERS
 
-    sphere(head, black, 0, 0.34, -0.34,
-        0.27, 0.035, 0.16);
+// Couronne de la casquette
+sphere(
+    head, black,
+    0, 0.37, -0.06,
+    0.38, 0.17, 0.35
+);
 
-    // Logo sur la casquette
-    sphere(head, white, 0, 0.39, -0.39,
-        0.07, 0.045, 0.025);
+// Visière arrière bien visible
+sphere(
+    head, mat(0x303030),
+    0, 0.32, -0.39,
+    0.34, 0.055, 0.25
+);
+
+// Bande blanche de la casquette
+sphere(
+    head, white,
+    0, 0.27, -0.12,
+    0.29, 0.025, 0.025
+);
+
+// Logo blanc sur la casquette
+sphere(
+    head, white,
+    0, 0.43, -0.385,
+    0.09, 0.065, 0.025
+);
+
+// Petit bouton au sommet
+sphere(
+    head, grey,
+    0, 0.535, -0.04,
+    0.055, 0.025, 0.055
+);
 
     // BRAS
     for (const side of [-1, 1]) {
