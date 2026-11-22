@@ -4921,7 +4921,7 @@ ctx.restore();
         cape.userData.logoTexture = texture;
     }
 
-let bones = null;
+    let bones = null;
 
 if (equippedSkin === "street_king") {
     bones = player.userData.streetKingBones;
@@ -4931,11 +4931,8 @@ if (equippedSkin === "astronaut") {
     bones = player.userData.astronautBones;
 }
 
-if (equippedSkin === "default") {
-    bones = player.userData.jackoBones;
-}
-
 if (
+    (equippedSkin === "street_king" || equippedSkin === "astronaut") &&
     bones &&
     bones.chest
 ) {
@@ -4950,10 +4947,10 @@ if (
 
 shopCapeObject = cape;
 
-shopCapeObject.userData.cloth = cloth;
-shopCapeObject.userData.capeId = equippedCape;
-shopCapeObject.userData.lastPhase = -1;
-    }
+    shopCapeObject.userData.cloth = cloth;
+    shopCapeObject.userData.capeId = equippedCape;
+    shopCapeObject.userData.lastPhase = -1;
+}
 // ======================================================
 // ANIMATION CAPE
 // ======================================================
