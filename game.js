@@ -402,7 +402,7 @@ const railGround = new THREE.Mesh(
 );
 
 railGround.rotation.x = -Math.PI / 2;
-railGround.position.set(0, -0.46, -80);
+railGround.position.set(0, -0.47, -80);
 scene.add(railGround);
 
 // ======================================================
