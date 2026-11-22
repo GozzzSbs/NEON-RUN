@@ -1299,8 +1299,9 @@ function createPlayer() {
         playerParts.legs.push(leg);
     }
 
-    player.position.set(0, 0, 0);
-    scene.add(player);
+    player.rotation.y = Math.PI;
+player.position.set(0, 0, 0);
+scene.add(player);
 }
 
 createPlayer();
