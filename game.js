@@ -2652,7 +2652,7 @@ function animateRunner() {
 
             if (bones) {
                 const run = swing * 0.55;
-                const armSwing = swing * 0.65;
+                const armSwing = -swing * 0.65;
 
                 // BRAS GAUCHE
                 if (bones.upperArmL) {
