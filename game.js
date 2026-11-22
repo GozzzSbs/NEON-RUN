@@ -58,7 +58,7 @@ const skyMaterial = new THREE.ShaderMaterial({
 const skyDome = new THREE.Mesh(skyGeometry, skyMaterial);
 skyDome.renderOrder = -1;
 scene.add(skyDome);
-scene.fog = new THREE.Fog(0x55baff, 150, 300);
+scene.fog = new THREE.Fog(0x55baff, 250, 500);
 const camera = new THREE.PerspectiveCamera(
     65,
     (canvas.clientWidth / canvas.clientHeight) || 1,
