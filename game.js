@@ -1039,6 +1039,7 @@ function createGLBCharacter(fileName, skinKey) {
                 if (child.isSkinnedMesh) {
                     child.skeleton.bones.forEach(function (bone) {
                         bones[bone.name] = bone;
+                        bone.userData.baseRotation = bone.rotation.clone();
                     });
                 }
             });
