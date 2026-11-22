@@ -4953,7 +4953,7 @@ function animateCape() {
                 const influence = v * v;
 
                 positions.array[offset] =
-                    base[offset] + wave * 0.035 * influence;
+                    base[offset] + wave * 0.09 * influence;
 
                 positions.array[offset + 1] =
                     base[offset + 1] +
@@ -4963,7 +4963,7 @@ function animateCape() {
                     base[offset + 2] -
                     influence * (
                         0.08 +
-                        wave * 0.07 +
+                       wave * 0.18 +
                         jumpingFactor * 0.28 -
                         slidingFactor * 0.08
                     );
