@@ -4678,7 +4678,7 @@ for (let y = 0; y <= heightSegments; y++) {
         vertices.push(
             THREE.MathUtils.lerp(topX, bottomX, v),
             2.25 - v * 2,
-            -0.34 - v * 0.14
+            -0.05 - v * 0.43
         );
 
         if (x < widthSegments && y < heightSegments) {
