@@ -3026,100 +3026,107 @@ window.addEventListener("resize", () => {
 
 const SHOP_CATALOG = {
     skins: [
-    {
-        id: "default",
-        name: "JACKO",
-        price: 0,
-        currency: "coins",
-        color: 0x7900b8,
-        description: "Le runner original."
-    },
-    {
-        id: "el_blackito",
-        name: "EL BLACKITO",
-        price: 10,
-        currency: "diamonds",
-        color: 0x050505,
-        description: "Noir absolu avec des détails blancs."
-    },
-    {
-        id: "electric",
-        name: "ELECTRIC",
-        price: 25,
-        currency: "diamonds",
-        color: 0x00eaff,
-        description: "L'énergie électrique."
-    },
-    {
-        id: "inferno",
-        name: "INFERNO",
-        price: 40,
-        currency: "diamonds",
-        color: 0xff3300,
-        description: "Un runner venu des flammes."
-    },
-    {
-        id: "royal",
-        name: "ROYAL",
-        price: 60,
-        currency: "diamonds",
-        color: 0xffd700,
-        description: "Un style digne d'un roi."
-    },
-    {
-        id: "galaxy",
-        name: "GALAXY",
-        price: 80,
-        currency: "diamonds",
-        color: 0x8a2be2,
-        description: "La puissance de la galaxie."
-    },
-    {
-        id: "diamond",
-        name: "DIAMOND",
-        price: 120,
-        currency: "diamonds",
-        color: 0xffffff,
-        description: "Le skin ultime."
-    }
-],
-
+        {
+            id: "default",
+            name: "JACKO",
+            price: 0,
+            currency: "coins",
+            color: 0x7900b8,
+            description: "Le runner original."
+        },
+        {
+            id: "street_king",
+            name: "STREET KING",
+            price: 50,
+            currency: "diamonds",
+            color: 0x151515,
+            description: "Le style streetwear ultime."
+        },
+        {
+            id: "el_blackito",
+            name: "EL BLACKITO",
+            price: 10,
+            currency: "diamonds",
+            color: 0x050505,
+            description: "Noir absolu avec des détails blancs."
+        },
+        {
+            id: "electric",
+            name: "ELECTRIC",
+            price: 25,
+            currency: "diamonds",
+            color: 0x00eaff,
+            description: "L'énergie électrique."
+        },
+        {
+            id: "inferno",
+            name: "INFERNO",
+            price: 40,
+            currency: "diamonds",
+            color: 0xff3300,
+            description: "Un runner venu des flammes."
+        },
+        {
+            id: "royal",
+            name: "ROYAL",
+            price: 60,
+            currency: "diamonds",
+            color: 0xffd700,
+            description: "Un style digne d'un roi."
+        },
+        {
+            id: "galaxy",
+            name: "GALAXY",
+            price: 80,
+            currency: "diamonds",
+            color: 0x8a2be2,
+            description: "La puissance de la galaxie."
+        },
+        {
+            id: "diamond",
+            name: "DIAMOND",
+            price: 120,
+            currency: "diamonds",
+            color: 0xffffff,
+            description: "Le skin ultime."
+        }
+    ],
 
     capes: [
-    {
-        id: "nr",
-        name: "CAPE NR",
-        price: 100,
-        currency: "diamonds",
-        color: 0x050505,
-        description: "Cape noire avec le logo NR."
-    },
-    {
-        id: "rxn",
-        name: "La RXN Cape,s",
-        price: 500,
-        currency: "diamonds",
-        color: 0x050505,
-        description: "Cape noire animée : RXN blanc et lune blanche."
-    },
-    {
-        id: "rxn_white",
-        name: "RXN WHITE",
-        price: 500,
-        currency: "diamonds",
-        color: 0xffffff,
-        description: "Cape blanche animée : RXN noir et lune noir."
-    },
-    {
-        id: "certified",
-        name: "CAPE CERTIFIÉE",
-        price: 0,
-        currency: "diamonds",
-        color: 0xffffff,
-        exclusive: true,
-        description: "Cape exclusive avec badge certifié animé."
-    }
-]
+        {
+            id: "nr",
+            name: "CAPE NR",
+            price: 100,
+            currency: "diamonds",
+            color: 0x050505,
+            description: "Cape noire avec le logo NR."
+        },
+        {
+            id: "rxn",
+            name: "La RXN Cape,s",
+            price: 500,
+            currency: "diamonds",
+            color: 0x050505,
+            description: "Cape noire animée : RXN blanc et lune blanche."
+        },
+        {
+            id: "rxn_white",
+            name: "RXN WHITE",
+            price: 500,
+            currency: "diamonds",
+            color: 0xffffff,
+            description: "Cape blanche animée : RXN noir et lune noir."
+        },
+        {
+            id: "certified",
+            name: "CAPE CERTIFIÉE",
+            price: 0,
+            currency: "diamonds",
+            color: 0xffffff,
+            exclusive: true,
+            description: "Cape exclusive avec badge certifié animé."
+        }
+    ]
 };
 
 // ======================================================
