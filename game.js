@@ -1057,7 +1057,7 @@ function createGLBCharacter(fileName, skinKey) {
 
             model.position.x -= center.x;
             model.position.z -= center.z;
-            model.position.y -= scaledBox.min.y;
+            model.position.y -= scaledBox.min.y - 0.03;
 
             model.traverse(function (child) {
                 if (child.isMesh) {
