@@ -1083,6 +1083,9 @@ function createStreetKing() {
 function createAstronaut() {
     createGLBCharacter("grab3d-cozy-character%20(1).glb", "astronaut");
 }
+function createJacko() {
+    createGLBCharacter("grab3d-cozy-character%20(2).glb", "jacko");
+}
 function createPlayer() {
     player = new THREE.Group();
 
@@ -1090,7 +1093,10 @@ if (equippedSkin === "street_king") {
     createStreetKing();
     return;
 }
-
+if (equippedSkin === "default") {
+    createJacko();
+    return;
+}
 if (equippedSkin === "astronaut") {
     createAstronaut();
     return;
