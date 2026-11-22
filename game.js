@@ -4946,14 +4946,26 @@ ctx.restore();
         cape.userData.logoTexture = texture;
     }
 
-    const bones = player.userData.streetKingBones;
+    let bones = null;
 
-if (equippedSkin === "street_king" && bones && bones.chest) {
-   bones.chest.add(cape);
+if (equippedSkin === "street_king") {
+    bones = player.userData.streetKingBones;
+}
 
-// Position et taille de la cape
-cape.position.set(0, -0.30, -0.18);
-cape.scale.set(0.35, 0.22, 0.35);
+if (equippedSkin === "astronaut") {
+    bones = player.userData.astronautBones;
+}
+
+if (
+    (equippedSkin === "street_king" || equippedSkin === "astronaut") &&
+    bones &&
+    bones.chest
+) {
+    bones.chest.add(cape);
+
+    cape.position.set(0, -0.30, -0.18);
+    cape.scale.set(0.35, 0.22, 0.35);
+
 } else {
     player.add(cape);
 }
