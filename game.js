@@ -2473,11 +2473,7 @@ function jump() {
     player.scale.y = 1;
 
     jumping = true;
-    const gravity = selectedMode === "lava" ? 0.035 : 0.012;
-const maxJumpHeight = (0.32 * 0.32) / (2 * gravity);
-const remainingHeight = Math.max(0, maxJumpHeight - player.position.y);
-
-jumpVelocity = Math.sqrt(2 * gravity * remainingHeight);
+    jumpVelocity = 0.32;
 }
 
 function slide() {
