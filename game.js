@@ -3668,7 +3668,12 @@ let shopPreviewScene = null;
 let shopPreviewCamera = null;
 let shopPreviewItems = [];
 let shopPreviewAnimation = null;
-
+// MINIATURES 3D DES SKINS
+let shopSkinRenderer = null;
+let shopSkinScene = null;
+let shopSkinCamera = null;
+let shopSkinItems = [];
+let shopSkinAnimation = null;
 
 // ======================================================
 // SAUVEGARDE DES ACHATS
