@@ -2326,17 +2326,42 @@ if (equippedSkin === "street_king") {
     const model = player.userData.streetKingModel;
 
     if (model) {
-        model.position.y = bounce * 0.055;
+    const bones = player.userData.streetKingBones;
 
-        if (jumping) {
-            model.rotation.x = -0.12;
-        } else if (sliding) {
-            model.rotation.x = 0.45;
-        } else {
-            model.rotation.x = 0.035 + swing * 0.025;
-            model.rotation.z = swing * 0.025;
+    model.position.y = bounce * 0.055;
+
+    if (bones) {
+        const run = swing * 0.55;
+
+        // BRAS
+        if (bones.upperArmL) bones.upperArmL.rotation.x = run;
+        if (bones.upperArmR) bones.upperArmR.rotation.x = -run;
+
+        if (bones.lowerArmL) bones.lowerArmL.rotation.x = -0.25;
+        if (bones.lowerArmR) bones.lowerArmR.rotation.x = -0.25;
+
+        // JAMBES
+        if (bones.upperLegL) bones.upperLegL.rotation.x = -run;
+        if (bones.upperLegR) bones.upperLegR.rotation.x = run;
+
+        if (bones.lowerLegL) {
+            bones.lowerLegL.rotation.x = Math.max(0, run) * 0.8;
+        }
+
+        if (bones.lowerLegR) {
+            bones.lowerLegR.rotation.x = Math.max(0, -run) * 0.8;
         }
     }
+
+    if (jumping) {
+        model.rotation.x = -0.12;
+    } else if (sliding) {
+        model.rotation.x = 0.45;
+    } else {
+        model.rotation.x = 0.035 + swing * 0.025;
+        model.rotation.z = swing * 0.025;
+    }
+}
 
     animateCape();
     return;
