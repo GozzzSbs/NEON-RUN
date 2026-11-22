@@ -1023,6 +1023,9 @@ function createGLBCharacter(fileName, skinKey) {
 
         function (gltf) {
             const model = gltf.scene;
+            if (skinKey === "jacko") {
+    model.rotation.y += Math.PI;
+}
             const bones = {};
 
             model.traverse(function (child) {
