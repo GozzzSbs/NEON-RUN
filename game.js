@@ -3037,7 +3037,7 @@ const SHOP_CATALOG = {
         {
             id: "street_king",
             name: "STREET KING",
-            price: 50,
+            price: 500,
             currency: "diamonds",
             color: 0x151515,
             description: "Le style streetwear ultime."
