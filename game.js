@@ -4680,7 +4680,7 @@ function setupShopSkinPreviews() {
         canvas.style.width = "100%";
         canvas.style.height = "100%";
         canvas.style.pointerEvents = "none";
-        canvas.style.zIndex = "2";
+        canvas.style.zIndex = "-1";
         grid.appendChild(canvas);
     }
 
