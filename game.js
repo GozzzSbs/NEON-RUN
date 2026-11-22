@@ -2046,7 +2046,19 @@ const patterns = [
 ];
 
 const pattern = patterns[Math.floor(Math.random() * patterns.length)];
+// AJOUT DE PIÈCES DANS LES PARCOURS SANS PIÈCES
+if (
+    selectedMode !== "nocoin" &&
+    selectedMode !== "lava" &&
+    !["single", "double", "jumps", "arc", "coinZigzag"].includes(pattern) &&
+    Math.random() < 0.75
+) {
+    const coinLane = Math.floor(Math.random() * 3);
 
+    for (let i = 0; i < 7; i++) {
+        createCoin(coinLane, -55 - i * 3);
+    }
+}
 // CRÉATION D'UN OBSTACLE ALÉATOIRE
 function createRandomObstacle(lane, z) {
     if (Math.random() < 0.55) {
