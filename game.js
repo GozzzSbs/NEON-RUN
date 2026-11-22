@@ -4815,6 +4815,7 @@ canvas.style.background = "transparent";
                     shopSkinScene,
                     shopSkinCamera
                 );
+                console.log("SKIN PREVIEW RENDER", item.id, item.group.children.length);
             });
 
             shopSkinRenderer.setScissorTest(false);
