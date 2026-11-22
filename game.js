@@ -1023,7 +1023,7 @@ function createStreetKing() {
 
         function (gltf) {
             const model = gltf.scene;
-
+player.userData.streetKingModel = model;
             // Calculer la taille du modèle
             const box = new THREE.Box3().setFromObject(model);
             const size = box.getSize(new THREE.Vector3());
