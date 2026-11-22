@@ -4962,7 +4962,7 @@ if (
 
     cape.position.set(0, 1.2, -0.5);
     cape.rotation.y = 0;
-    cape.scale.set(0.35, 0.22, 0.35);
+    cape.scale.set(1, 0.85, 1);
 
 } else {
     player.add(cape);
