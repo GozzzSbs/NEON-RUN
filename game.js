@@ -2329,87 +2329,96 @@ function animateRunner() {
     const movement = frame * 0.14;
     const swing = Math.sin(movement);
     const bounce = Math.abs(Math.sin(movement * 2));
-// ANIMATION DU MODÈLE GLB STREET KING
-if (equippedSkin === "street_king") {
-    const model = player.userData.streetKingModel;
 
-    if (model) {
-    const bones = player.userData.streetKingBones;
+    // ANIMATION DES MODÈLES GLB
+    if (equippedSkin === "street_king" || equippedSkin === "astronaut") {
 
-    model.position.y = bounce * 0.055;
+        const skinKey = equippedSkin === "street_king"
+            ? "streetKing"
+            : "astronaut";
 
-    if (bones) {
-        const run = swing * 0.55;
+        const model = player.userData[skinKey + "Model"];
+        const bones = player.userData[skinKey + "Bones"];
 
-        // BRAS : POSITION DE COURSE
-const armSwing = swing * 0.65;
+        if (model) {
 
-// Bras gauche
-if (bones.upperArmL) {
-    bones.upperArmL.rotation.set(
-        armSwing,
-        0,
-        -0.85
-    );
-}
-if (bones.lowerArmL) {
-    bones.lowerArmL.rotation.set(-1.0, 0, 0);
-}
+            model.position.y = bounce * 0.055;
 
-// Bras droit
-if (bones.upperArmR) {
-    bones.upperArmR.rotation.set(
-        -armSwing,
-        0,
-        0.85
-    );
-}
-if (bones.lowerArmR) {
-    bones.lowerArmR.rotation.set(-1.0, 0, 0);
-}
-        // JAMBES
-        if (bones.upperLegL) bones.upperLegL.rotation.x = -run;
-        if (bones.upperLegR) bones.upperLegR.rotation.x = run;
+            if (bones) {
+                const run = swing * 0.55;
+                const armSwing = swing * 0.65;
 
-        if (bones.lowerLegL) {
-            bones.lowerLegL.rotation.x = Math.max(0, run) * 0.8;
+                // BRAS GAUCHE
+                if (bones.upperArmL) {
+                    bones.upperArmL.rotation.set(armSwing, 0, -0.85);
+                }
+
+                if (bones.lowerArmL) {
+                    bones.lowerArmL.rotation.set(-1.0, 0, 0);
+                }
+
+                // BRAS DROIT
+                if (bones.upperArmR) {
+                    bones.upperArmR.rotation.set(-armSwing, 0, 0.85);
+                }
+
+                if (bones.lowerArmR) {
+                    bones.lowerArmR.rotation.set(-1.0, 0, 0);
+                }
+
+                // JAMBES
+                if (bones.upperLegL) {
+                    bones.upperLegL.rotation.x = -run;
+                }
+
+                if (bones.upperLegR) {
+                    bones.upperLegR.rotation.x = run;
+                }
+
+                if (bones.lowerLegL) {
+                    bones.lowerLegL.rotation.x = Math.max(0, run) * 0.8;
+                }
+
+                if (bones.lowerLegR) {
+                    bones.lowerLegR.rotation.x = Math.max(0, -run) * 0.8;
+                }
+            }
+
+            // SAUT
+            if (jumping) {
+                model.rotation.x = -0.12;
+                model.position.y = bounce * 0.055;
+                model.position.z = 0;
+            }
+
+            // ROULADE
+            else if (sliding) {
+                const progress = 1 - slideTimer / 50;
+                const angle = progress * Math.PI * 2;
+
+                model.rotation.x = angle;
+
+                model.position.y = 1.5 - 1.5 * Math.cos(angle);
+                model.position.z = -1.5 * Math.sin(angle);
+            }
+
+            // COURSE
+            else {
+                model.rotation.x = 0.035 + swing * 0.025;
+                model.rotation.z = swing * 0.025;
+
+                model.position.y = bounce * 0.055;
+                model.position.z = 0;
+            }
         }
 
-        if (bones.lowerLegR) {
-            bones.lowerLegR.rotation.x = Math.max(0, -run) * 0.8;
-        }
+        animateCape();
+        return;
     }
 
-    if (jumping) {
-    model.rotation.x = -0.12;
-    model.position.y = bounce * 0.055;
-    model.position.z = 0;
-
-} else if (sliding) {
-
-    const progress = 1 - slideTimer / 50;
-    const angle = progress * Math.PI * 2;
-
-    // Roulade complète
-    model.rotation.x = angle;
-
-    // Garder le personnage centré pendant la rotation
-    model.position.y = 1.5 - 1.5 * Math.cos(angle);
-    model.position.z = -1.5 * Math.sin(angle);
-
-} else {
-    model.rotation.x = 0.035 + swing * 0.025;
-    model.rotation.z = swing * 0.025;
-
-    model.position.y = bounce * 0.055;
-    model.position.z = 0;
-}
-}
-
-    animateCape();
-    return;
-}
+    // ANIMATION DU PERSONNAGE CLASSIQUE
     if (!jumping && !sliding) {
+
         // BALANCEMENT DES BRAS
         playerParts.arms.forEach((arm, i) => {
             const direction = i === 0 ? 1 : -1;
@@ -2441,6 +2450,7 @@ if (bones.lowerArmR) {
         playerParts.head.rotation.z = -swing * 0.025;
     }
 
+    // SAUT DU PERSONNAGE CLASSIQUE
     if (jumping) {
         playerParts.arms.forEach(arm => {
             arm.rotation.x = -0.8;
@@ -2454,6 +2464,7 @@ if (bones.lowerArmR) {
         playerParts.body.rotation.x = -0.12;
     }
 
+    // GLISSADE DU PERSONNAGE CLASSIQUE
     if (sliding) {
         playerParts.arms.forEach(arm => {
             arm.rotation.x = 0.7;
