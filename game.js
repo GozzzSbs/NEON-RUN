@@ -2568,7 +2568,7 @@ function checkCollisions() {
             }
         }
             // COLLISION AVEC LE TUNNEL
-        if (
+                if (
             obstacle.type === "tunnel" &&
             distance > -1.3 &&
             distance < 1.3
@@ -2578,6 +2578,9 @@ function checkCollisions() {
                 return;
             }
         }
+
+    }
+
 
     // Ramassage des pièces
     for (let i = coinObjects.length - 1; i >= 0; i--) {
