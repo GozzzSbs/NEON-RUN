@@ -1034,6 +1034,9 @@ model.traverse(function (child) {
 });
 
 player.userData.streetKingBones = bones;
+            console.log("DOS :", bones.chest.position);
+console.log("HANCHES :", bones.hips.position);
+console.log("DOS ROTATION :", bones.chest.rotation);
             model.traverse(function (child) {
     if (child.isSkinnedMesh) {
         console.log("SQUELETTE GLB :", child.skeleton.bones.map(b => b.name));
