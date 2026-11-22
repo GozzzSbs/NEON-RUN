@@ -4960,7 +4960,7 @@ if (
 ) {
     bones.chest.add(cape);
 
-    cape.position.set(0, -0.30, 0.18);
+    cape.position.set(0, 0.40, 0.18);
     cape.rotation.y = 0;
     cape.scale.set(0.35, 0.22, 0.35);
 
