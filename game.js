@@ -4909,10 +4909,11 @@ ctx.restore();
     const bones = player.userData.streetKingBones;
 
 if (equippedSkin === "street_king" && bones && bones.chest) {
-    bones.chest.add(cape);
+   bones.chest.add(cape);
 
-    // Position de la cape sur le dos
-    cape.position.set(0, 0.08, -0.18);
+// Position et taille de la cape
+cape.position.set(0, 0.08, -0.18);
+cape.scale.set(0.35, 0.35, 0.35);
 } else {
     player.add(cape);
 }
