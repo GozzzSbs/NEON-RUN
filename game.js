@@ -3960,7 +3960,6 @@ function createShopStyles() {
 
         .neon-shop-panel {
             position: relative;
-            z-index: 1;
             width: min(850px, 100%);
             max-height: 90vh;
             overflow-y: auto;
