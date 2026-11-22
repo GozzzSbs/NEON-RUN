@@ -347,51 +347,63 @@ function box(w, h, d, color, x, y, z, parent = scene) {
 // ======================================================
 
 // ======================================================
-// SOL URBAIN EN ASPHALTE
+// SOL URBAIN MARRON
 // ======================================================
 
-const asphaltCanvas = document.createElement("canvas");
-asphaltCanvas.width = 512;
-asphaltCanvas.height = 512;
+const groundCanvas = document.createElement("canvas");
+groundCanvas.width = 512;
+groundCanvas.height = 512;
 
-const asphaltCtx = asphaltCanvas.getContext("2d");
+const groundCtx = groundCanvas.getContext("2d");
 
-// Fond bitume
-asphaltCtx.fillStyle = "#59402e";
-asphaltCtx.fillRect(0, 0, 512, 512);
+groundCtx.fillStyle = "#59402e";
+groundCtx.fillRect(0, 0, 512, 512);
 
-// Texture légèrement usée
-for (let i = 0; i < 5000; i++) {
+for (let i = 0; i < 4000; i++) {
     const x = Math.random() * 512;
     const y = Math.random() * 512;
     const size = Math.random() * 2 + 0.5;
 
     const shades = ["#70543c", "#493323", "#806044", "#5e422e"];
-    asphaltCtx.fillStyle = shades[Math.floor(Math.random() * shades.length)];
+    groundCtx.fillStyle = shades[Math.floor(Math.random() * shades.length)];
 
-    asphaltCtx.beginPath();
-    asphaltCtx.arc(x, y, size, 0, Math.PI * 2);
-    asphaltCtx.fill();
+    groundCtx.beginPath();
+    groundCtx.arc(x, y, size, 0, Math.PI * 2);
+    groundCtx.fill();
 }
 
-const asphaltTexture = new THREE.CanvasTexture(asphaltCanvas);
-asphaltTexture.wrapS = THREE.RepeatWrapping;
-asphaltTexture.wrapT = THREE.RepeatWrapping;
-asphaltTexture.repeat.set(12, 18);
-asphaltTexture.offset.set(0, 0);
-asphaltTexture.matrixAutoUpdate = false;
-asphaltTexture.updateMatrix();
+const groundTexture = new THREE.CanvasTexture(groundCanvas);
+groundTexture.wrapS = THREE.RepeatWrapping;
+groundTexture.wrapT = THREE.RepeatWrapping;
+groundTexture.repeat.set(12, 18);
+
 const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(300, 350),
     new THREE.MeshStandardMaterial({
-        map: asphaltTexture,
-        roughness: 0.95
+        map: groundTexture,
+        roughness: 1
     })
 );
 
 floor.rotation.x = -Math.PI / 2;
-floor.position.set(0, -0.47, -100);
+floor.position.set(0, -0.48, -100);
 scene.add(floor);
+
+// ======================================================
+// SOL GRIS BLEUTÉ SOUS LES RAILS
+// ======================================================
+
+const railGround = new THREE.Mesh(
+    new THREE.PlaneGeometry(12, 220),
+    new THREE.MeshStandardMaterial({
+        color: 0x303b48,
+        roughness: 1
+    })
+);
+
+railGround.rotation.x = -Math.PI / 2;
+railGround.position.set(0, -0.46, -80);
+scene.add(railGround);
 
 // ======================================================
 // BORDURES ORANGE
