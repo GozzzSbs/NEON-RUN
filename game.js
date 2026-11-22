@@ -2576,7 +2576,17 @@ function checkCollisions() {
                 return;
             }
         }
-    }
+            // COLLISION AVEC LE TUNNEL
+        if (
+            obstacle.type === "tunnel" &&
+            distance > -1.3 &&
+            distance < 1.3
+        ) {
+            if (!sliding) {
+                endGame("Tu n'as pas évité le plafond du tunnel !");
+                return;
+            }
+        }
 
     // Ramassage des pièces
     for (let i = coinObjects.length - 1; i >= 0; i--) {
