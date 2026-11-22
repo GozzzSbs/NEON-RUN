@@ -1013,7 +1013,7 @@ function createGLBCharacter(fileName, skinKey) {
     }
 
     player = new THREE.Group();
-
+const character = player;
     playerParts = {
         arms: [],
         legs: [],
