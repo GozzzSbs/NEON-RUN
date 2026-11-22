@@ -1046,8 +1046,8 @@ const character = player;
                 }
             });
 
-            player.userData[skinKey + "Bones"] = bones;
-            player.userData[skinKey + "Model"] = model;
+            character.userData[skinKey + "Bones"] = bones;
+character.userData[skinKey + "Model"] = model;
 
             console.log("SQUELETTE " + skinKey + " :", Object.keys(bones));
 
