@@ -4649,6 +4649,7 @@ function createCape() {
     }
 
     const cape = new THREE.Group();
+    cape.scale.set(0.75, 0.75, 0.75);
 if (equippedCape === "certified") {
     cape.position.z = -0.28;
 }
