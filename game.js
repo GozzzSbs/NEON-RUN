@@ -2464,7 +2464,7 @@ function moveRight() {
 function jump() {
     if (!running || paused) return;
 
-   if (jumping && !ridingTrain) return;
+   if (jumping && !sliding && !ridingTrain) return;
 
     ridingTrain = null;
     sliding = false;
@@ -2473,7 +2473,11 @@ function jump() {
     player.scale.y = 1;
 
     jumping = true;
-    jumpVelocity = 0.32;
+    const gravity = selectedMode === "lava" ? 0.035 : 0.012;
+const maxJumpHeight = (0.32 * 0.32) / (2 * gravity);
+const remainingHeight = Math.max(0, maxJumpHeight - player.position.y);
+
+jumpVelocity = Math.sqrt(2 * gravity * remainingHeight);
 }
 
 function slide() {
