@@ -3331,6 +3331,22 @@ for (const obstacle of obstacles) {
         led.material.emissiveIntensity = 1.5 + pulse * 2;
     });
 }
+    // DÉFILEMENT DES ANNEAUX DU TUNNEL
+for (const obstacle of obstacles) {
+    if (obstacle.type !== "tunnel") continue;
+
+    const rings = obstacle.object.userData.ledRings;
+
+    if (!rings) continue;
+
+    rings.forEach(ring => {
+        ring.position.z += speed * 1.5;
+
+        if (ring.position.z > 32) {
+            ring.position.z = -32;
+        }
+    });
+}
    // JACKO RESTE SUR LE TRAIN TEMPORAIREMENT
 if (ridingTrain) {
     const trainExists = obstacles.some(
