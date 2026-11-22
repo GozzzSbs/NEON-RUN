@@ -2337,8 +2337,11 @@ function animateRunner() {
     const bounce = Math.abs(Math.sin(movement * 2));
 
     // ANIMATION DES MODÈLES GLB
-    if (equippedSkin === "street_king" || equippedSkin === "astronaut") {
-
+    if (
+    equippedSkin === "street_king" ||
+    equippedSkin === "astronaut" ||
+    equippedSkin === "default"
+) {
         const skinKey = equippedSkin === "street_king"
             ? "streetKing"
             : "astronaut";
