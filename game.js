@@ -1006,7 +1006,6 @@ for (const side of [-1, 1]) {
 // ======================================================
 // PERSONNAGE 3D - STYLE CARTOON RÉALISTE
 // ======================================================
-
 function createGLBCharacter(fileName, skinKey) {
     player = new THREE.Group();
 
@@ -1024,20 +1023,16 @@ function createGLBCharacter(fileName, skinKey) {
 
         function (gltf) {
             const model = gltf.scene;
-
-            // Rotation du corps
-            model.rotation.y += Math.PI;
-
-            // Compensation de la tête
-            model.traverse(function (child) {
-                if (
-                    child.isBone &&
-                    child.name.toLowerCase().includes("head")
-                ) {
-                    child.rotation.y += Math.PI;
-                }
-            });
-
+            if (skinKey === "jacko") {
+    model.traverse(function (child) {
+        if (child.isBone && child.name === "head") {
+            child.rotation.y += Math.PI;
+        }
+    });
+}
+            if (skinKey === "jacko") {
+    model.rotation.y += Math.PI;
+}
             const bones = {};
 
             model.traverse(function (child) {
@@ -1046,20 +1041,12 @@ function createGLBCharacter(fileName, skinKey) {
                         bones[bone.name] = bone;
                     });
                 }
-
-                if (child.isMesh) {
-                    child.castShadow = true;
-                    child.receiveShadow = true;
-                }
             });
 
             player.userData[skinKey + "Bones"] = bones;
             player.userData[skinKey + "Model"] = model;
 
-            console.log(
-                "SQUELETTE " + skinKey + " :",
-                Object.keys(bones)
-            );
+            console.log("SQUELETTE " + skinKey + " :", Object.keys(bones));
 
             const box = new THREE.Box3().setFromObject(model);
             const size = box.getSize(new THREE.Vector3());
@@ -1074,6 +1061,13 @@ function createGLBCharacter(fileName, skinKey) {
             model.position.z -= center.z;
             model.position.y -= scaledBox.min.y;
 
+            model.traverse(function (child) {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            });
+
             player.add(model);
 
             console.log(skinKey + " GLB CHARGÉ !");
@@ -1082,15 +1076,12 @@ function createGLBCharacter(fileName, skinKey) {
         undefined,
 
         function (error) {
-            console.error(
-                "ERREUR CHARGEMENT " + skinKey + " :",
-                error
-            );
+            console.error("ERREUR CHARGEMENT " + skinKey + " :", error);
         }
     );
 
-    player.rotation.y = Math.PI;
-    player.position.set(0, 0, 0);
+   player.rotation.y = Math.PI;
+player.position.set(0, 0, 0);
 
     scene.add(player);
 }
@@ -2098,44 +2089,42 @@ if (pattern === 4) {
 // 5. DEUX CHEMINS QUI REJOIGNENT LE CENTRE
 if (pattern === 5) {
     for (let i = 0; i < 4; i++) {
-        if (laneA !== laneIndex) {
-            createCoin(laneA, -65 - i * 3);
-        }
-
-        if (laneB !== laneIndex) {
-            createCoin(laneB, -65 - i * 3);
-        }
+    if (laneA !== laneIndex) {
+        createCoin(laneA, -65 - i * 3);
     }
-
-    const centerLane = 1;
-
-    if (centerLane !== laneIndex) {
-        for (let i = 0; i < 4; i++) {
-            createCoin(centerLane, -77 - i * 3);
-        }
-    }
-}
-
 // 6. FORMATION RARE : 3 LIGNES DE PIÈCES
 if (pattern === 6) {
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 5; i++) {
         createCoin(0, -65 - i * 3);
         createCoin(1, -65 - i * 3);
         createCoin(2, -65 - i * 3);
     }
 }
-
-// 4. CHOIX ENTRE DEUX PARCOURS
-if (pattern === 3) {
-    for (let i = 0; i < 4; i++) {
-        createCoin(laneA, -65 - i * 3);
-    }
-
-    for (let i = 0; i < 9; i++) {
+    if (laneB !== laneIndex) {
         createCoin(laneB, -65 - i * 3);
     }
 }
+
+    const centerLane = 1;
+
+if (centerLane !== laneIndex) {
+    for (let i = 0; i < 4; i++) {
+        createCoin(centerLane, -77 - i * 3);
+    }
 }
+    }
+    // 4. CHOIX ENTRE DEUX PARCOURS
+    if (pattern === 3) {
+        for (let i = 0; i < 4; i++) {
+            createCoin(laneA, -65 - i * 3);
+        }
+
+        for (let i = 0; i < 9; i++) {
+            createCoin(laneB, -65 - i * 3);
+        }
+    }
+}
+
 // ======================================================
 // MODES
 // ======================================================
@@ -2439,7 +2428,7 @@ function animateRunner() {
                 const angle = progress * Math.PI * 2;
 
                 model.rotation.x = angle;
-shopCapeObject.rotation.x = angle;
+
                 model.position.y = 1.5 - 1.5 * Math.cos(angle);
                 model.position.z = -1.5 * Math.sin(angle);
             }
@@ -4688,7 +4677,6 @@ function createCape() {
     }
 
     const cape = new THREE.Group();
-
     cape.position.set(0, 0, 0);
     cape.scale.set(1, 0.85, 1);
 if (equippedCape === "certified") {
@@ -4958,11 +4946,10 @@ if (
     bones &&
     bones.chest
 ) {
-    player.add(cape);
+    bones.chest.add(cape);
 
-    cape.position.set(0, 0.2, -0.5);
-    cape.rotation.y = 0;
-    cape.scale.set(1, 0.85, 1);
+    cape.position.set(0, -0.30, -0.18);
+    cape.scale.set(0.35, 0.22, 0.35);
 
 } else {
     player.add(cape);
