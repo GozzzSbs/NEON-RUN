@@ -3046,8 +3046,10 @@ function startGame() {
     console.log("PLAYER :", player);
 console.log("PLAYER PARTS :", playerParts);
 
-if (!player || !playerParts || 
-    (equippedSkin !== "street_king" && !playerParts.body)) {
+if (!player || !playerParts ||
+    (equippedSkin !== "street_king" &&
+     equippedSkin !== "astronaut" &&
+     !playerParts.body)) {
     console.error("ERREUR : le personnage n'est pas correctement initialisé !");
     return;
 }
