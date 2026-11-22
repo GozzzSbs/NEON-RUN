@@ -1071,7 +1071,7 @@ character.userData[skinKey + "Model"] = model;
                 }
             });
 
-            player.add(model);
+            character.add(model);
 
             console.log(skinKey + " GLB CHARGÉ !");
         },
@@ -1086,7 +1086,7 @@ character.userData[skinKey + "Model"] = model;
    player.rotation.y = Math.PI;
 player.position.set(0, 0, 0);
 
-    scene.add(player);
+    scene.add(character);
 }
 
 function createStreetKing() {
