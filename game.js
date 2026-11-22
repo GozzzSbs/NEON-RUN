@@ -2313,14 +2313,7 @@ if (pattern === "jumps") {
 // =====================================
 
 if (pattern === "tunnel") {
-    const firstLane = Math.floor(Math.random() * 3);
-    const secondLane = (firstLane + 1) % 3;
-    const thirdLane = (firstLane + 2) % 3;
-
-    createTunnel(firstLane, -115);
-    createTunnel(secondLane, -195);
-    createTunnel(thirdLane, -275);
-
+    createTunnel(1, -115);
     return;
 }
 
