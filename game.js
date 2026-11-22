@@ -1006,6 +1006,7 @@ for (const side of [-1, 1]) {
 // ======================================================
 // PERSONNAGE 3D - STYLE CARTOON RÉALISTE
 // ======================================================
+
 function createGLBCharacter(fileName, skinKey) {
     player = new THREE.Group();
 
@@ -1023,16 +1024,20 @@ function createGLBCharacter(fileName, skinKey) {
 
         function (gltf) {
             const model = gltf.scene;
-            if (skinKey === "jacko") {
-    model.traverse(function (child) {
-        if (child.isBone && child.name === "head") {
-            child.rotation.y += Math.PI;
-        }
-    });
-}
-            if (skinKey === "jacko") {
-    model.rotation.y += Math.PI;
-}
+
+            // Rotation du corps
+            model.rotation.y += Math.PI;
+
+            // Compensation de la tête
+            model.traverse(function (child) {
+                if (
+                    child.isBone &&
+                    child.name.toLowerCase().includes("head")
+                ) {
+                    child.rotation.y += Math.PI;
+                }
+            });
+
             const bones = {};
 
             model.traverse(function (child) {
@@ -1041,12 +1046,20 @@ function createGLBCharacter(fileName, skinKey) {
                         bones[bone.name] = bone;
                     });
                 }
+
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
             });
 
             player.userData[skinKey + "Bones"] = bones;
             player.userData[skinKey + "Model"] = model;
 
-            console.log("SQUELETTE " + skinKey + " :", Object.keys(bones));
+            console.log(
+                "SQUELETTE " + skinKey + " :",
+                Object.keys(bones)
+            );
 
             const box = new THREE.Box3().setFromObject(model);
             const size = box.getSize(new THREE.Vector3());
@@ -1061,13 +1074,6 @@ function createGLBCharacter(fileName, skinKey) {
             model.position.z -= center.z;
             model.position.y -= scaledBox.min.y;
 
-            model.traverse(function (child) {
-                if (child.isMesh) {
-                    child.castShadow = true;
-                    child.receiveShadow = true;
-                }
-            });
-
             player.add(model);
 
             console.log(skinKey + " GLB CHARGÉ !");
@@ -1076,12 +1082,15 @@ function createGLBCharacter(fileName, skinKey) {
         undefined,
 
         function (error) {
-            console.error("ERREUR CHARGEMENT " + skinKey + " :", error);
+            console.error(
+                "ERREUR CHARGEMENT " + skinKey + " :",
+                error
+            );
         }
     );
 
-   player.rotation.y = Math.PI;
-player.position.set(0, 0, 0);
+    player.rotation.y = Math.PI;
+    player.position.set(0, 0, 0);
 
     scene.add(player);
 }
