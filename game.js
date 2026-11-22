@@ -4657,35 +4657,66 @@ if (equippedCape === "certified") {
         cape.position.z = 0.10;
     }
 
-    // TISSU
-    const geometry = new THREE.BufferGeometry();
+    // TISSU SOUPLE ET ANIMABLE
+const widthSegments = 10;
+const heightSegments = 14;
 
-   const vertices = new Float32Array([
-    -0.38, 2.25, -0.34,
-     0.38, 2.25, -0.34,
-    -0.62, 0.25, -0.48,
-     0.62, 0.25, -0.48
-]);
+const geometry = new THREE.BufferGeometry();
 
-    geometry.setAttribute(
-        "position",
-        new THREE.BufferAttribute(vertices, 3)
-    );
+const vertices = [];
+const indices = [];
 
-    geometry.setIndex([0, 2, 1, 1, 2, 3]);
-    geometry.computeVertexNormals();
+for (let y = 0; y <= heightSegments; y++) {
+    const v = y / heightSegments;
 
-    const capeMaterial = new THREE.MeshStandardMaterial({
-        color: ["rxn_white", "certified"].includes(equippedCape)
-            ? 0xffffff
-            : 0x030303,
-        roughness: 0.85,
-        metalness: 0.1,
-        side: THREE.DoubleSide
-    });
+    for (let x = 0; x <= widthSegments; x++) {
+        const u = x / widthSegments;
 
-    const cloth = new THREE.Mesh(geometry, capeMaterial);
-    cape.add(cloth);
+        const topX = -0.38 + u * 0.76;
+        const bottomX = -0.62 + u * 1.24;
+
+        vertices.push(
+            THREE.MathUtils.lerp(topX, bottomX, v),
+            2.25 - v * 2,
+            -0.34 - v * 0.14
+        );
+
+        if (x < widthSegments && y < heightSegments) {
+            const a = y * (widthSegments + 1) + x;
+            const b = a + 1;
+            const c = a + widthSegments + 1;
+            const d = c + 1;
+
+            indices.push(a, c, b);
+            indices.push(b, c, d);
+        }
+    }
+}
+
+geometry.setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(vertices, 3)
+);
+
+geometry.setIndex(indices);
+geometry.computeVertexNormals();
+
+const capeMaterial = new THREE.MeshStandardMaterial({
+    color: ["rxn_white", "certified"].includes(equippedCape)
+        ? 0xffffff
+        : 0x030303,
+    roughness: 0.85,
+    metalness: 0.1,
+    side: THREE.DoubleSide
+});
+
+const cloth = new THREE.Mesh(geometry, capeMaterial);
+cape.add(cloth);
+
+// DONNÉES POUR L'ANIMATION DU TISSU
+cape.userData.clothBasePositions = vertices.slice();
+cape.userData.widthSegments = widthSegments;
+cape.userData.heightSegments = heightSegments;
 
     // BADGE CERTIFIÉ
     if (equippedCape === "certified") {
@@ -4888,25 +4919,80 @@ function animateCape() {
 
     const time = performance.now() * 0.001;
 
+    const cloth = shopCapeObject.userData.cloth;
+
+    if (cloth) {
+        const geometry = cloth.geometry;
+        const positions = geometry.attributes.position;
+        const base = shopCapeObject.userData.clothBasePositions;
+
+        const widthSegments = shopCapeObject.userData.widthSegments;
+        const heightSegments = shopCapeObject.userData.heightSegments;
+
+        const jumpingFactor = jumping ? 1 : 0;
+        const slidingFactor = sliding ? 0.3 : 0;
+
+        for (let y = 0; y <= heightSegments; y++) {
+            const v = y / heightSegments;
+
+            for (let x = 0; x <= widthSegments; x++) {
+                const index = y * (widthSegments + 1) + x;
+                const offset = index * 3;
+
+                // Le haut reste fixé au dos
+                if (y === 0) {
+                    positions.array[offset] = base[offset];
+                    positions.array[offset + 1] = base[offset + 1];
+                    positions.array[offset + 2] = base[offset + 2];
+                    continue;
+                }
+
+                const wave = Math.sin(time * 5 - v * 4 + x * 0.25);
+                const jumpWave = Math.sin(time * 7 - v * 3);
+
+                const influence = v * v;
+
+                positions.array[offset] =
+                    base[offset] + wave * 0.035 * influence;
+
+                positions.array[offset + 1] =
+                    base[offset + 1] +
+                    influence * (jumpingFactor * jumpWave * 0.16);
+
+                positions.array[offset + 2] =
+                    base[offset + 2] -
+                    influence * (
+                        0.08 +
+                        wave * 0.07 +
+                        jumpingFactor * 0.28 -
+                        slidingFactor * 0.08
+                    );
+            }
+        }
+
+        positions.needsUpdate = true;
+        geometry.computeVertexNormals();
+    }
+
+    // Mouvement général de la cape
     shopCapeObject.rotation.z = Math.sin(time * 4) * 0.045;
     shopCapeObject.rotation.x = -0.22 + Math.sin(time * 3) * 0.020;
-// ROTATION LENTE DE L'ANNEAU CERTIFIÉ
-if (shopCapeObject.userData.badgeRing) {
-    shopCapeObject.userData.badgeRing.rotation.z = time * 1.2;
-}
-    if (["rxn", "rxn_white"].includes(shopCapeObject.userData.capeId)) {
 
+    // Rotation de l'anneau certifié
+    if (shopCapeObject.userData.badgeRing) {
+        shopCapeObject.userData.badgeRing.rotation.z = time * 1.2;
+    }
+
+    // Alternance du logo RXN et de la lune
+    if (["rxn", "rxn_white"].includes(shopCapeObject.userData.capeId)) {
         const phase = Math.floor(time) % 2;
 
         if (phase !== shopCapeObject.userData.lastPhase) {
-
             shopCapeObject.userData.lastPhase = phase;
 
-            if (phase === 0) {
-                shopCapeObject.userData.drawCapeLogo("rxn");
-            } else {
-                shopCapeObject.userData.drawCapeLogo("moon");
-            }
+            shopCapeObject.userData.drawCapeLogo(
+                phase === 0 ? "rxn" : "moon"
+            );
 
             shopCapeObject.userData.logoTexture.needsUpdate = true;
         }
