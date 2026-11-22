@@ -2161,7 +2161,7 @@ function moveRight() {
 function jump() {
     if (!running || paused) return;
 
-    if (jumping && !ridingTrain) return;
+   if (jumping && !sliding && !ridingTrain) return;
 
     ridingTrain = null;
     sliding = false;
