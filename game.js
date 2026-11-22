@@ -4500,21 +4500,21 @@ function createCape() {
 
     const cape = new THREE.Group();
 if (equippedCape === "certified") {
-    cape.position.z = 0.28;
+    cape.position.z = -0.28;
 }
     if (equippedCape === "rxn_white") {
-        cape.position.z = 0.28;
+        cape.position.z = -0.28;
     }
 
     // TISSU
     const geometry = new THREE.BufferGeometry();
 
-    const vertices = new Float32Array([
-        -0.38, 2.25, 0.34,
-         0.38, 2.25, 0.34,
-        -0.62, 0.25, 0.48,
-         0.62, 0.25, 0.48
-    ]);
+   const vertices = new Float32Array([
+    -0.38, 2.25, -0.34,
+     0.38, 2.25, -0.34,
+    -0.62, 0.25, -0.48,
+     0.62, 0.25, -0.48
+]);
 
     geometry.setAttribute(
         "position",
