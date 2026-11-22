@@ -2626,19 +2626,8 @@ function checkCollisions() {
                 return;
             }
         }
-            // COLLISION AVEC LE TUNNEL
-                if (
-            obstacle.type === "tunnel" &&
-            distance > -1.3 &&
-            distance < 1.3
-        ) {
-            if (!sliding) {
-                endGame("Tu n'as pas évité le plafond du tunnel !");
-                return;
-            }
-        }
-
-    }
+            // GRAND TUNNEL : AUCUNE COLLISION
+// Le joueur peut courir normalement à l'intérieur.
 
 
     // Ramassage des pièces
