@@ -1007,6 +1007,11 @@ for (const side of [-1, 1]) {
 // PERSONNAGE 3D - STYLE CARTOON RÉALISTE
 // ======================================================
 function createGLBCharacter(fileName, skinKey) {
+
+    if (player && player.parent) {
+        player.parent.remove(player);
+    }
+
     player = new THREE.Group();
 
     playerParts = {
@@ -1057,7 +1062,7 @@ function createGLBCharacter(fileName, skinKey) {
 
             model.position.x -= center.x;
             model.position.z -= center.z;
-            model.position.y -= scaledBox.min.y - 0.03;
+            model.position.y -= scaledBox.min.y;
 
             model.traverse(function (child) {
                 if (child.isMesh) {
@@ -2364,7 +2369,7 @@ function animateRunner() {
             model.position.y = bounce * 0.055;
 
             if (bones) {
-                const run = swing * 0.55;
+                const run = swing * 0.40;
                 const armSwing = swing * 0.65;
 
                 // BRAS GAUCHE
