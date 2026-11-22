@@ -4655,7 +4655,9 @@ cape.userData.badgeRing = ringGroup;
 
         function drawCapeLogo(type) {
             ctx.clearRect(0, 0, 512, 256);
-
+ctx.save();
+ctx.translate(512, 0);
+ctx.scale(-1, 1);
             const logoColor = equippedCape === "rxn_white"
                 ? "#000000"
                 : "#ffffff";
