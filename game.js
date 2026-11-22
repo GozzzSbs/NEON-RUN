@@ -2333,25 +2333,31 @@ if (equippedSkin === "street_king") {
     if (bones) {
         const run = swing * 0.55;
 
-        // BRAS : COURSE NATURELLE
-const armSwing = swing * 0.9;
+        // BRAS : POSITION DE COURSE
+const armSwing = swing * 0.65;
 
 // Bras gauche
 if (bones.upperArmL) {
-    bones.upperArmL.rotation.x = armSwing;
-    bones.upperArmL.rotation.z = -0.12;
+    bones.upperArmL.rotation.set(
+        armSwing,
+        0,
+        -0.85
+    );
 }
 if (bones.lowerArmL) {
-    bones.lowerArmL.rotation.x = -0.9;
+    bones.lowerArmL.rotation.set(-1.0, 0, 0);
 }
 
 // Bras droit
 if (bones.upperArmR) {
-    bones.upperArmR.rotation.x = -armSwing;
-    bones.upperArmR.rotation.z = 0.12;
+    bones.upperArmR.rotation.set(
+        -armSwing,
+        0,
+        0.85
+    );
 }
 if (bones.lowerArmR) {
-    bones.lowerArmR.rotation.x = -0.9;
+    bones.lowerArmR.rotation.set(-1.0, 0, 0);
 }
         // JAMBES
         if (bones.upperLegL) bones.upperLegL.rotation.x = -run;
