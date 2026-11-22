@@ -5951,3 +5951,4 @@ function closeDailyChallenges() {
 }
 
 window.closeDailyChallenges = closeDailyChallenges;
+console.log("GLTFLoader :", THREE.GLTFLoader);
