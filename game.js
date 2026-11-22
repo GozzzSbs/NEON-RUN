@@ -1004,7 +1004,7 @@ for (const side of [-1, 1]) {
     }
 }
 // ======================================================
-// PERSONNAGE
+// PERSONNAGE 3D - STYLE CARTOON RÉALISTE
 // ======================================================
 
 function createPlayer() {
@@ -1017,109 +1017,283 @@ function createPlayer() {
         head: null
     };
 
-    const purple = mat(0x7900b8, 0x39005c, 0.3);
+    const purple = mat(0x7900b8);
+    const darkPurple = mat(0x39005c);
     const black = mat(0x211b28);
-    const lime = mat(0xb6ff19, 0x4cff00, 0.5);
+    const lime = mat(0xb6ff19, 0x4cff00, 0.3);
     const skin = mat(0xd98a57);
-    const white = mat(0xffe9d1);
+    const white = mat(0xffffff);
+    const shoeMat = mat(0x29252f);
 
-    function limb(w, h, d, material, x, y, z, parent) {
+    // Fonction pour créer une sphère
+    function sphere(parent, material, x, y, z, sx, sy, sz) {
         const mesh = new THREE.Mesh(
-            new THREE.BoxGeometry(w, h, d),
+            new THREE.SphereGeometry(1, 24, 20),
+            material
+        );
+
+        mesh.position.set(x, y, z);
+        mesh.scale.set(sx, sy, sz);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+
+        parent.add(mesh);
+        return mesh;
+    }
+
+    // Fonction pour créer un membre arrondi
+    function roundedLimb(parent, material, radius, height, x, y, z) {
+        const mesh = new THREE.Mesh(
+            new THREE.CylinderGeometry(
+                radius * 0.9,
+                radius,
+                height,
+                16
+            ),
             material
         );
 
         mesh.position.set(x, y, z);
         mesh.castShadow = true;
         parent.add(mesh);
+
+        sphere(parent, material, x, y + height / 2, z,
+            radius, radius, radius);
+
+        sphere(parent, material, x, y - height / 2, z,
+            radius, radius, radius);
+
         return mesh;
     }
 
-    function sphere(radius, material, x, y, z, parent) {
-        const mesh = new THREE.Mesh(
-            new THREE.SphereGeometry(radius, 16, 16),
-            material
-        );
+    // ======================================================
+    // CORPS
+    // ======================================================
 
-        mesh.position.set(x, y, z);
-        parent.add(mesh);
-        return mesh;
-    }
-
-    // Corps
     const torso = new THREE.Group();
     torso.position.y = 1.75;
     player.add(torso);
     playerParts.body = torso;
 
-    limb(0.9, 1.1, 0.48, black, 0, 0, 0, torso);
-    limb(0.94, 0.15, 0.5, white, 0, -0.52, 0, torso);
-
-    // Logo
-    const logo = new THREE.Mesh(
-        new THREE.BoxGeometry(0.38, 0.28, 0.03),
-        lime
+    // Sweat principal
+    sphere(
+        torso, black,
+        0, 0, 0,
+        0.47, 0.67, 0.29
     );
 
-    logo.position.set(0, 0.1, 0.25);
-    torso.add(logo);
+    // Partie violette du sweat
+    sphere(
+        torso, purple,
+        0, 0.12, 0.245,
+        0.37, 0.42, 0.065
+    );
 
-    // Tête
+    // Col du sweat
+    sphere(
+        torso, darkPurple,
+        0, 0.57, 0,
+        0.19, 0.13, 0.2
+    );
+
+    // Logo lumineux
+    sphere(
+        torso, lime,
+        0, 0.12, 0.31,
+        0.09, 0.09, 0.025
+    );
+
+    // Bas du sweat
+    sphere(
+        torso, white,
+        0, -0.57, 0,
+        0.43, 0.09, 0.28
+    );
+
+    // ======================================================
+    // TÊTE ET VISAGE
+    // ======================================================
+
     const head = new THREE.Group();
     head.position.set(0, 2.65, 0);
     player.add(head);
     playerParts.head = head;
 
-    sphere(0.34, skin, 0, 0, 0, head);
-    sphere(0.35, black, 0, 0.13, 0, head);
-    sphere(0.39, purple, 0, 0.3, 0, head);
+    // Tête
+    sphere(
+        head, skin,
+        0, 0, 0,
+        0.34, 0.42, 0.3
+    );
 
-    limb(0.74, 0.18, 0.72, purple, 0, 0.17, 0, head);
-
+    // Oreilles
     for (const side of [-1, 1]) {
-        limb(0.16, 0.38, 0.28, black, side * 0.39, -0.12, 0, head);
-        limb(0.17, 0.15, 0.29, lime, side * 0.4, -0.12, 0, head);
+        sphere(
+            head, skin,
+            side * 0.33, -0.02, 0,
+            0.09, 0.13, 0.1
+        );
     }
 
-    // Bras
+    // Cheveux
+    sphere(
+        head, black,
+        0, 0.25, -0.035,
+        0.35, 0.25, 0.31
+    );
+
+    // Mèche à l'avant
+    sphere(
+        head, black,
+        0, 0.19, 0.24,
+        0.23, 0.13, 0.12
+    );
+
+    // Yeux
+    for (const side of [-1, 1]) {
+        sphere(
+            head, white,
+            side * 0.12, 0.035, 0.265,
+            0.065, 0.085, 0.035
+        );
+
+        sphere(
+            head, black,
+            side * 0.12, 0.035, 0.296,
+            0.027, 0.045, 0.018
+        );
+    }
+
+    // Sourcils
+    for (const side of [-1, 1]) {
+        sphere(
+            head, black,
+            side * 0.12, 0.15, 0.275,
+            0.075, 0.025, 0.025
+        );
+    }
+
+    // Nez
+    sphere(
+        head, skin,
+        0, -0.055, 0.31,
+        0.055, 0.065, 0.055
+    );
+
+    // Sourire
+    const smile = new THREE.Mesh(
+        new THREE.TorusGeometry(0.075, 0.012, 8, 20, Math.PI),
+        black
+    );
+
+    smile.position.set(0, -0.17, 0.29);
+    smile.rotation.z = Math.PI;
+    head.add(smile);
+
+    // Casquette
+    sphere(
+        head, purple,
+        0, 0.37, 0,
+        0.36, 0.12, 0.32
+    );
+
+    sphere(
+        head, lime,
+        0, 0.34, 0.22,
+        0.28, 0.035, 0.16
+    );
+
+    // ======================================================
+    // BRAS
+    // ======================================================
+
     for (const side of [-1, 1]) {
         const arm = new THREE.Group();
-        arm.position.set(side * 0.51, 2.2, 0);
+        arm.position.set(side * 0.48, 2.18, 0);
         player.add(arm);
 
-        limb(
-            0.28, 0.48, 0.3,
-            side === -1 ? purple : lime,
-            0, -0.24, 0, arm
+        roundedLimb(
+            arm,
+            side === -1 ? purple : black,
+            0.15,
+            0.46,
+            0, -0.23, 0
         );
 
         const elbow = new THREE.Group();
-        elbow.position.y = -0.48;
+        elbow.position.y = -0.46;
         arm.add(elbow);
 
-        limb(0.24, 0.43, 0.27, black, 0, -0.21, 0, elbow);
-        sphere(0.14, skin, 0, -0.46, 0, elbow);
+        roundedLimb(
+            elbow,
+            side === -1 ? black : lime,
+            0.12,
+            0.4,
+            0, -0.2, 0
+        );
+
+        // Main
+        sphere(
+            elbow, skin,
+            0, -0.44, 0,
+            0.13, 0.13, 0.13
+        );
 
         arm.userData.elbow = elbow;
         playerParts.arms.push(arm);
     }
 
-    // Jambes
+    // ======================================================
+    // JAMBES
+    // ======================================================
+
     for (const side of [-1, 1]) {
         const leg = new THREE.Group();
-        leg.position.set(side * 0.24, 1.22, 0);
+        leg.position.set(side * 0.23, 1.22, 0);
         player.add(leg);
 
-        limb(0.34, 0.6, 0.38, black, 0, -0.3, 0, leg);
+        // Pantalon
+        roundedLimb(
+            leg,
+            black,
+            0.16,
+            0.55,
+            0, -0.28, 0
+        );
 
         const knee = new THREE.Group();
-        knee.position.y = -0.58;
+        knee.position.y = -0.55;
         leg.add(knee);
 
-        limb(0.32, 0.45, 0.36, black, 0, -0.2, 0, knee);
-        limb(0.43, 0.23, 0.6, purple, 0, -0.48, -0.1, knee);
-        limb(0.44, 0.08, 0.61, white, 0, -0.6, -0.1, knee);
-        limb(0.35, 0.07, 0.12, lime, 0, -0.47, -0.36, knee);
+        // Bas du pantalon
+        roundedLimb(
+            knee,
+            darkPurple,
+            0.14,
+            0.4,
+            0, -0.19, 0
+        );
+
+        // Baskets
+        sphere(
+            knee, shoeMat,
+            0, -0.44, 0.1,
+            0.23, 0.13, 0.34
+        );
+
+        // Semelles blanches
+        sphere(
+            knee, white,
+            0, -0.52, 0.1,
+            0.23, 0.045, 0.34
+        );
+
+        // Détails verts
+        sphere(
+            knee, lime,
+            0, -0.43, 0.32,
+            0.12, 0.035, 0.035
+        );
 
         leg.userData.knee = knee;
         playerParts.legs.push(leg);
