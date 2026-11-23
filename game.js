@@ -1268,6 +1268,9 @@ function createStreetKing() {
 function createAstronaut() {
     createGLBCharacter("grab3d-cozy-character%20(1).glb", "astronaut");
 }
+function createCulprit() {
+    createGLBCharacter("grab3d-cozy-character%20(5).glb", "culprit");
+}
 function createJacko() {
     createGLBCharacter("grab3d-cozy-character%20(2).glb", "jacko");
 }
@@ -1284,6 +1287,10 @@ if (equippedSkin === "default") {
 }
 if (equippedSkin === "astronaut") {
     createAstronaut();
+    return;
+}
+    if (equippedSkin === "culprit") {
+    createCulprit();
     return;
 }
     playerParts = {
