@@ -324,6 +324,13 @@ function calculateTrophies(score, difficulty) {
 
     return Math.floor(Math.sqrt(Math.max(0, score) / 100) * multiplier);
 }
+function updateTrophyCounter() {
+    const counter = document.getElementById("trophyCount");
+
+    if (counter) {
+        counter.textContent = playerTrophies;
+    }
+}
 // ======================================================
 // MATÉRIAUX
 // ======================================================
