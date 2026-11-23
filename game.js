@@ -548,7 +548,39 @@ function createTrack() {
 }
 
 createTrack();
+// =====================================
+// DÉCOR DU MODE MÉTRO
+// =====================================
 
+function createMetroDecor() {
+    const wallMaterial = mat(0x18202e);
+    const neonMaterial = mat(0x00eaff, 0x00eaff, 2);
+
+    // Murs latéraux
+    for (const x of [-8, 8]) {
+        const wall = box(
+            1, 10, 220,
+            wallMaterial,
+            x, 4.5, -80
+        );
+        metroDecor.push(wall);
+
+        const neon = box(
+            0.12, 0.15, 220,
+            neonMaterial,
+            x + (x < 0 ? 0.6 : -0.6), 6, -80
+        );
+        metroDecor.push(neon);
+    }
+
+    // Plafond
+    const ceiling = box(
+        18, 0.5, 220,
+        mat(0x101522),
+        0, 10, -80
+    );
+    metroDecor.push(ceiling);
+}
 // ======================================================
 // TEXTURE MURS EN BRIQUES
 // ======================================================
