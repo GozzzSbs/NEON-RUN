@@ -1271,6 +1271,9 @@ function createAstronaut() {
 function createCulprit() {
     createGLBCharacter("grab3d-cozy-character%20(5).glb", "culprit");
 }
+function createCooker() {
+    createGLBCharacter("grab3d-cozy-character%20(6).glb", "cooker");
+}
 function createJacko() {
     createGLBCharacter("grab3d-cozy-character%20(2).glb", "jacko");
 }
