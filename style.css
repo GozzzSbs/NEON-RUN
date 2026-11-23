@@ -1851,3 +1851,40 @@ width: 100%;
     font-weight: bold;
     cursor: pointer;
 }
+/* ROUTE DES TROPHÉES */
+
+#trophyMilestones {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: min(90%, 550px);
+    max-height: 45vh;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.trophy-milestone {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    background: linear-gradient(135deg, #343b75, #171d48);
+    border: 2px solid #647cff;
+    border-radius: 16px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 5px 0 #101333;
+    transition: 0.2s;
+}
+
+.trophy-milestone strong {
+    color: #ffca28;
+    white-space: nowrap;
+}
+
+.trophy-milestone:hover {
+    transform: scale(1.03);
+    border-color: #00eaff;
+}
