@@ -2370,9 +2370,49 @@ if (selectedMode === "metro") {
 
     // Pièces dans la voie restée libre
     if (selectedMode !== "nocoin") {
-        for (let i = 0; i < 8; i++) {
-            createCoin(lanes[2], -55 - i * 3);
+        const coinPattern = Math.floor(Math.random() * 5);
+
+if (coinPattern === 0) {
+    // Ligne droite
+    for (let i = 0; i < 10; i++) {
+        createCoin(lanes[2], -55 - i * 3);
+    }
+}
+
+else if (coinPattern === 1) {
+    // Zigzag
+    const zigzag = [0, 1, 2, 1, 0, 1, 2, 1];
+
+    zigzag.forEach((lane, i) => {
+        createCoin(lane, -55 - i * 3);
+    });
+}
+
+else if (coinPattern === 2) {
+    // Arc
+    const heights = [1.3, 2, 2.8, 3.3, 3.5, 3.3, 2.8, 2, 1.3];
+
+    heights.forEach((height, i) => {
+        createCoin(lanes[2], -55 - i * 3, height);
+    });
+}
+
+else if (coinPattern === 3) {
+    // Deux lignes parallèles
+    for (let i = 0; i < 8; i++) {
+        createCoin(lanes[1], -55 - i * 3);
+        createCoin(lanes[2], -55 - i * 3);
+    }
+}
+
+else {
+    // Trois lignes
+    for (let i = 0; i < 7; i++) {
+        for (let lane = 0; lane < 3; lane++) {
+            createCoin(lane, -55 - i * 3);
         }
+    }
+}
     }
 
     return;
