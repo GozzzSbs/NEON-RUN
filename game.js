@@ -380,6 +380,36 @@ if (progressBar) {
         container.appendChild(card);
     });
 }
+function claimTrophyReward(index) {
+    const item = trophyRewards[index];
+
+    if (!item) return;
+
+    if (claimedTrophyRewards.includes(index)) return;
+
+    if (playerTrophies < item.trophies) return;
+
+    if (item.coins) {
+        coins += item.coins;
+        localStorage.setItem("neonCoins", coins);
+    }
+
+    if (item.diamonds) {
+        shopDiamonds += item.diamonds;
+        localStorage.setItem("neonDiamonds", shopDiamonds);
+    }
+
+    claimedTrophyRewards.push(index);
+
+    localStorage.setItem(
+        "neonClaimedTrophyRewards",
+        JSON.stringify(claimedTrophyRewards)
+    );
+
+    updateTrophyRoad();
+
+    alert("🎉 Récompense récupérée : " + item.reward);
+}
 // ======================================================
 // MATÉRIAUX
 // ======================================================
