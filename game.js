@@ -2966,7 +2966,30 @@ function checkCollisions() {
             Math.abs(obstacle.object.position.x - player.position.x) < 1.25;
 
         if (!sameLane) continue;
+// BARRIÈRES
+if (
+    obstacle.type === "barrier" &&
+    distance > -1.3 &&
+    distance < 1.3
+) {
+    // Variante 0 : glissade obligatoire
+    if (obstacle.variant === 0 && !sliding) {
+        endGame("Tu as heurté une barrière !");
+        return;
+    }
 
+    // Variante 1 : changer de voie
+    if (obstacle.variant === 1) {
+        endGame("Tu as heurté une barrière !");
+        return;
+    }
+
+    // Variante 2 : saut obligatoire
+    if (obstacle.variant === 2 && !jumping) {
+        endGame("Tu as heurté une barrière !");
+        return;
+    }
+}
         if (
     obstacle.type === "train" &&
     ridingTrain !== obstacle.object &&
