@@ -2991,7 +2991,7 @@ saveScoreToSupabase().catch(error => {
         playerTrophies += earnedTrophies;
 
         localStorage.setItem("neonTrophies", playerTrophies);
-
+updateTrophyCounter();
         console.log("🏆 Trophées gagnés :", earnedTrophies);
     }
 
