@@ -17,84 +17,6 @@ if (!canvas) throw new Error("Canvas #game introuvable");
 // ======================================================
 
 const scene = new THREE.Scene();
-// =====================================
-// PERSONNAGE 3D DU LOBBY
-// =====================================
-
-let lobbyScene = new THREE.Scene();
-
-let lobbyCamera = new THREE.PerspectiveCamera(
-    35,
-    1,
-    0.1,
-    100
-);
-
-lobbyCamera.position.set(0, 1.5, 8);
-lobbyCamera.lookAt(0, 1.5, 0);
-
-let lobbyRenderer = new THREE.WebGLRenderer({
-    canvas: document.getElementById("lobbyCanvas"),
-    alpha: true,
-    antialias: true
-});
-
-lobbyRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-lobbyRenderer.setSize(250, 270);
-lobbyRenderer.domElement.style.width = "100%";
-lobbyRenderer.domElement.style.height = "100%";
-lobbyScene.add(
-    new THREE.HemisphereLight(0xffffff, 0x445566, 2)
-);
-
-const lobbyLight = new THREE.DirectionalLight(0xffffff, 2);
-lobbyLight.position.set(3, 5, 5);
-lobbyScene.add(lobbyLight);
-// =====================================
-// CHARGEMENT DE L'ASTRONAUTE DU LOBBY
-// =====================================
-
-let lobbyCharacter = null;
-
-const lobbyLoader = new THREE.GLTFLoader();
-
-lobbyLoader.load(
-    "grab3d-cozy-character%20(1).glb",
-
-    function (gltf) {
-        lobbyCharacter = gltf.scene;
-
-        const box = new THREE.Box3().setFromObject(lobbyCharacter);
-        const size = box.getSize(new THREE.Vector3());
-        const center = box.getCenter(new THREE.Vector3());
-
-        const scale = 3 / size.y;
-        lobbyCharacter.scale.setScalar(scale);
-
-        lobbyCharacter.position.x = -center.x * scale;
-        lobbyCharacter.position.z = -center.z * scale;
-        lobbyCharacter.position.y = -box.min.y * scale;
-
-        lobbyCharacter.rotation.y = Math.PI;
-
-        lobbyCharacter.traverse(function (child) {
-            if (child.isMesh) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-            }
-        });
-
-        lobbyScene.add(lobbyCharacter);
-
-        console.log("ASTRONAUTE DU LOBBY CHARGÉ !");
-    },
-
-    undefined,
-
-    function (error) {
-        console.error("Erreur chargement astronaute du lobby :", error);
-    }
-);
 let metroDecor = [];
 scene.background = new THREE.Color(0x55baff);
 // ======================================================
@@ -3624,11 +3546,6 @@ function moveCoins() {
 }
 function animate() {
     requestAnimationFrame(animate);
-
-    // RENDU DU PERSONNAGE DANS LE LOBBY
-    if (lobbyRenderer && lobbyScene && lobbyCamera) {
-        lobbyRenderer.render(lobbyScene, lobbyCamera);
-    }
 
     if (!running || paused || gameEnded) return;
 
