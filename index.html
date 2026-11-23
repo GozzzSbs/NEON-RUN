@@ -73,13 +73,24 @@
     </div>
 </div>
 
-    <div class="statistics">
-        <div class="stat-card"><strong>00m00s</strong><small>Record</small></div>
-        <div class="stat-card"><strong>--</strong><small>Dernière partie</small></div>
-        <div class="stat-card"><strong>⭐ 291</strong><small>Étoiles</small></div>
-        <div class="stat-card"><strong>1</strong><small>Niveau</small></div>
-        <div class="stat-card"><strong>Runner</strong><small>Joueur</small></div>
+    <div class="lobby-player-stats">
+
+    <div class="lobby-stat">
+        <strong id="lobbyTrophies">0</strong>
+        <small>🏆 TROPHÉES</small>
     </div>
+
+    <div class="lobby-stat">
+        <strong id="lobbyRank">NON CLASSÉ</strong>
+        <small>🥇 RANG</small>
+    </div>
+
+    <div class="lobby-stat">
+        <strong id="lobbyPassLevel">1</strong>
+        <small>🎟️ PASSE</small>
+    </div>
+
+</div>
 
     <h3 class="section-title">DIFFICULTÉ</h3>
 
@@ -92,11 +103,41 @@
 
     <h3 class="section-title">MODE DE JEU</h3>
 
-    <div class="mode-buttons">
-    <button class="active" onclick="selectMode('classic',this)">Classique</button>
-    <button onclick="selectMode('nocoin',this)">Sans pièces</button>
-    <button onclick="selectMode('lava',this)">Le sol est de la lave</button>
-    <button onclick="selectMode('metro',this)">🚇 MÉTRO</button>
+    <div class="lobby-mode-section">
+
+    <h2>CHOISIS TON MODE</h2>
+
+    <div class="lobby-mode-cards">
+
+        <button class="lobby-mode-card active"
+            onclick="selectMode('classic',this)">
+            <span>🏃</span>
+            <strong>CLASSIQUE</strong>
+            <small>Le mode original</small>
+        </button>
+
+        <button class="lobby-mode-card"
+            onclick="selectMode('nocoin',this)">
+            <span>🚫</span>
+            <strong>SANS PIÈCES</strong>
+            <small>Pas de pièces à ramasser</small>
+        </button>
+
+        <button class="lobby-mode-card"
+            onclick="selectMode('lava',this)">
+            <span>🌋</span>
+            <strong>LAVE</strong>
+            <small>Ne touche pas le sol</small>
+        </button>
+
+        <button class="lobby-mode-card"
+            onclick="selectMode('metro',this)">
+            <span>🚇</span>
+            <strong>MÉTRO</strong>
+            <small>Survis dans les tunnels</small>
+        </button>
+
+    </div>
 </div>
 
     <div class="rules-panel">
