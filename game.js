@@ -366,13 +366,17 @@ if (progressBar) {
         card.className = "trophy-milestone";
 
         card.innerHTML = `
-            <span>🏆 ${item.trophies} trophées</span>
-            <span>${item.reward}</span>
-            <strong>
-                ${claimed ? "✅ RÉCUPÉRÉ" : unlocked ? "🔓 DÉBLOQUÉ" : "🔒 VERROUILLÉ"}
-            </strong>
-        `;
+    <span>🏆 ${item.trophies} trophées</span>
+    <span>🎁 ${item.reward}</span>
 
+    <strong>
+        ${claimed ? "✅ RÉCUPÉRÉ" : unlocked ? "🔓 DÉBLOQUÉ" : "🔒 VERROUILLÉ"}
+    </strong>
+
+    ${unlocked && !claimed
+        ? `<button onclick="claimTrophyReward(${index})">🎁 RÉCUPÉRER</button>`
+        : ""}
+`;
         container.appendChild(card);
     });
 }
