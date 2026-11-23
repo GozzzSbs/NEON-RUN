@@ -4069,7 +4069,7 @@ const SHOP_CATALOG = {
         {
             id: "culprit",
             name: "CULPRIT",
-            price: 700,
+            price: 1100,
             currency: "diamonds",
             color: 0x222222,
             description: "Skin Full Black."
@@ -4081,6 +4081,14 @@ const SHOP_CATALOG = {
             currency: "diamonds",
             color: 0x333333,
             description: "Un Ptit Patissier Tu Connais."
+        },
+        {
+            id: "shella",
+            name: "SHELLA",
+            price: 600,
+            currency: "diamonds",
+            color: 0xff69b4,
+            description: "Un nouveau runner."
         }
     ],
 
