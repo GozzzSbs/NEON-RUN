@@ -2975,6 +2975,19 @@ saveScoreToSupabase().catch(error => {
     console.error("Erreur lors de la sauvegarde :", error);
 });
     if (score > best) {
+    const oldTrophies = calculateTrophies(best, difficulty);
+    const newTrophies = calculateTrophies(score, difficulty);
+
+    const earnedTrophies = newTrophies - oldTrophies;
+
+    if (earnedTrophies > 0) {
+        playerTrophies += earnedTrophies;
+
+        localStorage.setItem("neonTrophies", playerTrophies);
+
+        console.log("🏆 Trophées gagnés :", earnedTrophies);
+    }
+
     best = score;
     localStorage.setItem("neonBest_" + difficulty, best);
 }
