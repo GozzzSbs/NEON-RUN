@@ -312,7 +312,18 @@ function applyDifficultySettings(reset = true) {
 
     speed = baseSpeed * speedMultiplier;
 }
+function calculateTrophies(score, difficulty) {
+    const multipliers = {
+        facile: 0.5,
+        normal: 0.75,
+        difficile: 1,
+        extreme: 1.5
+    };
 
+    const multiplier = multipliers[difficulty] || 0.75;
+
+    return Math.floor(Math.sqrt(Math.max(0, score) / 100) * multiplier);
+}
 // ======================================================
 // MATÉRIAUX
 // ======================================================
