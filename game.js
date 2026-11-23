@@ -2337,40 +2337,42 @@ function spawnObjects() {
 
 if (selectedMode === "metro") {
 
-    const metroLane = Math.floor(Math.random() * 3);
-
     const metroPatterns = [
-        "gate",
-        "gate",
+        "gate", "gate",
         "doors",
-        "cable",
-        "cable",
+        "cable", "cable",
         "sign",
-        "train",
-        "train"
+        "train", "train"
     ];
 
-    const metroPattern =
-        metroPatterns[Math.floor(Math.random() * metroPatterns.length)];
+    function spawnMetroObstacle(lane, z) {
+        const pattern =
+            metroPatterns[Math.floor(Math.random() * metroPatterns.length)];
 
-    if (metroPattern === "gate") {
-        createMetroGate(metroLane, -105);
+        if (pattern === "gate") createMetroGate(lane, z);
+        else if (pattern === "doors") createMetroDoor(lane, z);
+        else if (pattern === "cable") createMetroCable(lane, z);
+        else if (pattern === "sign") createMetroSign(lane, z);
+        else if (pattern === "train") createMetroTrain(lane, z);
     }
 
-    else if (metroPattern === "doors") {
-        createMetroDoor(metroLane, -105);
-    }
+    // Deux obstacles sur deux voies différentes
+    const lanes = [0, 1, 2].sort(() => Math.random() - 0.5);
 
-    else if (metroPattern === "cable") {
-        createMetroCable(metroLane, -105);
-    }
+    spawnMetroObstacle(lanes[0], -105);
+    spawnMetroObstacle(lanes[1], -105);
 
-    else if (metroPattern === "sign") {
-        createMetroSign(metroLane, -105);
-    }
+    // Un obstacle supplémentaire plus loin
+    spawnMetroObstacle(
+        Math.floor(Math.random() * 3),
+        -190
+    );
 
-    else if (metroPattern === "train") {
-        createMetroTrain(metroLane, -115);
+    // Pièces dans la voie restée libre
+    if (selectedMode !== "nocoin") {
+        for (let i = 0; i < 8; i++) {
+            createCoin(lanes[2], -55 - i * 3);
+        }
     }
 
     return;
