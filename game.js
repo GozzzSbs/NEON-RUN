@@ -2018,16 +2018,18 @@ function spawnObjects() {
     const laneIndex = Math.floor(Math.random() * 3);
 
     // CHOIX DU PARCOURS
+const difficultyLevel = Math.min(1, Math.max(0, (score - 5000) / 45000));
+
 const patterns = [
     "single", "single",
 
     "double", "double", "double",
 
-    "slalom", "slalom", "slalom",
+    "slalom", "slalom",
 
-    "sequence", "sequence", "sequence",
+    "sequence", "sequence",
 
-    "mixed", "mixed", "mixed",
+    "mixed", "mixed",
 
     "jumps", "jumps",
 
@@ -2037,15 +2039,14 @@ const patterns = [
 
     "coinZigzag",
 
-    "complex", "complex",
+    ...Array(Math.round(difficultyLevel * 4)).fill("complex"),
 
-    "rare",
+    ...Array(Math.round(difficultyLevel * 3)).fill("rare"),
 
-    "fakePassage", "fakePassage",
+    ...Array(Math.round(difficultyLevel * 3)).fill("fakePassage"),
 
-    "longSequence", "longSequence"
+    ...Array(Math.round(difficultyLevel * 3)).fill("longSequence")
 ];
-
 const pattern = patterns[Math.floor(Math.random() * patterns.length)];
 // AJOUT DE PIÈCES DANS LES PARCOURS SANS PIÈCES
 if (
