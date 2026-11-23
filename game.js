@@ -3087,13 +3087,16 @@ function animateRunner() {
     if (
     equippedSkin === "street_king" ||
     equippedSkin === "astronaut" ||
-    equippedSkin === "default"
+    equippedSkin === "default" ||
+    equippedSkin === "newSkin1" ||
+    equippedSkin === "newSkin2"
 ) {
-        const skinKey = equippedSkin === "street_king"
-    ? "streetKing"
-    : equippedSkin === "astronaut"
-        ? "astronaut"
-        : "jacko";
+        const skinKey =
+    equippedSkin === "street_king" ? "streetKing" :
+    equippedSkin === "astronaut" ? "astronaut" :
+    equippedSkin === "newSkin1" ? "newSkin1" :
+    equippedSkin === "newSkin2" ? "newSkin2" :
+    "jacko";
 
         const model = player.userData[skinKey + "Model"];
         const bones = player.userData[skinKey + "Bones"];
