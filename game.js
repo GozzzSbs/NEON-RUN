@@ -3094,6 +3094,7 @@ function animateRunner() {
     equippedSkin === "astronaut" ||
         equippedSkin === "culprit" ||
         equippedSkin === "cooker" ||
+        equippedSkin === "shella" ||
     equippedSkin === "default"
 ) {
         const skinKey =
