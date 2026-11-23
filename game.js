@@ -580,6 +580,17 @@ function createMetroDecor() {
         0, 10, -80
     );
     metroDecor.push(ceiling);
+        // Panneaux lumineux de station
+    const signMaterial = mat(0x063344, 0x00eaff, 1.5);
+
+    for (const z of [-25, -75, -125]) {
+        const sign = box(
+            3.5, 1.2, 0.2,
+            signMaterial,
+            -7.35, 7.5, z
+        );
+        metroDecor.push(sign);
+    }
 }
 // ======================================================
 // TEXTURE MURS EN BRIQUES
