@@ -1920,3 +1920,177 @@ width: 100%;
     transition: width 0.5s ease;
     box-shadow: 0 0 12px #ffc928;
 }
+/* =================================
+   NOUVEAU LOBBY NEON RUN
+================================= */
+
+#menu {
+    position: relative;
+    min-height: 100vh;
+    padding: 25px;
+    background:
+        radial-gradient(ellipse at 50% 35%, #173d68 0%, #10172d 45%, #080d1c 100%);
+    color: white;
+    overflow-x: hidden;
+}
+
+/* HEADER */
+
+.lobby-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1100px;
+    margin: auto;
+}
+
+.lobby-logo {
+    font-size: 30px;
+    font-weight: 900;
+    color: #00eaff;
+    text-shadow: 0 0 15px #00eaff;
+}
+
+.lobby-currencies {
+    display: flex;
+    gap: 12px;
+}
+
+.currency {
+    background: #202c49;
+    border: 2px solid #536a9b;
+    border-radius: 20px;
+    padding: 10px 18px;
+    font-weight: bold;
+}
+
+/* PERSONNAGE CENTRAL */
+
+.lobby-character-area {
+    position: relative;
+    height: 330px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.lobby-character-glow {
+    position: absolute;
+    width: 230px;
+    height: 230px;
+    border-radius: 50%;
+    background: #00cfff;
+    filter: blur(90px);
+    opacity: 0.35;
+}
+
+#lobbyCharacter {
+    position: relative;
+    width: 250px;
+    height: 270px;
+    z-index: 2;
+}
+
+.lobby-character-name {
+    color: #00eaff;
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-shadow: 0 0 12px #00eaff;
+}
+
+/* STATISTIQUES */
+
+.lobby-player-stats {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px auto;
+}
+
+.lobby-stat {
+    min-width: 120px;
+    padding: 12px;
+    text-align: center;
+    background: #202c49;
+    border: 2px solid #3c5684;
+    border-radius: 14px;
+}
+
+.lobby-stat strong {
+    display: block;
+    font-size: 22px;
+    color: #ffe66d;
+}
+
+.lobby-stat small {
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* MODES */
+
+.lobby-mode-section {
+    max-width: 900px;
+    margin: 30px auto;
+    text-align: center;
+}
+
+.lobby-mode-section h2 {
+    color: #00eaff;
+    letter-spacing: 3px;
+}
+
+.lobby-mode-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.lobby-mode-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 8px;
+    background: #202c49;
+    color: white;
+    border: 2px solid #40577f;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.lobby-mode-card span {
+    font-size: 30px;
+}
+
+.lobby-mode-card.active {
+    border-color: #00eaff;
+    background: #164b69;
+    box-shadow: 0 0 15px #00cfff66;
+}
+
+.lobby-mode-card small {
+    font-size: 11px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 650px) {
+    .lobby-mode-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .lobby-player-stats {
+        gap: 6px;
+    }
+
+    .lobby-stat {
+        min-width: 90px;
+        padding: 8px 4px;
+    }
+
+    .lobby-character-area {
+        height: 280px;
+    }
+}
