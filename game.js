@@ -2900,16 +2900,48 @@ function checkCollisions() {
             return;
         }
 
-        if (
-            obstacle.type === "barrier" &&
-            distance > -1.3 &&
-            distance < 1.3
-        ) {
-            if (!jumping && !sliding) {
-                endGame("Tu as heurté une barrière !");
-                return;
-            }
-        }
+        // PORTIQUE : IL FAUT SAUTER
+if (
+    obstacle.type === "metroGate" &&
+    distance > -1.3 &&
+    distance < 1.3 &&
+    !jumping
+) {
+    endGame("Tu as heurté un portique !");
+    return;
+}
+
+// PORTES : IL FAUT CHANGER DE VOIE
+if (
+    obstacle.type === "metroDoor" &&
+    distance > -1.5 &&
+    distance < 1.5
+) {
+    endGame("Tu es resté devant les portes du métro !");
+    return;
+}
+
+// CÂBLE : IL FAUT GLISSER
+if (
+    obstacle.type === "metroCable" &&
+    distance > -1.3 &&
+    distance < 1.3 &&
+    !sliding
+) {
+    endGame("Tu as heurté un câble !");
+    return;
+}
+
+// PANNEAU : IL FAUT GLISSER
+if (
+    obstacle.type === "metroSign" &&
+    distance > -1.3 &&
+    distance < 1.3 &&
+    !sliding
+) {
+    endGame("Tu as heurté un panneau !");
+    return;
+}
             // GRAND TUNNEL : AUCUNE COLLISION
 // Le joueur peut courir normalement à l'intérieur.
 
