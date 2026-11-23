@@ -5924,6 +5924,9 @@ if (equippedSkin === "street_king") {
 if (equippedSkin === "astronaut") {
     bones = player.userData.astronautBones;
 }
+    if (equippedSkin === "cooker") {
+    bones = player.userData.cookerBones;
+}
 if (equippedSkin === "culprit") {
     bones = player.userData.culpritBones;
 }
