@@ -3109,10 +3109,17 @@ if (score % 100 === 0) {
 }
     checkDiamondMilestones();
 
-    speedMultiplier = Math.min(
-        maxSpeedMultiplier,
-        speedMultiplier + SPEED_INCREASE
-    );
+    const scoreDifficultyBonus = Math.min(
+    1.2,
+    Math.max(0, (score - 5000) / 40000)
+);
+
+const currentMaxSpeed = maxSpeedMultiplier + scoreDifficultyBonus;
+
+speedMultiplier = Math.min(
+    currentMaxSpeed,
+    speedMultiplier + SPEED_INCREASE
+);
 
     speed = baseSpeed * speedMultiplier;
 
