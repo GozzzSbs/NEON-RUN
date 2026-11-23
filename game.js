@@ -3081,11 +3081,11 @@ function animateRunner() {
         equippedSkin === "culprit" ||
     equippedSkin === "default"
 ) {
-        const skinKey = equippedSkin === "street_king"
-    ? "streetKing"
-    : equippedSkin === "astronaut"
-        ? "astronaut"
-        : "jacko";
+        const skinKey =
+    equippedSkin === "street_king" ? "streetKing" :
+    equippedSkin === "astronaut" ? "astronaut" :
+    equippedSkin === "culprit" ? "culprit" :
+    "jacko";
 
         const model = player.userData[skinKey + "Model"];
         const bones = player.userData[skinKey + "Bones"];
