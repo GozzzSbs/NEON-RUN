@@ -1271,6 +1271,13 @@ function createAstronaut() {
 function createJacko() {
     createGLBCharacter("grab3d-cozy-character%20(2).glb", "jacko");
 }
+function createNewSkin1() {
+    createGLBCharacter("grab3d-cozy-character%20(3).glb", "newSkin1");
+}
+
+function createNewSkin2() {
+    createGLBCharacter("grab3d-cozy-character%20(4).glb", "newSkin2");
+}
 function createPlayer() {
     player = new THREE.Group();
 
