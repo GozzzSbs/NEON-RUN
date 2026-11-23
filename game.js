@@ -3696,7 +3696,18 @@ let claimedPassRewards = JSON.parse(
 let shopDiamonds = Number(localStorage.getItem("neonDiamonds") || 0);
 // TROPHÉES
 let playerTrophies = Number(localStorage.getItem("neonTrophies") || 0);
+// ROUTE DES TROPHÉES
 
+const trophyRewards = [
+    { trophies: 50, reward: "100 pièces", coins: 100 },
+    { trophies: 100, reward: "10 diamants", diamonds: 10 },
+    { trophies: 250, reward: "Récompense spéciale", coins: 500 },
+    { trophies: 500, reward: "Skin exclusif", coins: 1000 }
+];
+
+let claimedTrophyRewards = JSON.parse(
+    localStorage.getItem("neonClaimedTrophyRewards") || "[]"
+);
 function readSavedArray(key, fallback) {
     try {
         const value = JSON.parse(localStorage.getItem(key) || "null");
