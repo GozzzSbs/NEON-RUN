@@ -3623,6 +3623,11 @@ function moveCoins() {
 function animate() {
     requestAnimationFrame(animate);
 
+    // RENDU DU PERSONNAGE DANS LE LOBBY
+    if (lobbyRenderer && lobbyScene && lobbyCamera) {
+        lobbyRenderer.render(lobbyScene, lobbyCamera);
+    }
+
     if (!running || paused || gameEnded) return;
 
     frame++;
