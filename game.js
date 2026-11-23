@@ -1832,7 +1832,7 @@ function checkCollisions() {
             }
 
             // MODÈLE 3 : IL FAUT SAUTER
-            if (obstacle.variant === 2 && (!jumping || player.position.y < 0.5)) {
+            if (obstacle.variant === 2 && (!jumping || player.position.y < 1.5)) {
     endGame("Tu as heurté une barrière !");
     return;
 }
@@ -2985,7 +2985,7 @@ if (
     }
 
     // Variante 2 : saut obligatoire
-    if (obstacle.variant === 2 && (!jumping || player.position.y < 0.5)) {
+    if (obstacle.variant === 2 && (!jumping || player.position.y < 1.5)) {
     endGame("Tu as heurté une barrière !");
     return;
 }
