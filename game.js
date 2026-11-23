@@ -237,7 +237,7 @@ let equippedSkin = localStorage.getItem("neonEquippedSkin") || "default";
 let equippedCape = localStorage.getItem("neonEquippedCape") || "";
 let shopCapeObject = null;
 let score = 0;
-let coins = 0;
+let coins = Number(localStorage.getItem("neonCoins") || 0);
 // TIMER NO COIN
 let noCoinStartTime = 0;
 let noCoinTimerInterval = null;
