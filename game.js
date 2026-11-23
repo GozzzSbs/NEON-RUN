@@ -3607,7 +3607,9 @@ if (devBadge) devBadge.style.display = "none";
 
     if (modeName) {
         modeName.textContent =
-            selectedMode === "nocoin" ? "NO COIN" : "SPACE GALAXY";
+    selectedMode === "nocoin" ? "NO COIN" :
+    selectedMode === "metro" ? "🚇 MÉTRO" :
+    "SPACE GALAXY";
     }
 
     updateHUD();
