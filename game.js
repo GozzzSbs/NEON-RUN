@@ -1744,170 +1744,134 @@ function createTrain(laneIndex, z) {
 // BARRIÈRES FUTURISTES
 // ======================================================
 
-function createBarrier(laneIndex, z) {
-
-    const barrier = new THREE.Group();
-
-    // MATÉRIAUX GALAXY
-    const red = mat(0xff244f, 0x990020, 1.5);
-    const white = mat(0xeafaff, 0x80dfff, 1);
-    const blue = mat(0x087cff, 0x003bff, 2);
-    const cyan = mat(0x00eaff, 0x0088ff, 2);
-    const purple = mat(0x9b31ff, 0x6200ff, 2);
-    const metal = mat(0x252b49, 0x10152e, 0.8);
-
-    // 3 MODÈLES AU HASARD
-    const variant = Math.floor(Math.random() * 3);
-
-    // PETITE FONCTION POUR LES SPHÈRES
-    function orb(x, y, z, radius, material) {
-        const sphere = new THREE.Mesh(
-            new THREE.SphereGeometry(radius, 20, 16),
-            material
-        );
-
-        sphere.position.set(x, y, z);
-        barrier.add(sphere);
+function checkCollisions() {
+    if (
+        selectedMode === "lava" &&
+        !jumping &&
+        !isPlayerAboveLavaPlatform()
+    ) {
+        endGame("Tu es tombé dans la lave !");
+        return;
     }
 
-    // PETITE FONCTION POUR LES BANDES
-    function stripe(x, y, rotation) {
-        const mesh = new THREE.Mesh(
-            new THREE.BoxGeometry(0.38, 0.9, 0.16),
-            red
-        );
+    for (const obstacle of obstacles) {
+        const distance = obstacle.object.position.z;
 
-        mesh.position.set(x, y, 0);
-        mesh.rotation.z = rotation;
-        barrier.add(mesh);
+        const sameLane =
+            Math.abs(obstacle.object.position.x - player.position.x) < 1.25;
+
+        if (!sameLane) continue;
+
+        // BARRIÈRES
+        if (
+            obstacle.type === "barrier" &&
+            distance > -1.3 &&
+            distance < 1.3
+        ) {
+            // MODÈLE 1 : IL FAUT GLISSER
+            if (obstacle.variant === 0 && !sliding) {
+                endGame("Tu as heurté une barrière !");
+                return;
+            }
+
+            // MODÈLE 2 : IL FAUT CHANGER DE VOIE
+            if (obstacle.variant === 1) {
+                endGame("Tu as heurté une barrière !");
+                return;
+            }
+
+            // MODÈLE 3 : IL FAUT SAUTER
+            if (obstacle.variant === 2 && !jumping) {
+                endGame("Tu as heurté une barrière !");
+                return;
+            }
+        }
+
+        // TRAIN
+        if (
+            obstacle.type === "train" &&
+            ridingTrain !== obstacle.object &&
+            player.position.y < 3.5 &&
+            distance > -8 &&
+            distance < 2
+        ) {
+            endGame("Un train spatial t'a percuté !");
+            return;
+        }
+
+        // PORTIQUE
+        if (
+            obstacle.type === "metroGate" &&
+            distance > -1.3 &&
+            distance < 1.3 &&
+            !jumping
+        ) {
+            endGame("Tu as heurté un portique !");
+            return;
+        }
+
+        // PORTES
+        if (
+            obstacle.type === "metroDoor" &&
+            distance > -1.5 &&
+            distance < 1.5
+        ) {
+            endGame("Tu es resté devant les portes du métro !");
+            return;
+        }
+
+        // CÂBLE
+        if (
+            obstacle.type === "metroCable" &&
+            distance > -1.3 &&
+            distance < 1.3 &&
+            !sliding
+        ) {
+            endGame("Tu as heurté un câble !");
+            return;
+        }
+
+        // PANNEAU
+        if (
+            obstacle.type === "metroSign" &&
+            distance > -1.3 &&
+            distance < 1.3 &&
+            !sliding
+        ) {
+            endGame("Tu as heurté un panneau !");
+            return;
+        }
     }
 
-    // =================================================
-    // MODÈLE 1 : GRANDE BARRIÈRE SUSPENDUE
-    // =================================================
+    // RAMASSAGE DES PIÈCES
+    for (let i = coinObjects.length - 1; i >= 0; i--) {
+        const coin = coinObjects[i];
 
-    if (variant === 0) {
+        const coinWorldPosition = new THREE.Vector3();
+        coin.getWorldPosition(coinWorldPosition);
 
-        // Supports latéraux
-        for (const side of [-1, 1]) {
+        if (
+            Math.abs(coinWorldPosition.z) < 0.8 &&
+            Math.abs(coinWorldPosition.x - player.position.x) < 0.75 &&
+            Math.abs(coinWorldPosition.y - (1.3 + player.position.y)) < 1.5
+        ) {
+            coin.parent.remove(coin);
+            coinObjects.splice(i, 1);
 
-            box(0.18, 2.5, 0.25,
-                metal, side * 1.05, 1.25, 0, barrier);
+            if (selectedMode === "nocoin") {
+                endGame("Tu as ramassé une pièce !");
+                return;
+            }
 
-            box(0.24, 0.12, 0.3,
-                cyan, side * 1.05, 2.5, 0, barrier);
+            coins++;
+            updateDailyChallengeProgress("coins", 1);
+            shopWallet++;
+            localStorage.setItem("neonWallet", shopWallet);
 
-            // Boules d'énergie
-            orb(side * 0.92, 2.55, 0, 0.25, blue);
+            updateShopWallet();
         }
-
-        // Panneau rayé
-        box(2.1, 1.15, 0.35,
-            red, 0, 2.15, 0, barrier);
-
-        // Bandes blanches
-        for (let i = -2; i <= 2; i++) {
-            stripe(i * 0.4, 2.15, 0);
-        }
-
-        // Contour lumineux
-        box(2.2, 0.08, 0.42,
-            cyan, 0, 2.75, 0, barrier);
-
-        // Énergie au centre
-        box(0.12, 0.95, 0.43,
-            purple, 0, 2.15, -0.03, barrier);
     }
-
-    // =================================================
-    // MODÈLE 2 : BARRIÈRE SUR PLATEFORME
-    // =================================================
-
-    else if (variant === 1) {
-
-        // Base futuriste
-        box(2.35, 0.25, 0.7,
-            blue, 0, 0.15, 0, barrier);
-
-        box(2.1, 0.08, 0.74,
-            cyan, 0, 0.3, 0, barrier);
-
-        // Montants
-        for (const side of [-1, 1]) {
-
-            box(0.2, 1.4, 0.3,
-                metal, side * 0.85, 0.9, 0, barrier);
-
-            box(0.3, 0.3, 0.35,
-                purple, side * 0.85, 1.65, 0, barrier);
-
-            orb(side * 0.85, 1.85, 0, 0.22, cyan);
-        }
-
-        // Panneau central
-        box(2.1, 0.85, 0.35,
-            red, 0, 1.55, 0, barrier);
-
-        // Bandes blanches
-        for (let i = -2; i <= 2; i++) {
-            stripe(i * 0.4, 1.55, 0);
-        }
-
-        // Ligne lumineuse supérieure
-        box(2.2, 0.08, 0.4,
-            cyan, 0, 2.02, 0, barrier);
-    }
-
-    // =================================================
-    // MODÈLE 3 : BARRIÈRE BASSE À SAUTER
-    // =================================================
-
-    else {
-
-        // Panneau principal
-        box(2.1, 1.05, 0.35,
-            red, 0, 0.95, 0, barrier);
-
-        // Bandes blanches
-        for (let i = -2; i <= 2; i++) {
-            stripe(i * 0.4, 0.95, 0);
-        }
-
-        // Grosses sphères latérales
-        for (const side of [-1, 1]) {
-
-            orb(side * 1.08, 1.35, 0, 0.28, blue);
-
-            box(0.16, 0.9, 0.25,
-                metal, side * 1.08, 0.45, 0, barrier);
-        }
-
-        // Socle
-        box(2.25, 0.18, 0.55,
-            metal, 0, 0.08, 0, barrier);
-
-        // Ligne d'énergie
-        box(2.15, 0.07, 0.4,
-            cyan, 0, 1.5, 0, barrier);
-    }
-
-    // POSITION
-    barrier.position.set(
-        lanePositions[laneIndex],
-        0,
-        z
-    );
-
-    scene.add(barrier);
-
-    obstacles.push({
-        object: barrier,
-        type: "barrier",
-        lane: laneIndex,
-        variant: variant
-    });
 }
-
 // ======================================================
 // PIÈCES COSMIQUES
 // ======================================================
