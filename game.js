@@ -5933,7 +5933,8 @@ if (equippedSkin === "culprit") {
 if (
     (equippedSkin === "street_king" ||
      equippedSkin === "astronaut" ||
-     equippedSkin === "culprit") &&
+     equippedSkin === "culprit" ||
+     equippedSkin === "cooker") &&
     bones &&
     bones.chest
 ) {
