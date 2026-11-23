@@ -333,8 +333,10 @@ function updateTrophyCounter() {
 }
 function openTrophyRoad() {
     const road = document.getElementById("trophyRoad");
+    const count = document.getElementById("roadTrophyCount");
 
     if (road) {
+        count.textContent = playerTrophies;
         road.style.display = "flex";
     }
 }
