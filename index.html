@@ -4,179 +4,93 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>NEON RUN 3D</title>
-
 <link rel="stylesheet" href="style.css">
-
-
 </head>
 
 <body>
 
 <div class="background-grid"></div>
+
 <!-- CREATION DU PROFIL -->
-
 <div id="profileSetup" class="profile-setup">
-
     <div class="profile-box">
-
         <h1>🌌 NEON RUN</h1>
         <h2>BIENVENUE RUNNER !</h2>
 
         <div class="auth-tabs">
-            <button onclick="showAuthForm('register')">
-                CRÉER UN COMPTE
-            </button>
-
-            <button onclick="showAuthForm('login')">
-                SE CONNECTER
-            </button>
+            <button onclick="showAuthForm('register')">CRÉER UN COMPTE</button>
+            <button onclick="showAuthForm('login')">SE CONNECTER</button>
         </div>
 
-        <!-- INSCRIPTION -->
         <div id="registerForm">
-
             <p>Crée ton compte pour sauvegarder ta progression.</p>
-
-            <input
-                type="text"
-                id="registerPseudo"
-                placeholder="Choisis ton pseudo..."
-                maxlength="16"
-            >
-
-            <input
-                type="password"
-                id="registerPassword"
-                placeholder="Choisis ton mot de passe..."
-            >
-
-            <input
-                type="password"
-                id="confirmPassword"
-                placeholder="Confirme ton mot de passe..."
-            >
-
-            <button onclick="registerPlayer()">
-                🚀 CRÉER MON COMPTE
-            </button>
-
+            <input type="text" id="registerPseudo" placeholder="Choisis ton pseudo..." maxlength="16">
+            <input type="password" id="registerPassword" placeholder="Choisis ton mot de passe...">
+            <input type="password" id="confirmPassword" placeholder="Confirme ton mot de passe...">
+            <button onclick="registerPlayer()">🚀 CRÉER MON COMPTE</button>
         </div>
 
-        <!-- CONNEXION -->
         <div id="loginForm" style="display:none;">
-
             <p>Content de te revoir, Runner !</p>
-
-            <input
-                type="text"
-                id="loginPseudo"
-                placeholder="Ton pseudo..."
-                maxlength="16"
-            >
-
-            <input
-                type="password"
-                id="loginPassword"
-                placeholder="Ton mot de passe..."
-            >
-
-            <button onclick="loginPlayer()">
-                🔐 SE CONNECTER
-            </button>
-
+            <input type="text" id="loginPseudo" placeholder="Ton pseudo..." maxlength="16">
+            <input type="password" id="loginPassword" placeholder="Ton mot de passe...">
+            <button onclick="loginPlayer()">🔐 SE CONNECTER</button>
         </div>
 
         <p id="pseudoError"></p>
-
     </div>
-
 </div>
 
 <!-- MENU PRINCIPAL -->
 <section id="menu">
-<button id="trophyCounter" onclick="openTrophyRoad()">
-    🏆 <span id="trophyCount">0</span>
-    <small>VOIR</small>
-</button>
+
+    <button id="trophyCounter" onclick="openTrophyRoad()">
+        🏆 <span id="trophyCount">0</span>
+        <small>VOIR</small>
+    </button>
+
     <div class="menu-header">
         <h1>⚡ BIENVENUE DANS NEON RUN</h1>
     </div>
 
     <div class="statistics">
-
-        <div class="stat-card">
-            <strong>00m00s</strong>
-            <small>Record</small>
-        </div>
-
-        <div class="stat-card">
-            <strong>--</strong>
-            <small>Dernière partie</small>
-        </div>
-
-        <div class="stat-card">
-            <strong>⭐ 291</strong>
-            <small>Étoiles</small>
-        </div>
-
-        <div class="stat-card">
-            <strong>1</strong>
-            <small>Niveau</small>
-        </div>
-
-        <div class="stat-card">
-            <strong>Runner</strong>
-            <small>Joueur</small>
-        </div>
-
+        <div class="stat-card"><strong>00m00s</strong><small>Record</small></div>
+        <div class="stat-card"><strong>--</strong><small>Dernière partie</small></div>
+        <div class="stat-card"><strong>⭐ 291</strong><small>Étoiles</small></div>
+        <div class="stat-card"><strong>1</strong><small>Niveau</small></div>
+        <div class="stat-card"><strong>Runner</strong><small>Joueur</small></div>
     </div>
 
     <h3 class="section-title">DIFFICULTÉ</h3>
 
     <div class="difficulty-buttons">
-
         <button onclick="setDifficulty('facile',this)">Facile</button>
         <button class="active" onclick="setDifficulty('normal',this)">Normal</button>
         <button onclick="setDifficulty('difficile',this)">Difficile</button>
         <button onclick="setDifficulty('extreme',this)">Extrême</button>
-
     </div>
 
     <h3 class="section-title">MODE DE JEU</h3>
 
     <div class="mode-buttons">
-
-        <button class="active" onclick="selectMode('classic',this)">
-            Classique
-        </button>
-
-        <button onclick="selectMode('nocoin',this)">
-            Sans pièces
-        </button>
-
-        <button onclick="selectMode('lava',this)">
-            Le sol est de la lave
-        </button>
-
+        <button class="active" onclick="selectMode('classic',this)">Classique</button>
+        <button onclick="selectMode('nocoin',this)">Sans pièces</button>
+        <button onclick="selectMode('lava',this)">Le sol est de la lave</button>
     </div>
 
     <div class="rules-panel">
         <p id="modeDescription">
-    🚆 Évite les trains et les barrières.<br>
-    ⬆️ Saute par-dessus les obstacles.<br>
-    🏃 Glisse pour éviter les obstacles en hauteur.<br>
-    🪙 Ramasse les pièces et bats ton record !
-</p>
+            🚆 Évite les trains et les barrières.<br>
+            ⬆️ Saute par-dessus les obstacles.<br>
+            🏃 Glisse pour éviter les obstacles en hauteur.<br>
+            🪙 Ramasse les pièces et bats ton record !
+        </p>
     </div>
 
-    <button class="play-button" onclick="startGame()">
-        JOUER
-    </button>
-<button class="play-button" onclick="openDailyChallenges()">
-    📅 DÉFIS QUOTIDIENS
-</button>
+    <button class="play-button" onclick="startGame()">JOUER</button>
+    <button class="play-button" onclick="openDailyChallenges()">📅 DÉFIS QUOTIDIENS</button>
+
     <div class="small-buttons">
         <button>Profil</button>
         <button>Social</button>
@@ -184,9 +98,7 @@
     </div>
 
     <div class="secondary-buttons">
-        <button onclick="openLeaderboard()">
-    🏆 Classement mondial
-</button>
+        <button onclick="openLeaderboard()">🏆 Classement mondial</button>
         <button>Amis</button>
         <button>Chat</button>
         <button>Classement</button>
@@ -195,9 +107,7 @@
         <button>Persos</button>
         <button>Boutique</button>
         <button onclick="openAccount()">👤 Compte</button>
-        <button onclick="logoutPlayer()" style="background:#ff1744; color:white;">
-    🚪 DÉCONNEXION
-</button>
+        <button onclick="logoutPlayer()" style="background:#ff1744;color:white;">🚪 DÉCONNEXION</button>
         <button>Paramètres</button>
     </div>
 
@@ -207,38 +117,26 @@
         <kbd>Z</kbd>
         <kbd>S</kbd>
         <kbd>ESPACE</kbd>
-
-        <small>
-            Q/D : changer de voie · Z : sauter · S : glisser
-        </small>
+        <small>Q/D : changer de voie · Z : sauter · S : glisser</small>
     </div>
 
 </section>
-    <!-- DÉFIS QUOTIDIENS -->
+
+<!-- DÉFIS QUOTIDIENS -->
 <section id="dailyChallengesScreen" class="hidden">
-
     <div class="account-container">
-
         <h1>📅 DÉFIS QUOTIDIENS</h1>
         <p>Relève les défis et gagne des pièces !</p>
-
         <div id="dailyChallengesList"></div>
-
-        <button onclick="closeDailyChallenges()" class="account-back">
-            ← RETOUR AU MENU
-        </button>
-
+        <button onclick="closeDailyChallenges()" class="account-back">← RETOUR AU MENU</button>
     </div>
-
 </section>
+
 <!-- PROFIL DU JOUEUR -->
 <section id="accountScreen" class="hidden">
-
     <div class="account-container">
-
         <div class="account-header">
             <div class="account-avatar">🚀</div>
-
             <div>
                 <h1 id="accountPseudo">RUNNER</h1>
                 <p>MEMBRE DE NEON RUN GALAXY</p>
@@ -248,25 +146,21 @@
         <h2>🌌 MON PROFIL</h2>
 
         <div class="account-stats">
-
             <div class="account-card">
                 <span>🎮</span>
                 <strong id="accountRuns">0</strong>
                 <small>PARTIES LANCÉES</small>
             </div>
-
             <div class="account-card">
                 <span>🏆</span>
                 <strong id="accountClassic">0</strong>
                 <small>RECORD CLASSIQUE</small>
             </div>
-
             <div class="account-card">
                 <span>⏱️</span>
                 <strong id="accountNoCoin">0 s</strong>
                 <small>RECORD NO COIN</small>
             </div>
-
         </div>
 
         <div class="account-info">
@@ -275,102 +169,61 @@
             <p>Continue à jouer pour améliorer tes records.</p>
         </div>
 
-        <button onclick="closeAccount()" class="account-back">
-            ← RETOUR AU MENU
-        </button>
-
+        <button onclick="closeAccount()" class="account-back">← RETOUR AU MENU</button>
     </div>
-
 </section>
+
 <!-- CLASSEMENT MONDIAL -->
-
 <section id="leaderboardScreen" class="hidden">
-
     <div class="leaderboard-container">
-
         <h1>🏆 CLASSEMENT MONDIAL</h1>
         <p>LES MEILLEURS RUNNERS DE NEON RUN</p>
-<div class="leaderboard-tabs">
 
-    <button id="classicLeaderboardBtn"
-        class="active"
-        onclick="changeLeaderboardMode('classic')">
-        🏆 CLASSIQUE
-    </button>
+        <div class="leaderboard-tabs">
+            <button id="classicLeaderboardBtn" class="active" onclick="changeLeaderboardMode('classic')">🏆 CLASSIQUE</button>
+            <button id="noCoinLeaderboardBtn" onclick="changeLeaderboardMode('nocoin')">🪙 NO COIN</button>
+        </div>
 
-    <button id="noCoinLeaderboardBtn"
-        onclick="changeLeaderboardMode('nocoin')">
-        🪙 NO COIN
-    </button>
-
-</div>
         <div class="leaderboard-tabs difficulty-leaderboard-tabs">
+            <button class="active" onclick="changeLeaderboardDifficulty('facile', this)">🟢 FACILE</button>
+            <button onclick="changeLeaderboardDifficulty('normal', this)">🔵 NORMAL</button>
+            <button onclick="changeLeaderboardDifficulty('difficile', this)">🟠 DIFFICILE</button>
+            <button onclick="changeLeaderboardDifficulty('extreme', this)">🔴 EXTRÊME</button>
+        </div>
 
-    <button class="active" onclick="changeLeaderboardDifficulty('facile', this)">
-        🟢 FACILE
-    </button>
-
-    <button onclick="changeLeaderboardDifficulty('normal', this)">
-        🔵 NORMAL
-    </button>
-
-    <button onclick="changeLeaderboardDifficulty('difficile', this)">
-        🟠 DIFFICILE
-    </button>
-
-    <button onclick="changeLeaderboardDifficulty('extreme', this)">
-        🔴 EXTRÊME
-    </button>
-
-</div>
         <div id="leaderboardPodium" class="leaderboard-podium"></div>
 
         <div class="leaderboard-list">
-
             <div class="leaderboard-heading">
                 <span>POSITION</span>
                 <span>JOUEUR</span>
                 <span>SCORE</span>
             </div>
-
-            <div id="leaderboardPlayers">
-                Chargement du classement...
-            </div>
-
+            <div id="leaderboardPlayers">Chargement du classement...</div>
         </div>
 
-        <button onclick="openLeaderboard()">
-            🔄 ACTUALISER
-        </button>
-
-        <button onclick="closeLeaderboard()">
-            ← RETOUR AU MENU
-        </button>
-
+        <button onclick="openLeaderboard()">🔄 ACTUALISER</button>
+        <button onclick="closeLeaderboard()">← RETOUR AU MENU</button>
     </div>
-
 </section>
+
 <!-- JEU 3D -->
-
 <section id="gameScreen" class="hidden">
-
     <div class="gameHeader">
+        <div class="player-game-info">
+            <span id="gamePlayerPseudo">RUNNER</span>
+            <span id="gamePlayerBadge"></span>
+            <span class="game-score">SCORE : <b id="score">0</b></span>
+        </div>
 
-    <div class="player-game-info">
-        <span id="gamePlayerPseudo">RUNNER</span>
-        <span id="gamePlayerBadge"></span>
-        <span class="game-score">SCORE : <b id="score">0</b></span>
+        <button id="pauseButton" onclick="pauseGame()" aria-label="Pause">Ⅱ</button>
+
+        <div id="gameCoinCounter">
+            <span class="coin-icon">🪙</span>
+            <span>:</span>
+            <span id="gameCoinCount">0</span>
+        </div>
     </div>
-
-    <button id="pauseButton" onclick="pauseGame()" aria-label="Pause">Ⅱ</button>
-<div id="gameCoinCounter">
-    <span class="coin-icon">🪙</span>
-    <span>:</span>
-    <span id="gameCoinCount">0</span>
-</div>
-
-</div>
-    <!-- IMPORTANT : LE CANVAS RESTE ICI -->
 
     <canvas id="game" width="900" height="450"></canvas>
 
@@ -378,26 +231,21 @@
         <span>Q/D : VOIES · Z : SAUTER · S : GLISSER</span>
         <button onclick="backToMenu()">← QUITTER</button>
     </div>
-
 </section>
+
 <!-- POPUP PAUSE -->
 <div id="pauseMenu" class="hidden">
     <div class="pause-panel">
         <h1>⏸️ PAUSE</h1>
-
         <button onclick="resumeGame()">▶ REPRENDRE</button>
         <button onclick="backToMenu()">🏠 MENU</button>
     </div>
 </div>
 
 <!-- GAME OVER -->
-
 <div id="gameOver" class="overlay hidden">
-
     <div class="result">
-
         <h1 id="gameOverTitle">GAME OVER</h1>
-
         <p id="gameOverReason">Tu peux faire mieux !</p>
 
         <div class="resultStats">
@@ -405,69 +253,28 @@
             <div>COINS <b id="finalCoins">0</b></div>
         </div>
 
-        <button class="play-button" onclick="startGame()">
-            🔄 REJOUER
-        </button>
-
-        <button onclick="backToMenu()">
-            🏠 MENU
-        </button>
-
+        <button class="play-button" onclick="startGame()">🔄 REJOUER</button>
+        <button onclick="backToMenu()">🏠 MENU</button>
     </div>
-
 </div>
+
 <!-- PASS NEON RUN -->
-<div id="neonPass" style="
-    display:none;
-    position:fixed;
-    inset:0;
-    z-index:10000;
-    background:rgba(0,0,0,0.92);
-    color:white;
-    overflow-y:auto;
-    font-family:Arial,sans-serif;
-    padding:25px;
-">
+<div id="neonPass" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.92);color:white;overflow-y:auto;font-family:Arial,sans-serif;padding:25px;">
     <div style="max-width:850px;margin:auto;">
-
-        <button onclick="closePass()" style="float:right;">
-            ✖ FERMER
-        </button>
-
-        <h1 style="text-align:center;color:#00eaff;">
-            💎 NEON RUN PASS
-        </h1>
-
-        <h2 style="text-align:center;">
-            NIVEAU <span id="passLevel">1</span> / 100
-        </h2>
+        <button onclick="closePass()" style="float:right;">✖ FERMER</button>
+        <h1 style="text-align:center;color:#00eaff;">💎 NEON RUN PASS</h1>
+        <h2 style="text-align:center;">NIVEAU <span id="passLevel">1</span> / 100</h2>
 
         <div style="background:#333;border-radius:20px;height:18px;">
-            <div id="passXpBar" style="
-                width:0%;
-                height:100%;
-                background:#00eaff;
-                border-radius:20px;
-            "></div>
+            <div id="passXpBar" style="width:0%;height:100%;background:#00eaff;border-radius:20px;"></div>
         </div>
 
-        <p style="text-align:center;">
-            XP : <span id="passXp">0</span> / 100
-        </p>
-
-        <div id="passRewards" style="
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
-            gap:12px;
-            margin-top:25px;
-        "></div>
-
+        <p style="text-align:center;">XP : <span id="passXp">0</span> / 100</p>
+        <div id="passRewards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:25px;"></div>
     </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="game.js"></script>
+
+<!-- ROUTE DES TROPHÉES -->
 <section id="trophyRoad" style="display:none;">
     <h1>🏆 ROUTE DES TROPHÉES</h1>
 
@@ -475,9 +282,34 @@
         🏆 <span id="roadTrophyCount">0</span> trophées
     </div>
 
+    <div id="trophyMilestones">
+        <div class="trophy-milestone">
+            <span>🏆 50 trophées</span>
+            <span>🪙 100 pièces</span>
+        </div>
+        <div class="trophy-milestone">
+            <span>🏆 100 trophées</span>
+            <span>💎 10 diamants</span>
+        </div>
+        <div class="trophy-milestone">
+            <span>🏆 250 trophées</span>
+            <span>🎁 Récompense spéciale</span>
+        </div>
+        <div class="trophy-milestone">
+            <span>🏆 500 trophées</span>
+            <span>👑 Skin exclusif</span>
+        </div>
+    </div>
+
     <button onclick="document.getElementById('trophyRoad').style.display='none'">
         ✖ FERMER
     </button>
 </section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="game.js"></script>
+
 </body>
 </html>
