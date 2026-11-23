@@ -5901,7 +5901,9 @@ if (equippedSkin === "astronaut") {
 }
 
 if (
-    (equippedSkin === "street_king" || equippedSkin === "astronaut") &&
+    (equippedSkin === "street_king" ||
+     equippedSkin === "astronaut" ||
+     equippedSkin === "culprit") &&
     bones &&
     bones.chest
 ) {
