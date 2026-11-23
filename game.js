@@ -2331,7 +2331,50 @@ function createMetroTrain(lane, z) {
 }
 function spawnObjects() {
     const laneIndex = Math.floor(Math.random() * 3);
+// =====================================
+// PARCOURS EXCLUSIFS AU MÉTRO
+// =====================================
 
+if (selectedMode === "metro") {
+
+    const metroLane = Math.floor(Math.random() * 3);
+
+    const metroPatterns = [
+        "gate",
+        "gate",
+        "doors",
+        "cable",
+        "cable",
+        "sign",
+        "train",
+        "train"
+    ];
+
+    const metroPattern =
+        metroPatterns[Math.floor(Math.random() * metroPatterns.length)];
+
+    if (metroPattern === "gate") {
+        createMetroGate(metroLane, -105);
+    }
+
+    else if (metroPattern === "doors") {
+        createMetroDoor(metroLane, -105);
+    }
+
+    else if (metroPattern === "cable") {
+        createMetroCable(metroLane, -105);
+    }
+
+    else if (metroPattern === "sign") {
+        createMetroSign(metroLane, -105);
+    }
+
+    else if (metroPattern === "train") {
+        createMetroTrain(metroLane, -115);
+    }
+
+    return;
+}
     // CHOIX DU PARCOURS
 const difficultyLevel = Math.min(1, Math.max(0, (score - 5000) / 45000));
 
