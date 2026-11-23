@@ -2962,9 +2962,9 @@ saveScoreToSupabase().catch(error => {
     console.error("Erreur lors de la sauvegarde :", error);
 });
     if (score > best) {
-        best = score;
-        localStorage.setItem("neonBest", best);
-    }
+    best = score;
+    localStorage.setItem("neonBest_" + difficulty, best);
+}
 
     const gameOver = document.getElementById("gameOver");
 
