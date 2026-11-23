@@ -2985,10 +2985,10 @@ if (
     }
 
     // Variante 2 : saut obligatoire
-    if (obstacle.variant === 2 && !jumping) {
-        endGame("Tu as heurté une barrière !");
-        return;
-    }
+    if (obstacle.variant === 2 && (!jumping || player.position.y < 0.5)) {
+    endGame("Tu as heurté une barrière !");
+    return;
+}
 }
         if (
     obstacle.type === "train" &&
