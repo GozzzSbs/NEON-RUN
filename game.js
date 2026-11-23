@@ -1274,6 +1274,9 @@ function createCulprit() {
 function createCooker() {
     createGLBCharacter("grab3d-cozy-character%20(6).glb", "cooker");
 }
+function createShella() {
+    createGLBCharacter("grab3d-cozy-character%20(7).glb", "shella");
+}
 function createJacko() {
     createGLBCharacter("grab3d-cozy-character%20(2).glb", "jacko");
 }
@@ -1298,6 +1301,10 @@ if (equippedSkin === "astronaut") {
 }
     if (equippedSkin === "cooker") {
     createCooker();
+    return;
+}
+    if (equippedSkin === "shella") {
+    createShella();
     return;
 }
     playerParts = {
