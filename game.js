@@ -580,7 +580,8 @@ function createMetroDecor() {
         0, 10, -80
     );
     metroDecor.push(ceiling);
-        // Panneaux lumineux de station
+
+    // Panneaux lumineux de station
     const signMaterial = mat(0x063344, 0x00eaff, 1.5);
 
     for (const z of [-25, -75, -125]) {
@@ -590,6 +591,35 @@ function createMetroDecor() {
             -7.35, 7.5, z
         );
         metroDecor.push(sign);
+
+        // Texte du panneau
+        const signCanvas = document.createElement("canvas");
+        signCanvas.width = 512;
+        signCanvas.height = 128;
+
+        const ctx = signCanvas.getContext("2d");
+        ctx.clearRect(0, 0, 512, 128);
+        ctx.fillStyle = "#00eaff";
+        ctx.font = "bold 48px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("METRO NEON RUN", 256, 64);
+
+        const signTexture = new THREE.CanvasTexture(signCanvas);
+
+        const signText = new THREE.Mesh(
+            new THREE.PlaneGeometry(3.3, 0.8),
+            new THREE.MeshBasicMaterial({
+                map: signTexture,
+                transparent: true,
+                side: THREE.DoubleSide
+            })
+        );
+
+        signText.position.set(-7.22, 7.5, z - 0.11);
+        signText.rotation.y = Math.PI / 2;
+
+        metroDecor.push(signText);
     }
 }
 // ======================================================
