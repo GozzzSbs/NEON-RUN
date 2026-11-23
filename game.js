@@ -4088,7 +4088,7 @@ const SHOP_CATALOG = {
             price: 600,
             currency: "diamonds",
             color: 0xff69b4,
-            description: "Un nouveau runner."
+            description: "La Ptite Fille."
         }
     ],
 
@@ -4096,14 +4096,14 @@ const SHOP_CATALOG = {
         {
             id: "nr",
             name: "CAPE NR",
-            price: 100,
+            price: 300,
             currency: "diamonds",
             color: 0x050505,
             description: "Cape noire avec le logo NR."
         },
         {
             id: "rxn",
-            name: "La RXN Cape,s",
+            name: "La RXN Cape's",
             price: 500,
             currency: "diamonds",
             color: 0x050505,
@@ -4111,7 +4111,7 @@ const SHOP_CATALOG = {
         },
         {
             id: "rxn_white",
-            name: "RXN WHITE",
+            name: "La White RXN Cape's",
             price: 500,
             currency: "diamonds",
             color: 0xffffff,
