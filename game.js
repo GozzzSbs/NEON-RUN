@@ -1271,13 +1271,6 @@ function createAstronaut() {
 function createJacko() {
     createGLBCharacter("grab3d-cozy-character%20(2).glb", "jacko");
 }
-function createNewSkin1() {
-    createGLBCharacter("grab3d-cozy-character%20(3).glb", "newSkin1");
-}
-
-function createNewSkin2() {
-    createGLBCharacter("grab3d-cozy-character%20(4).glb", "newSkin2");
-}
 function createPlayer() {
     player = new THREE.Group();
 
@@ -1291,15 +1284,6 @@ if (equippedSkin === "default") {
 }
 if (equippedSkin === "astronaut") {
     createAstronaut();
-    return;
-}
-    if (equippedSkin === "newSkin1") {
-    createNewSkin1();
-    return;
-}
-
-if (equippedSkin === "newSkin2") {
-    createNewSkin2();
     return;
 }
     playerParts = {
@@ -3087,16 +3071,13 @@ function animateRunner() {
     if (
     equippedSkin === "street_king" ||
     equippedSkin === "astronaut" ||
-    equippedSkin === "default" ||
-    equippedSkin === "newSkin1" ||
-    equippedSkin === "newSkin2"
+    equippedSkin === "default"
 ) {
-        const skinKey =
-    equippedSkin === "street_king" ? "streetKing" :
-    equippedSkin === "astronaut" ? "astronaut" :
-    equippedSkin === "newSkin1" ? "newSkin1" :
-    equippedSkin === "newSkin2" ? "newSkin2" :
-    "jacko";
+        const skinKey = equippedSkin === "street_king"
+    ? "streetKing"
+    : equippedSkin === "astronaut"
+        ? "astronaut"
+        : "jacko";
 
         const model = player.userData[skinKey + "Model"];
         const bones = player.userData[skinKey + "Bones"];
@@ -3873,8 +3854,6 @@ if (!player || !playerParts ||
     (equippedSkin !== "street_king" &&
      equippedSkin !== "astronaut" &&
      equippedSkin !== "default" &&
-     equippedSkin !== "newSkin1" &&
-     equippedSkin !== "newSkin2" &&
      !playerParts.body)) {
     console.error("ERREUR : le personnage n'est pas correctement initialisé !");
     return;
@@ -4034,48 +4013,31 @@ window.addEventListener("resize", () => {
 
 const SHOP_CATALOG = {
     skins: [
-        {
-            id: "default",
-            name: "JACKO",
-            price: 0,
-            currency: "coins",
-            color: 0x7900b8,
-            description: "Le runner original."
-        },
-        {
-            id: "street_king",
-            name: "STREET KING",
-            price: 500,
-            currency: "diamonds",
-            color: 0x151515,
-            description: "Le style streetwear ultime."
-        },
-        {
-            id: "astronaut",
-            name: "ASTRONAUT",
-            price: 600,
-            currency: "diamonds",
-            color: 0xffffff,
-            description: "Un runner venu de l'espace."
-        },
-        {
-            id: "newSkin1",
-            name: "CULPRIT",
-            price: 900,
-            currency: "diamonds",
-            color: 0x222222,
-            description: "Le skin Culprit."
-        },
-        {
-            id: "newSkin2",
-            name: "COOKER",
-            price: 700,
-            currency: "diamonds",
-            color: 0xff5500,
-            description: "Le skin Cooker."
-        }
-    ],
-
+    {
+        id: "default",
+        name: "JACKO",
+        price: 0,
+        currency: "coins",
+        color: 0x7900b8,
+        description: "Le runner original."
+    },
+    {
+        id: "street_king",
+        name: "STREET KING",
+        price: 500,
+        currency: "diamonds",
+        color: 0x151515,
+        description: "Le style streetwear ultime."
+    },
+    {
+        id: "astronaut",
+        name: "ASTRONAUT",
+        price: 600,
+        currency: "diamonds",
+        color: 0xffffff,
+        description: "Un runner venu de l'espace."
+    }
+],
     capes: [
         {
             id: "nr",
