@@ -3102,6 +3102,7 @@ function animateRunner() {
     equippedSkin === "astronaut" ? "astronaut" :
     equippedSkin === "culprit" ? "culprit" :
     equippedSkin === "cooker" ? "cooker" :
+    equippedSkin === "shella" ? "shella" :
     "jacko";
 
         const model = player.userData[skinKey + "Model"];
