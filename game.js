@@ -1296,6 +1296,10 @@ if (equippedSkin === "astronaut") {
     createCulprit();
     return;
 }
+    if (equippedSkin === "cooker") {
+    createCooker();
+    return;
+}
     playerParts = {
         arms: [],
         legs: [],
