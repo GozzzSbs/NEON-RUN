@@ -17,6 +17,37 @@ if (!canvas) throw new Error("Canvas #game introuvable");
 // ======================================================
 
 const scene = new THREE.Scene();
+// =====================================
+// PERSONNAGE 3D DU LOBBY
+// =====================================
+
+let lobbyScene = new THREE.Scene();
+
+let lobbyCamera = new THREE.PerspectiveCamera(
+    35,
+    1,
+    0.1,
+    100
+);
+
+lobbyCamera.position.set(0, 1.5, 7);
+
+let lobbyRenderer = new THREE.WebGLRenderer({
+    canvas: document.getElementById("lobbyCanvas"),
+    alpha: true,
+    antialias: true
+});
+
+lobbyRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+lobbyRenderer.setSize(250, 270);
+
+lobbyScene.add(
+    new THREE.HemisphereLight(0xffffff, 0x445566, 2)
+);
+
+const lobbyLight = new THREE.DirectionalLight(0xffffff, 2);
+lobbyLight.position.set(3, 5, 5);
+lobbyScene.add(lobbyLight);
 let metroDecor = [];
 scene.background = new THREE.Color(0x55baff);
 // ======================================================
