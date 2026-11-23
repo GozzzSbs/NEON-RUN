@@ -303,6 +303,8 @@ function applyDifficultySettings(reset = true) {
     const settings =
         DIFFICULTY_SETTINGS[difficulty] || DIFFICULTY_SETTINGS.normal;
 
+    best = Number(localStorage.getItem("neonBest_" + difficulty) || 0);
+
     baseSpeed = settings.base;
     maxSpeedMultiplier = settings.max;
 
