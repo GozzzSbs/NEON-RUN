@@ -30,7 +30,8 @@ let lobbyCamera = new THREE.PerspectiveCamera(
     100
 );
 
-lobbyCamera.position.set(0, 1.5, 7);
+lobbyCamera.position.set(0, 1.5, 8);
+lobbyCamera.lookAt(0, 1.5, 0);
 
 let lobbyRenderer = new THREE.WebGLRenderer({
     canvas: document.getElementById("lobbyCanvas"),
@@ -40,7 +41,8 @@ let lobbyRenderer = new THREE.WebGLRenderer({
 
 lobbyRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 lobbyRenderer.setSize(250, 270);
-
+lobbyRenderer.domElement.style.width = "100%";
+lobbyRenderer.domElement.style.height = "100%";
 lobbyScene.add(
     new THREE.HemisphereLight(0xffffff, 0x445566, 2)
 );
