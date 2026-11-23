@@ -2463,6 +2463,7 @@ window.difficulty = level;
     if (button) button.classList.add("active");
 
     applyDifficultySettings(true);
+    updateTrophyCounter();
 };
 console.log("SETDIFFICULTY DISPONIBLE :", typeof window.setDifficulty);
 // ======================================================
