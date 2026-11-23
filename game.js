@@ -337,8 +337,34 @@ function openTrophyRoad() {
 
     if (road) {
         count.textContent = playerTrophies;
+        updateTrophyRoad();
         road.style.display = "flex";
     }
+}
+function updateTrophyRoad() {
+    const container = document.getElementById("trophyMilestones");
+
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    trophyRewards.forEach((item, index) => {
+        const unlocked = playerTrophies >= item.trophies;
+        const claimed = claimedTrophyRewards.includes(index);
+
+        const card = document.createElement("div");
+        card.className = "trophy-milestone";
+
+        card.innerHTML = `
+            <span>🏆 ${item.trophies} trophées</span>
+            <span>${item.reward}</span>
+            <strong>
+                ${claimed ? "✅ RÉCUPÉRÉ" : unlocked ? "🔓 DÉBLOQUÉ" : "🔒 VERROUILLÉ"}
+            </strong>
+        `;
+
+        container.appendChild(card);
+    });
 }
 // ======================================================
 // MATÉRIAUX
