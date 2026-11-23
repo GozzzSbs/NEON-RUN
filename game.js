@@ -1832,11 +1832,11 @@ function checkCollisions() {
             }
 
             // MODÈLE 3 : IL FAUT SAUTER
-            if (obstacle.variant === 2 && !jumping) {
-                endGame("Tu as heurté une barrière !");
-                return;
-            }
-        }
+            if (obstacle.variant === 2 && (!jumping || player.position.y < 0.5)) {
+    endGame("Tu as heurté une barrière !");
+    return;
+}
+      }
 
         // TRAIN
         if (
