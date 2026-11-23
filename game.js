@@ -3872,6 +3872,7 @@ if (!player || !playerParts ||
      equippedSkin !== "astronaut" &&
      equippedSkin !== "default" &&
      equippedSkin !== "culprit" &&
+     equippedSkin !== "cooker" &&
      !playerParts.body)) {
     console.error("ERREUR : le personnage n'est pas correctement initialisé !");
     return;
