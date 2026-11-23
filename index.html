@@ -45,140 +45,141 @@
 <!-- MENU PRINCIPAL -->
 <section id="menu">
 
-    <button id="trophyCounter" onclick="openTrophyRoad()">
-        🏆 <span id="trophyCount">0</span>
-        <small>VOIR</small>
-    </button>
+    <!-- BARRE DU HAUT -->
+    <div class="lobby-topbar">
 
-    <div class="lobby-header">
-    <div class="lobby-logo">
-        ⚡ NEON RUN
-    </div>
+        <div class="lobby-profile">
+            <div class="lobby-avatar">🚀</div>
+            <div>
+                <strong id="lobbyPseudo">RUNNER</strong>
+                <small>NEON RUN</small>
+            </div>
+        </div>
 
-    <div class="lobby-currencies">
-        <div class="currency">🪙 <span id="lobbyCoins">0</span></div>
-        <div class="currency">💎 <span id="lobbyDiamonds">0</span></div>
-    </div>
-</div>
+        <div class="lobby-player-stats">
+            <div class="lobby-stat">
+                🏆 <strong id="lobbyTrophies">0</strong>
+            </div>
+            <div class="lobby-stat">
+                🥇 <strong id="lobbyRank">NON CLASSÉ</strong>
+            </div>
+            <div class="lobby-stat">
+                🎟️ <strong id="lobbyPassLevel">1</strong>
+            </div>
+        </div>
 
-<div class="lobby-character-area">
-    <div class="lobby-character-glow"></div>
-
-    <div id="lobbyCharacter">
-    <canvas id="lobbyCanvas"></canvas>
-</div>
-
-    <div class="lobby-character-name">
-        ASTRONAUTE
-    </div>
-</div>
-
-    <div class="lobby-player-stats">
-
-    <div class="lobby-stat">
-        <strong id="lobbyTrophies">0</strong>
-        <small>🏆 TROPHÉES</small>
-    </div>
-
-    <div class="lobby-stat">
-        <strong id="lobbyRank">NON CLASSÉ</strong>
-        <small>🥇 RANG</small>
-    </div>
-
-    <div class="lobby-stat">
-        <strong id="lobbyPassLevel">1</strong>
-        <small>🎟️ PASSE</small>
-    </div>
-
-</div>
-
-    <h3 class="section-title">DIFFICULTÉ</h3>
-
-    <div class="difficulty-buttons">
-        <button onclick="setDifficulty('facile',this)">Facile</button>
-        <button class="active" onclick="setDifficulty('normal',this)">Normal</button>
-        <button onclick="setDifficulty('difficile',this)">Difficile</button>
-        <button onclick="setDifficulty('extreme',this)">Extrême</button>
-    </div>
-
-    <h3 class="section-title">MODE DE JEU</h3>
-
-    <div class="lobby-mode-section">
-
-    <h2>CHOISIS TON MODE</h2>
-
-    <div class="lobby-mode-cards">
-
-        <button class="lobby-mode-card active"
-            onclick="selectMode('classic',this)">
-            <span>🏃</span>
-            <strong>CLASSIQUE</strong>
-            <small>Le mode original</small>
-        </button>
-
-        <button class="lobby-mode-card"
-            onclick="selectMode('nocoin',this)">
-            <span>🚫</span>
-            <strong>SANS PIÈCES</strong>
-            <small>Pas de pièces à ramasser</small>
-        </button>
-
-        <button class="lobby-mode-card"
-            onclick="selectMode('lava',this)">
-            <span>🌋</span>
-            <strong>LAVE</strong>
-            <small>Ne touche pas le sol</small>
-        </button>
-
-        <button class="lobby-mode-card"
-            onclick="selectMode('metro',this)">
-            <span>🚇</span>
-            <strong>MÉTRO</strong>
-            <small>Survis dans les tunnels</small>
-        </button>
+        <div class="lobby-currencies">
+            <div class="currency">🪙 <span id="lobbyCoins">0</span></div>
+            <div class="currency">💎 <span id="lobbyDiamonds">0</span></div>
+        </div>
 
     </div>
-</div>
 
-    <div class="rules-panel">
-        <p id="modeDescription">
-            🚆 Évite les trains et les barrières.<br>
-            ⬆️ Saute par-dessus les obstacles.<br>
-            🏃 Glisse pour éviter les obstacles en hauteur.<br>
-            🪙 Ramasse les pièces et bats ton record !
-        </p>
+    <!-- ZONE CENTRALE -->
+    <div class="lobby-main">
+
+        <!-- MENU GAUCHE -->
+        <aside class="lobby-left">
+
+            <button>🛍️ BOUTIQUE</button>
+            <button>🧑‍🚀 PERSOS</button>
+            <button>📰 ACTUALITÉS</button>
+            <button onclick="openTrophyRoad()">🏆 TROPHÉES</button>
+
+        </aside>
+
+        <!-- PERSONNAGE -->
+        <div class="lobby-hero">
+
+            <div class="lobby-character-glow"></div>
+
+            <div id="lobbyCharacter">
+                <canvas id="lobbyCanvas"></canvas>
+            </div>
+
+            <div class="lobby-character-name">ASTRONAUTE</div>
+
+        </div>
+
+        <!-- MENU DROIT -->
+        <aside class="lobby-right">
+
+            <button>⚙️ PARAMÈTRES</button>
+            <button onclick="openLeaderboard()">🏆 CLASSEMENTS</button>
+            <button onclick="openDailyChallenges()">📅 DÉFIS QUOTIDIENS</button>
+            <button>👥 AMIS</button>
+            <button>💬 CHAT</button>
+            <button onclick="openAccount()">👤 COMPTE</button>
+            <button onclick="logoutPlayer()">🚪 DÉCONNEXION</button>
+
+        </aside>
+
     </div>
 
-    <button class="play-button" onclick="startGame()">JOUER</button>
-    <button class="play-button" onclick="openDailyChallenges()">📅 DÉFIS QUOTIDIENS</button>
+    <!-- BARRE DU BAS -->
+    <div class="lobby-bottom">
 
-    <div class="small-buttons">
-        <button>Profil</button>
-        <button>Social</button>
-        <button>Réglages</button>
-    </div>
+        <!-- PASSE -->
+        <div class="lobby-pass">
+            <h2>🎟️ PASSE NEON RUN</h2>
+            <strong>NIVEAU <span id="lobbyPassLevelBottom">1</span></strong>
+            <button onclick="openPass()">VOIR LE PASSE</button>
+        </div>
 
-    <div class="secondary-buttons">
-        <button onclick="openLeaderboard()">🏆 Classement mondial</button>
-        <button>Amis</button>
-        <button>Chat</button>
-        <button>Classement</button>
-        <button onclick="openPass()">💎 Passe</button>
-        <button>Quêtes</button>
-        <button>Persos</button>
-        <button>Boutique</button>
-        <button onclick="openAccount()">👤 Compte</button>
-        <button onclick="logoutPlayer()" style="background:#ff1744;color:white;">🚪 DÉCONNEXION</button>
-        <button>Paramètres</button>
-    </div>
+        <!-- MODES -->
+        <div class="lobby-game-mode">
 
-    <div class="controls-help">
-        <kbd>Q</kbd>
-        <kbd>D</kbd>
-        <kbd>Z</kbd>
-        <kbd>S</kbd>
-        <kbd>ESPACE</kbd>
-        <small>Q/D : changer de voie · Z : sauter · S : glisser</small>
+            <h2>CHOISIS TON MODE</h2>
+
+            <div class="lobby-mode-cards">
+
+                <button class="lobby-mode-card active"
+                    onclick="selectMode('classic',this)">
+                    🏃 CLASSIQUE
+                </button>
+
+                <button class="lobby-mode-card"
+                    onclick="selectMode('nocoin',this)">
+                    🚫 SANS PIÈCES
+                </button>
+
+                <button class="lobby-mode-card"
+                    onclick="selectMode('lava',this)">
+                    🌋 LAVE
+                </button>
+
+                <button class="lobby-mode-card"
+                    onclick="selectMode('metro',this)">
+                    🚇 MÉTRO
+                </button>
+
+            </div>
+
+            <div class="lobby-difficulty">
+                <button onclick="setDifficulty('facile',this)">FACILE</button>
+                <button class="active" onclick="setDifficulty('normal',this)">NORMAL</button>
+                <button onclick="setDifficulty('difficile',this)">DIFFICILE</button>
+                <button onclick="setDifficulty('extreme',this)">EXTRÊME</button>
+            </div>
+
+            <div class="rules-panel">
+                <p id="modeDescription">
+                    🚆 Évite les trains et les barrières.<br>
+                    ⬆️ Saute par-dessus les obstacles.<br>
+                    🏃 Glisse pour éviter les obstacles en hauteur.<br>
+                    🪙 Ramasse les pièces et bats ton record !
+                </p>
+            </div>
+
+        </div>
+
+        <!-- JOUER -->
+        <div class="lobby-play">
+            <button class="play-button" onclick="startGame()">
+                ▶ JOUER
+            </button>
+        </div>
+
     </div>
 
 </section>
