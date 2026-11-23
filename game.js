@@ -3627,6 +3627,8 @@ let claimedPassRewards = JSON.parse(
     localStorage.getItem("neonPassClaimed") || "[]"
 );
 let shopDiamonds = Number(localStorage.getItem("neonDiamonds") || 0);
+// TROPHÉES
+let playerTrophies = Number(localStorage.getItem("neonTrophies") || 0);
 
 function readSavedArray(key, fallback) {
     try {
