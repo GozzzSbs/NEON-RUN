@@ -2187,7 +2187,148 @@ function isPlayerAboveLavaPlatform() {
 // ======================================================
 // GÉNÉRATION
 // ======================================================
+// =====================================
+// OBSTACLES EXCLUSIFS AU MÉTRO
+// =====================================
 
+// 1. PORTIQUE À SAUTER
+function createMetroGate(lane, z) {
+    const obj = new THREE.Group();
+
+    const metal = mat(0x263746);
+    const neon = mat(0x00eaff, 0x00eaff, 2);
+    const warning = mat(0xff3344, 0xff3344, 1.5);
+
+    for (const side of [-1, 1]) {
+        box(0.18, 2.4, 0.2, metal, side * 1.05, 1.2, 0, obj);
+        box(0.25, 0.12, 0.3, neon, side * 1.05, 2.4, 0, obj);
+    }
+
+    box(2.2, 0.35, 0.25, warning, 0, 1.9, 0, obj);
+    box(2.3, 0.08, 0.3, neon, 0, 2.15, 0, obj);
+
+    obj.position.set(lanePositions[lane], 0, z);
+    scene.add(obj);
+
+    obstacles.push({
+        object: obj,
+        type: "metroGate",
+        lane
+    });
+}
+
+
+// 2. PORTES DE WAGON
+function createMetroDoor(lane, z) {
+    const obj = new THREE.Group();
+
+    const metal = mat(0x172c42);
+    const glass = mat(0x00aaff, 0x00ddff, 1.5);
+    const neon = mat(0x00eaff, 0x00eaff, 2);
+
+    box(1.05, 2.8, 0.25, metal, -0.55, 1.4, 0, obj);
+    box(1.05, 2.8, 0.25, metal, 0.55, 1.4, 0, obj);
+
+    box(0.85, 2.1, 0.08, glass, -0.55, 1.45, -0.17, obj);
+    box(0.85, 2.1, 0.08, glass, 0.55, 1.45, -0.17, obj);
+
+    box(0.08, 2.5, 0.12, neon, 0, 1.4, -0.2, obj);
+
+    obj.position.set(lanePositions[lane], 0, z);
+    scene.add(obj);
+
+    obstacles.push({
+        object: obj,
+        type: "metroDoor",
+        lane
+    });
+}
+
+
+// 3. CÂBLE À ÉVITER EN GLISSANT
+function createMetroCable(lane, z) {
+    const obj = new THREE.Group();
+
+    const cable = mat(0xff3344, 0xff3344, 2);
+    const support = mat(0x263746);
+
+    for (const side of [-1, 1]) {
+        box(0.12, 1.8, 0.12, support, side * 1.05, 3.1, 0, obj);
+    }
+
+    box(2.2, 0.15, 0.18, cable, 0, 2.5, 0, obj);
+
+    obj.position.set(lanePositions[lane], 0, z);
+    scene.add(obj);
+
+    obstacles.push({
+        object: obj,
+        type: "metroCable",
+        lane
+    });
+}
+
+
+// 4. PANNEAU SUSPENDU
+function createMetroSign(lane, z) {
+    const obj = new THREE.Group();
+
+    const frame = mat(0x152b40);
+    const neon = mat(0x00eaff, 0x00eaff, 2);
+
+    box(2.1, 0.8, 0.18, frame, 0, 2.7, 0, obj);
+    box(1.9, 0.08, 0.2, neon, 0, 3.1, 0, obj);
+
+    for (const side of [-1, 1]) {
+        box(0.08, 0.7, 0.12, neon, side * 0.95, 2.7, 0, obj);
+    }
+
+    obj.position.set(lanePositions[lane], 0, z);
+    scene.add(obj);
+
+    obstacles.push({
+        object: obj,
+        type: "metroSign",
+        lane
+    });
+}
+
+
+// 5. TRAIN DE MÉTRO
+function createMetroTrain(lane, z) {
+    const train = new THREE.Group();
+
+    const body = mat(0x172b3d, 0x006688, 0.8);
+    const windows = mat(0x55eaff, 0x00aaff, 2);
+    const neon = mat(0x00eaff, 0x00eaff, 2);
+
+    box(2.55, 3.4, 13, body, 0, 2, 0, train);
+
+    box(2.48, 0.12, 12.8, neon, 0, 3.74, 0, train);
+
+    box(2.3, 1.1, 0.2, neon, 0, 3, 6.55, train);
+    box(1.7, 0.85, 0.12, windows, 0, 2.8, 6.68, train);
+
+    for (let zPos = -5; zPos <= 4; zPos += 3) {
+        box(0.08, 1, 1.5, windows, -1.3, 2.8, zPos, train);
+        box(0.08, 1, 1.5, windows, 1.3, 2.8, zPos, train);
+    }
+
+    train.position.set(lanePositions[lane], 0, z);
+
+    train.userData.wheels = [];
+    train.userData.shake = Math.random() * Math.PI * 2;
+
+    scene.add(train);
+
+    obstacles.push({
+        object: train,
+        type: "train",
+        lane
+    });
+
+    return train;
+}
 function spawnObjects() {
     const laneIndex = Math.floor(Math.random() * 3);
 
