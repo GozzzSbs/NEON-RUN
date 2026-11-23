@@ -242,7 +242,7 @@ let coins = 0;
 let noCoinStartTime = 0;
 let noCoinTimerInterval = null;
 let noCoinElapsed = 0;
-let best = Number(localStorage.getItem("neonBest") || 0);
+let best = 0;
 let selectedLeaderboardMode = "classic";
 // Diamants gagnés pendant cette partie
 let diamondMilestones = 0;
@@ -264,6 +264,7 @@ let maxSpeedMultiplier = 2;
 const SPEED_INCREASE = 0.00008;
 
 let difficulty = "normal";
+best = Number(localStorage.getItem("neonBest_" + difficulty) || 0);
 let selectedMode = "classic";
 
 let frame = 0;
