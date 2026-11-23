@@ -3126,9 +3126,14 @@ speedMultiplier = Math.min(
 
     spawnTimer++;
 
-    const spawnDelay = selectedMode === "nocoin"
-    ? Math.max(150, 220 - speed * 20)
-    : Math.max(130, 200 - speed * 25);
+    const scoreSpawnBonus = Math.min(
+    35,
+    Math.max(0, (score - 5000) / 1300)
+);
+
+const spawnDelay = selectedMode === "nocoin"
+    ? Math.max(150, 220 - speed * 20 - scoreSpawnBonus)
+    : Math.max(130, 200 - speed * 25 - scoreSpawnBonus);
 
     if (spawnTimer >= spawnDelay) {
     spawnObjects();
