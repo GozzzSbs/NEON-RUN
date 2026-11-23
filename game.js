@@ -4038,7 +4038,7 @@ const SHOP_CATALOG = {
             price: 0,
             currency: "coins",
             color: 0x7900b8,
-            description: "Le runner original."
+            description: "Le Skin original."
         },
         {
             id: "street_king",
@@ -4046,7 +4046,7 @@ const SHOP_CATALOG = {
             price: 500,
             currency: "diamonds",
             color: 0x151515,
-            description: "Le style streetwear ultime."
+            description: "Il Est Beau Achete Tkt."
         },
         {
             id: "astronaut",
@@ -4054,7 +4054,7 @@ const SHOP_CATALOG = {
             price: 600,
             currency: "diamonds",
             color: 0xffffff,
-            description: "Un runner venu de l'espace."
+            description: "Un Astronaut Venu De L'espace."
         },
         {
             id: "culprit",
@@ -4062,7 +4062,15 @@ const SHOP_CATALOG = {
             price: 700,
             currency: "diamonds",
             color: 0x222222,
-            description: "Un nouveau runner."
+            description: "Skin Full Black."
+        },
+        {
+            id: "cooker",
+            name: "COOKER",
+            price: 800,
+            currency: "diamonds",
+            color: 0x333333,
+            description: "Un Ptit Patissier Tu Connais."
         }
     ],
 
