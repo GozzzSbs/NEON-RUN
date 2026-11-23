@@ -2515,6 +2515,7 @@ function selectMode(mode, button) {
         classic: "🚆 Évite les trains et les barrières.\n⬆️ Saute par-dessus les obstacles.\n🏃 Glisse pour éviter les obstacles en hauteur.\n🪙 Ramasse les pièces et bats ton record !",
         nocoin: "🚫🪙 Ne touche aucune pièce !\n🚆 Évite les trains et les barrières.\n🏃 Concentre-toi sur les obstacles !",
         lava: "🌋 La voie est devenue de la lave !\n⬆️ Saute de plateforme en plateforme.\n🏃 Évite de tomber dans la lave !"
+        metro: "🚇 Bienvenue dans le métro !\n🚆 Attention aux trains qui arrivent !\n⚠️ Évite les obstacles sur les rails.\n🏃 Survis le plus longtemps possible !"
     };
 
     const description = document.getElementById("modeDescription");
