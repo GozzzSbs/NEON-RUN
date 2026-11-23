@@ -1888,3 +1888,35 @@ width: 100%;
     transform: scale(1.03);
     border-color: #00eaff;
 }
+/* BARRE DE PROGRESSION TROPHÉES */
+
+.trophy-progress {
+    width: min(85%, 500px);
+    margin: 10px auto 20px;
+}
+
+.trophy-progress-info {
+    display: flex;
+    justify-content: space-between;
+    color: white;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.trophy-progress-bg {
+    width: 100%;
+    height: 18px;
+    background: #17172f;
+    border: 2px solid #ffc928;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+#trophyProgressBar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #ff9800, #ffe600);
+    border-radius: 20px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 12px #ffc928;
+}
