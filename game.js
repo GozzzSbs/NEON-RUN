@@ -3493,7 +3493,41 @@ function startGame() {
         soonScreen.style.display = "flex";
         return;
     }
+// =====================================
+// ACTIVATION DU DÉCOR MÉTRO
+// =====================================
 
+const metroActive = selectedMode === "metro";
+
+if (metroActive && metroDecor.length === 0) {
+    createMetroDecor();
+}
+
+metroDecor.forEach(object => {
+    object.visible = metroActive;
+});
+
+// Masquer le ciel et les éléments extérieurs
+skyDome.visible = !metroActive;
+sun.visible = !metroActive;
+sunGlow.visible = !metroActive;
+
+movingClouds.forEach(cloud => {
+    cloud.visible = !metroActive;
+});
+
+movingBirds.forEach(bird => {
+    bird.visible = !metroActive;
+});
+
+// Ambiance souterraine
+if (metroActive) {
+    scene.background = new THREE.Color(0x101522);
+    scene.fog = new THREE.Fog(0x101522, 20, 130);
+} else {
+    scene.background = new THREE.Color(0x55baff);
+    scene.fog = new THREE.Fog(0x55baff, 250, 500);
+}
     score = 0;
     coins = 0;
 
