@@ -1293,6 +1293,15 @@ if (equippedSkin === "astronaut") {
     createAstronaut();
     return;
 }
+    if (equippedSkin === "newSkin1") {
+    createNewSkin1();
+    return;
+}
+
+if (equippedSkin === "newSkin2") {
+    createNewSkin2();
+    return;
+}
     playerParts = {
         arms: [],
         legs: [],
