@@ -335,7 +335,7 @@ function openTrophyRoad() {
     const road = document.getElementById("trophyRoad");
     const count = document.getElementById("roadTrophyCount");
 
-    if (road) {
+    if (road && count) {
         count.textContent = playerTrophies;
         updateTrophyRoad();
         road.style.display = "flex";
