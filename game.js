@@ -5956,6 +5956,7 @@ if (
     (equippedSkin === "street_king" ||
      equippedSkin === "astronaut" ||
      equippedSkin === "culprit" ||
+     equippedSkin === "shella" ||
      equippedSkin === "cooker") &&
     bones &&
     bones.chest
