@@ -345,7 +345,17 @@ function updateTrophyRoad() {
     const container = document.getElementById("trophyMilestones");
 
     if (!container) return;
+const progressText = document.getElementById("trophyProgressText");
+const progressBar = document.getElementById("trophyProgressBar");
 
+if (progressText) {
+    progressText.textContent = Math.min(playerTrophies, 500) + " / 500";
+}
+
+if (progressBar) {
+    progressBar.style.width =
+        Math.min(playerTrophies / 500 * 100, 100) + "%";
+}
     container.innerHTML = "";
 
     trophyRewards.forEach((item, index) => {
