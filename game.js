@@ -17,6 +17,7 @@ if (!canvas) throw new Error("Canvas #game introuvable");
 // ======================================================
 
 const scene = new THREE.Scene();
+let metroDecor = [];
 scene.background = new THREE.Color(0x55baff);
 // ======================================================
 // CIEL BLEU EN DÉGRADÉ
