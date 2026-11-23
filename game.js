@@ -4029,31 +4029,48 @@ window.addEventListener("resize", () => {
 
 const SHOP_CATALOG = {
     skins: [
-    {
-        id: "default",
-        name: "JACKO",
-        price: 0,
-        currency: "coins",
-        color: 0x7900b8,
-        description: "Le runner original."
-    },
-    {
-        id: "street_king",
-        name: "STREET KING",
-        price: 500,
-        currency: "diamonds",
-        color: 0x151515,
-        description: "Le style streetwear ultime."
-    },
-    {
-        id: "astronaut",
-        name: "ASTRONAUT",
-        price: 600,
-        currency: "diamonds",
-        color: 0xffffff,
-        description: "Un runner venu de l'espace."
-    }
-],
+        {
+            id: "default",
+            name: "JACKO",
+            price: 0,
+            currency: "coins",
+            color: 0x7900b8,
+            description: "Le runner original."
+        },
+        {
+            id: "street_king",
+            name: "STREET KING",
+            price: 500,
+            currency: "diamonds",
+            color: 0x151515,
+            description: "Le style streetwear ultime."
+        },
+        {
+            id: "astronaut",
+            name: "ASTRONAUT",
+            price: 600,
+            currency: "diamonds",
+            color: 0xffffff,
+            description: "Un runner venu de l'espace."
+        },
+        {
+            id: "newSkin1",
+            name: "CULPRIT",
+            price: 900,
+            currency: "diamonds",
+            color: 0x222222,
+            description: "Le skin Culprit."
+        },
+        {
+            id: "newSkin2",
+            name: "COOKER",
+            price: 700,
+            currency: "diamonds",
+            color: 0xff5500,
+            description: "Le skin Cooker."
+        }
+    ],
+
     capes: [
         {
             id: "nr",
