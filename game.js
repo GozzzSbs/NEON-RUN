@@ -331,6 +331,13 @@ function updateTrophyCounter() {
         counter.textContent = playerTrophies;
     }
 }
+function openTrophyRoad() {
+    const road = document.getElementById("trophyRoad");
+
+    if (road) {
+        road.style.display = "flex";
+    }
+}
 // ======================================================
 // MATÉRIAUX
 // ======================================================
