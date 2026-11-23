@@ -1606,7 +1606,58 @@ createPlayer();
 // ======================================================
 // TRAINS SPATIAUX
 // ======================================================
+function createBarrier(laneIndex, z) {
 
+    const barrier = new THREE.Group();
+
+    const variant = Math.floor(Math.random() * 3);
+
+    const red = mat(0xff2222, 0xff0000, 1.5);
+    const blue = mat(0x0033ff, 0x0088ff, 1.5);
+    const metal = mat(0x333344, 0x555577, 0.5);
+
+    if (variant === 0) {
+
+        // GRANDE BARRIÈRE SUSPENDUE
+        box(2.1, 1.15, 0.35, red, 0, 2.15, 0, barrier);
+
+        for (const side of [-1, 1]) {
+            box(0.12, 2.2, 0.25, metal, side * 1.05, 1.1, 0, barrier);
+        }
+
+    } else if (variant === 1) {
+
+        // BARRIÈRE SUR PLATEFORME
+        box(2.35, 0.25, 0.7, blue, 0, 0.15, 0, barrier);
+        box(2.1, 0.85, 0.35, red, 0, 1.55, 0, barrier);
+
+        for (const side of [-1, 1]) {
+            box(0.12, 1.5, 0.25, metal, side * 1.05, 0.8, 0, barrier);
+        }
+
+    } else {
+
+        // BARRIÈRE BASSE À SAUTER
+        box(2.1, 1.05, 0.35, red, 0, 0.95, 0, barrier);
+
+        for (const side of [-1, 1]) {
+            box(0.12, 0.9, 0.25, metal, side * 1.05, 0.45, 0, barrier);
+        }
+    }
+
+    barrier.position.set(lanePositions[laneIndex], 0, z);
+
+    scene.add(barrier);
+
+    obstacles.push({
+        object: barrier,
+        type: "barrier",
+        lane: laneIndex,
+        variant: variant
+    });
+
+    return barrier;
+}
 function createTrain(laneIndex, z) {
 
     const train = new THREE.Group();
