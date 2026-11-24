@@ -2454,3 +2454,8 @@ width: 100%;
             center;
     }
 }
+/* TEST FOND GALAXIE */
+#menu.galaxy-menu {
+    background: linear-gradient(135deg, #071b4a, #42106b, #001c35) !important;
+    min-height: 100vh;
+}
