@@ -3511,7 +3511,17 @@ movingBuildings.forEach(building => {
 
     bird.rotation.z = Math.sin(frame * 0.08 + index) * 0.08;
 });
+    // DÉFILEMENT DU DÉCOR DÉSERT
+if (selectedMap === "desert") {
+    desertDecor.children.forEach(object => {
+        object.position.z += speed;
+
+        if (object.position.z > 20) {
+            object.position.z -= 450;
+        }
+    });
 }
+    }
 // ======================================================
 // OBSTACLES ET TRAINS
 // ======================================================
