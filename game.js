@@ -7117,3 +7117,23 @@ function closeDailyChallenges() {
 
 window.closeDailyChallenges = closeDailyChallenges;
 console.log("GLTFLoader :", THREE.GLTFLoader);
+// ======================================
+// MENU DE SÉLECTION DES MAPS
+// ======================================
+
+function openMapSelection() {
+    document.getElementById("map-screen").classList.remove("hidden");
+}
+
+function closeMapSelection() {
+    document.getElementById("map-screen").classList.add("hidden");
+}
+
+function selectMap(mapName) {
+    if (mapName === "city") {
+        closeMapSelection();
+        return;
+    }
+
+    alert("Cette map sera bientôt disponible !");
+}
