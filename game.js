@@ -883,7 +883,7 @@ const desertDecor = new THREE.Group();
 desertDecor.visible = false;
 
 const desertSand = new THREE.MeshStandardMaterial({
-    color: 0xd9a441,
+    color: 0xc9a66b,
     roughness: 1
 });
 
