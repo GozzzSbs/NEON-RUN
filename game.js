@@ -1765,13 +1765,12 @@ function createBarrier(laneIndex, z) {
 
     } else if (variant === 1) {
 
-        // BARRIÈRE SUR PLATEFORME
-        box(2.35, 0.25, 0.7, blue, 0, 0.15, 0, barrier);
-        box(2.1, 0.85, 0.35, red, 0, 1.55, 0, barrier);
+        // BARRIÈRE À SAUTER
+box(2.1, 0.65, 0.35, red, 0, 0.65, 0, barrier);
 
-        for (const side of [-1, 1]) {
-            box(0.12, 1.5, 0.25, metal, side * 1.05, 0.8, 0, barrier);
-        }
+for (const side of [-1, 1]) {
+    box(0.12, 0.9, 0.25, metal, side * 1.05, 0.45, 0, barrier);
+}
 
     } else {
 
