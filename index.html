@@ -42,85 +42,202 @@
     </div>
 </div>
 
-<!-- MENU PRINCIPAL -->
-<section id="menu">
+<!-- MENU PRINCIPAL - GALAXY UI -->
+<section id="menu" class="galaxy-menu">
 
-    <button id="trophyCounter" onclick="openTrophyRoad()">
-        🏆 <span id="trophyCount">0</span>
-        <small>VOIR</small>
-    </button>
+    <!-- BARRE SUPÉRIEURE -->
+    <header class="galaxy-topbar">
+        <div class="galaxy-brand">
+            <span class="brand-icon">⚡</span>
+            <div>
+                <h2>NEON RUN</h2>
+                <small>SPACE GALAXY</small>
+            </div>
+        </div>
 
-    <div class="menu-header">
-        <h1>⚡ BIENVENUE DANS NEON RUN</h1>
+        <button id="trophyCounter" class="trophy-counter" onclick="openTrophyRoad()">
+            🏆 <span id="trophyCount">0</span>
+            <small>TROPHÉES</small>
+        </button>
+    </header>
+
+    <!-- TITRE -->
+    <div class="galaxy-hero">
+        <div class="hero-tag">✦ THE GALAXY IS YOURS ✦</div>
+
+        <h1>
+            NEON <span>RUN</span>
+        </h1>
+
+        <p>LE RUN ULTIME COMMENCE MAINTENANT</p>
+
+        <div class="hero-decoration">
+            <span>✦</span>
+            <span>◈</span>
+            <span>✧</span>
+        </div>
     </div>
 
-    <div class="statistics">
-        <div class="stat-card"><strong>00m00s</strong><small>Record</small></div>
-        <div class="stat-card"><strong>--</strong><small>Dernière partie</small></div>
-        <div class="stat-card"><strong>⭐ 291</strong><small>Étoiles</small></div>
-        <div class="stat-card"><strong>1</strong><small>Niveau</small></div>
-        <div class="stat-card"><strong>Runner</strong><small>Joueur</small></div>
+    <!-- STATISTIQUES -->
+    <div class="statistics galaxy-statistics">
+
+        <div class="stat-card">
+            <span>⏱️</span>
+            <strong>00m00s</strong>
+            <small>RECORD</small>
+        </div>
+
+        <div class="stat-card">
+            <span>🎮</span>
+            <strong>--</strong>
+            <small>DERNIÈRE PARTIE</small>
+        </div>
+
+        <div class="stat-card">
+            <span>⭐</span>
+            <strong>291</strong>
+            <small>ÉTOILES</small>
+        </div>
+
+        <div class="stat-card">
+            <span>🚀</span>
+            <strong>1</strong>
+            <small>NIVEAU</small>
+        </div>
+
+        <div class="stat-card">
+            <span>👤</span>
+            <strong>Runner</strong>
+            <small>JOUEUR</small>
+        </div>
+
     </div>
 
-    <h3 class="section-title">DIFFICULTÉ</h3>
+    <!-- ZONE DE JEU -->
+    <div class="galaxy-game-panel">
 
-    <div class="difficulty-buttons">
-        <button onclick="setDifficulty('facile',this)">Facile</button>
-        <button class="active" onclick="setDifficulty('normal',this)">Normal</button>
-        <button onclick="setDifficulty('difficile',this)">Difficile</button>
-        <button onclick="setDifficulty('extreme',this)">Extrême</button>
+        <div class="panel-heading">
+            <div>
+                <span class="panel-tag">01 / CONFIGURATION</span>
+                <h2>PRÉPARE TON RUN</h2>
+            </div>
+            <span class="panel-icon">🎮</span>
+        </div>
+
+        <!-- DIFFICULTÉ -->
+        <h3 class="section-title">⚡ DIFFICULTÉ</h3>
+
+        <div class="difficulty-buttons galaxy-buttons">
+            <button onclick="setDifficulty('facile',this)">🟢 FACILE</button>
+            <button class="active" onclick="setDifficulty('normal',this)">🔵 NORMAL</button>
+            <button onclick="setDifficulty('difficile',this)">🟠 DIFFICILE</button>
+            <button onclick="setDifficulty('extreme',this)">🔴 EXTRÊME</button>
+        </div>
+
+        <!-- MODES -->
+        <h3 class="section-title">🌌 MODE DE JEU</h3>
+
+        <div class="mode-buttons galaxy-modes">
+            <button class="active" onclick="selectMode('classic',this)">
+                🏃 CLASSIQUE
+            </button>
+
+            <button onclick="selectMode('nocoin',this)">
+                🪙 SANS PIÈCES
+            </button>
+
+            <button onclick="selectMode('lava',this)">
+                🔥 SOL EN LAVE
+            </button>
+
+            <button onclick="selectMode('metro',this)">
+                🚇 MÉTRO
+            </button>
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="rules-panel galaxy-rules">
+            <div class="rules-icon">💡</div>
+            <p id="modeDescription">
+                🚆 Évite les trains et les barrières.<br>
+                ⬆️ Saute par-dessus les obstacles.<br>
+                🏃 Glisse pour éviter les obstacles en hauteur.<br>
+                🪙 Ramasse les pièces et bats ton record !
+            </p>
+        </div>
+
+        <!-- JOUER -->
+        <button class="play-button galaxy-play" onclick="startGame()">
+            <span>▶</span>
+            JOUER
+            <small>ENTRER DANS LA GALAXIE</small>
+        </button>
+
+        <button class="play-button galaxy-challenges" onclick="openDailyChallenges()">
+            📅 DÉFIS QUOTIDIENS
+        </button>
+
     </div>
 
-    <h3 class="section-title">MODE DE JEU</h3>
+    <!-- NAVIGATION -->
+    <div class="galaxy-navigation">
 
-    <div class="mode-buttons">
-    <button class="active" onclick="selectMode('classic',this)">Classique</button>
-    <button onclick="selectMode('nocoin',this)">Sans pièces</button>
-    <button onclick="selectMode('lava',this)">Le sol est de la lave</button>
-    <button onclick="selectMode('metro',this)">🚇 MÉTRO</button>
-</div>
+        <h3>✦ EXPLORER NEON RUN ✦</h3>
 
-    <div class="rules-panel">
-        <p id="modeDescription">
-            🚆 Évite les trains et les barrières.<br>
-            ⬆️ Saute par-dessus les obstacles.<br>
-            🏃 Glisse pour éviter les obstacles en hauteur.<br>
-            🪙 Ramasse les pièces et bats ton record !
-        </p>
+        <div class="secondary-buttons galaxy-nav-grid">
+
+            <button onclick="openMapSelection()">🗺️<span>MAPS</span></button>
+
+            <button onclick="openLeaderboard()">🏆<span>CLASSEMENT</span></button>
+
+            <button onclick="openAccount()">👤<span>PROFIL</span></button>
+
+            <button onclick="openPass()">💎<span>PASSE</span></button>
+
+            <button><span>👥</span><span>AMIS</span></button>
+
+            <button><span>💬</span><span>CHAT</span></button>
+
+            <button><span>🎯</span><span>QUÊTES</span></button>
+
+            <button><span>🧍</span><span>PERSOS</span></button>
+
+            <button><span>🛒</span><span>BOUTIQUE</span></button>
+
+            <button><span>⚙️</span><span>RÉGLAGES</span></button>
+
+        </div>
+
     </div>
 
-    <button class="play-button" onclick="startGame()">JOUER</button>
-    <button class="play-button" onclick="openDailyChallenges()">📅 DÉFIS QUOTIDIENS</button>
-
-    <div class="small-buttons">
+    <!-- PETITS BOUTONS -->
+    <div class="small-buttons galaxy-small-buttons">
         <button>Profil</button>
         <button>Social</button>
         <button>Réglages</button>
     </div>
 
-    <div class="secondary-buttons">
-        <button onclick="openLeaderboard()">🏆 Classement mondial</button>
-        <button onclick="openMapSelection()">🗺️ MAP</button>
-        <button>Amis</button>
-        <button>Chat</button>
-        <button>Classement</button>
-        <button onclick="openPass()">💎 Passe</button>
-        <button>Quêtes</button>
-        <button>Persos</button>
-        <button>Boutique</button>
-        <button onclick="openAccount()">👤 Compte</button>
-        <button onclick="logoutPlayer()" style="background:#ff1744;color:white;">🚪 DÉCONNEXION</button>
-        <button>Paramètres</button>
-    </div>
+    <!-- DÉCONNEXION -->
+    <button onclick="logoutPlayer()" class="galaxy-logout">
+        🚪 DÉCONNEXION
+    </button>
 
-    <div class="controls-help">
-        <kbd>Q</kbd>
-        <kbd>D</kbd>
-        <kbd>Z</kbd>
-        <kbd>S</kbd>
-        <kbd>ESPACE</kbd>
+    <!-- COMMANDES -->
+    <div class="controls-help galaxy-controls">
+        <div class="control-keys">
+            <kbd>Q</kbd>
+            <kbd>D</kbd>
+            <kbd>Z</kbd>
+            <kbd>S</kbd>
+            <kbd>ESPACE</kbd>
+        </div>
+
         <small>Q/D : changer de voie · Z : sauter · S : glisser</small>
     </div>
+
+    <footer class="galaxy-footer">
+        NEON RUN GALAXY · ALL SYSTEMS ONLINE
+    </footer>
 
 </section>
 
