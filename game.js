@@ -875,7 +875,53 @@ for (let i = 0; i < 12; i++) {
 // ======================================================
 
 const movingBuildings = [];
+// ======================================
+// DÉCOR DE LA MAP DÉSERT
+// ======================================
 
+const desertDecor = new THREE.Group();
+desertDecor.visible = false;
+
+const desertSand = new THREE.MeshStandardMaterial({
+    color: 0xd9a441,
+    roughness: 1
+});
+
+const cactusMaterial = new THREE.MeshStandardMaterial({
+    color: 0x287a3b,
+    roughness: 1
+});
+
+// Création des cactus
+for (let i = 0; i < 12; i++) {
+    const cactus = new THREE.Group();
+
+    const trunk = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.25, 0.3, 3, 8),
+        cactusMaterial
+    );
+
+    trunk.position.y = 1.5;
+    cactus.add(trunk);
+
+    const arm = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.12, 0.12, 1.2, 8),
+        cactusMaterial
+    );
+
+    arm.position.set(0.4, 1.5, 0);
+    cactus.add(arm);
+
+    cactus.position.set(
+        i % 2 === 0 ? -9 : 9,
+        0,
+        -i * 25
+    );
+
+    desertDecor.add(cactus);
+}
+
+scene.add(desertDecor);
 // COULEURS DES IMMEUBLES
 const buildingColors = [
     0xe66b24, // Orange vif
@@ -7132,9 +7178,31 @@ function closeMapSelection() {
 let selectedMap = "city";
 
 function selectMap(mapName) {
-    if (!["city", "desert", "neon"].includes(mapName)) return;
+    if (mapName !== "city" && mapName !== "desert") return;
 
     selectedMap = mapName;
+
+    const isDesert = mapName === "desert";
+
+    // Afficher ou cacher le décor désert
+    desertDecor.visible = isDesert;
+
+    // Afficher ou cacher les éléments de la ville
+    streetWalls.forEach(wall => wall.visible = !isDesert);
+    movingStreetLamps.forEach(lamp => lamp.visible = !isDesert);
+    movingBuildings.forEach(building => building.visible = !isDesert);
+
+    movingGraffiti.forEach(graffiti => graffiti.visible = !isDesert);
+
+    // Changer l'ambiance du ciel
+    if (isDesert) {
+        scene.background = new THREE.Color(0xe8a84a);
+        scene.fog = new THREE.Fog(0xe8a84a, 100, 350);
+    } else {
+        scene.background = new THREE.Color(0x55baff);
+        scene.fog = new THREE.Fog(0x55baff, 250, 500);
+    }
+
     closeMapSelection();
 
     console.log("Map sélectionnée :", selectedMap);
