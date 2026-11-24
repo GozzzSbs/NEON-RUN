@@ -1951,46 +1951,26 @@ function checkCollisions() {
         if (!sameLane) continue;
 
         // BARRIÈRES
-if (
-    obstacle.type === "barrier" &&
-    distance > -1.3 &&
-    distance < 1.3
-) {
-    // VARIANTE 0 : BARRIÈRE SUSPENDUE
-    if (obstacle.variant === 0 && !sliding) {
-        endGame("Tu as heurté une barrière !");
-        return;
-    }
+        if (
+            obstacle.type === "barrier" &&
+            distance > -1.3 &&
+            distance < 1.3
+        ) {
+            // VARIANTE 0 : BARRIÈRE SUSPENDUE
+            if (obstacle.variant === 0 && !sliding) {
+                endGame("Tu as heurté une barrière !");
+                return;
+            }
 
-    // VARIANTES 1 ET 2 : BARRIÈRES À SAUTER
-    if (obstacle.variant === 1 || obstacle.variant === 2) {
-
-        const hauteurSuffisante = player.position.y > 1.5;
-
-        if (!jumping || !hauteurSuffisante) {
-            endGame("Tu as heurté une barrière !");
-            return;
+            // VARIANTES 1 ET 2 : SAUT OBLIGATOIRE
+            if (
+                (obstacle.variant === 1 || obstacle.variant === 2) &&
+                (!jumping || player.position.y < 1.5)
+            ) {
+                endGame("Tu as heurté une barrière !");
+                return;
+            }
         }
-    }
-}
-
-            // MODÈLE 2 : IL FAUT SAUTER
-            console.log("SAUT :", jumping, "HAUTEUR :", player.position.y);
-if (obstacle.variant === 1 && (!jumping || player.position.y < 1.0)) {
-    endGame("Tu as heurté une barrière !");
-    return;
-}
-
-            // MODÈLE 3 : GRANDE BARRIÈRE À FRANCHIR EN SAUTANT
-if (obstacle.variant === 2) {
-    const jumpIsHighEnough = player.position.y > 1.5;
-
-    if (!jumpIsHighEnough) {
-        endGame("Tu as heurté une barrière !");
-        return;
-    }
-}
-      }
 
         // TRAIN
         if (
