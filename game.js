@@ -3122,7 +3122,7 @@ if (obstacle.variant === 1 && (!jumping || player.position.y < 1.0)) {
     return;
 }
     // Variante 2 : saut obligatoire
-    if (obstacle.variant === 2 && (!jumping || player.position.y < 1.5)) {
+    if (obstacle.variant === 2 && (!jumping || player.position.y < 0.8)) {
     endGame("Tu as heurté une barrière !");
     return;
 }
