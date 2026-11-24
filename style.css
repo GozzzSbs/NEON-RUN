@@ -1966,3 +1966,446 @@ width: 100%;
     background: #ff7900;
     color: black;
 }
+/* =========================================
+   NEON RUN - GALAXY INTERFACE
+========================================= */
+
+.galaxy-menu {
+    position: relative;
+    min-height: 100vh;
+    padding: 25px 5%;
+    overflow: hidden;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(0, 190, 255, 0.18), transparent 45%),
+        radial-gradient(ellipse at 10% 40%, rgba(120, 0, 255, 0.16), transparent 40%),
+        linear-gradient(145deg, #030817, #080d24 55%, #020511);
+}
+
+/* BARRE SUPÉRIEURE */
+
+.galaxy-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1250px;
+    margin: auto;
+}
+
+.galaxy-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon {
+    font-size: 38px;
+    color: #00eaff;
+    filter: drop-shadow(0 0 12px #00cfff);
+}
+
+.galaxy-brand h2 {
+    margin: 0;
+    font-size: 23px;
+    letter-spacing: 4px;
+    color: #00eaff;
+}
+
+.galaxy-brand small {
+    color: #899bbd;
+    letter-spacing: 3px;
+    font-size: 9px;
+}
+
+.trophy-counter {
+    background: rgba(255, 190, 0, 0.12);
+    border: 1px solid #ffca45;
+    color: #ffd65c;
+    border-radius: 14px;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 17px;
+}
+
+.trophy-counter small {
+    display: block;
+    font-size: 9px;
+}
+
+/* HERO */
+
+.galaxy-hero {
+    text-align: center;
+    padding: 65px 10px 35px;
+}
+
+.hero-tag {
+    color: #00eaff;
+    font-size: 11px;
+    letter-spacing: 5px;
+    margin-bottom: 15px;
+}
+
+.galaxy-hero h1 {
+    font-size: clamp(55px, 10vw, 105px);
+    font-weight: 1000;
+    letter-spacing: 8px;
+    margin: 0;
+    color: white;
+    text-shadow: 0 0 20px rgba(0, 220, 255, 0.6);
+}
+
+.galaxy-hero h1 span {
+    color: #00eaff;
+    text-shadow: 0 0 30px #00bfff;
+}
+
+.galaxy-hero p {
+    color: #9db3d8;
+    letter-spacing: 4px;
+    font-size: 12px;
+}
+
+.hero-decoration {
+    color: #00eaff;
+    display: flex;
+    justify-content: center;
+    gap: 35px;
+    font-size: 22px;
+    margin-top: 20px;
+}
+
+/* STATISTIQUES */
+
+.galaxy-statistics {
+    max-width: 1050px;
+    margin: 20px auto 45px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+}
+
+.galaxy-statistics .stat-card {
+    background: rgba(15, 30, 65, 0.65);
+    border: 1px solid rgba(0, 220, 255, 0.25);
+    border-radius: 15px;
+    padding: 18px 8px;
+    text-align: center;
+    backdrop-filter: blur(12px);
+}
+
+.galaxy-statistics .stat-card span {
+    display: block;
+    font-size: 22px;
+    margin-bottom: 8px;
+}
+
+.galaxy-statistics .stat-card strong {
+    display: block;
+    color: #00eaff;
+    font-size: 18px;
+}
+
+.galaxy-statistics .stat-card small {
+    display: block;
+    color: #91a4c7;
+    font-size: 9px;
+    margin-top: 7px;
+    letter-spacing: 1px;
+}
+
+/* PANNEAU PRINCIPAL */
+
+.galaxy-game-panel {
+    max-width: 850px;
+    margin: auto;
+    padding: 30px;
+    background: rgba(9, 19, 45, 0.82);
+    border: 1px solid rgba(0, 220, 255, 0.3);
+    border-radius: 24px;
+    box-shadow: 0 0 45px rgba(0, 120, 255, 0.12);
+    backdrop-filter: blur(15px);
+}
+
+.panel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.panel-tag {
+    color: #00eaff;
+    font-size: 10px;
+    letter-spacing: 3px;
+}
+
+.panel-heading h2 {
+    font-size: 23px;
+    letter-spacing: 2px;
+}
+
+.panel-icon {
+    font-size: 35px;
+}
+
+.section-title {
+    color: #00eaff;
+    font-size: 12px;
+    letter-spacing: 3px;
+    margin: 28px 0 13px;
+}
+
+/* BOUTONS */
+
+.galaxy-buttons,
+.galaxy-modes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.galaxy-buttons button,
+.galaxy-modes button {
+    background: rgba(20, 40, 80, 0.8);
+    border: 1px solid rgba(0, 220, 255, 0.2);
+    color: white;
+    border-radius: 12px;
+    padding: 14px 8px;
+    cursor: pointer;
+    transition: 0.25s;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.galaxy-buttons button:hover,
+.galaxy-modes button:hover {
+    border-color: #00eaff;
+    transform: translateY(-3px);
+    box-shadow: 0 0 18px rgba(0, 220, 255, 0.3);
+}
+
+.galaxy-buttons button.active,
+.galaxy-modes button.active {
+    background: rgba(0, 210, 255, 0.2);
+    border-color: #00eaff;
+    color: #00eaff;
+    box-shadow: 0 0 15px rgba(0, 220, 255, 0.2);
+}
+
+/* RÈGLES */
+
+.galaxy-rules {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(0, 180, 255, 0.07);
+    border-left: 3px solid #00eaff;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 25px;
+}
+
+.rules-icon {
+    font-size: 25px;
+}
+
+.galaxy-rules p {
+    color: #bdcbe4;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+/* BOUTON JOUER */
+
+.galaxy-play {
+    width: 100%;
+    min-height: 75px;
+    margin-top: 28px;
+    border: 1px solid #8af8ff;
+    border-radius: 15px;
+    background: linear-gradient(100deg, #006eff, #00d9ff);
+    color: white;
+    font-size: 25px;
+    font-weight: 1000;
+    letter-spacing: 4px;
+    cursor: pointer;
+    box-shadow: 0 0 25px rgba(0, 200, 255, 0.4);
+    transition: 0.25s;
+}
+
+.galaxy-play:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 40px rgba(0, 220, 255, 0.7);
+}
+
+.galaxy-play span {
+    margin-right: 12px;
+}
+
+.galaxy-play small {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 3px;
+    margin-top: 5px;
+}
+
+.galaxy-challenges {
+    width: 100%;
+    margin-top: 12px;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #a45cff;
+    background: rgba(130, 50, 255, 0.12);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* NAVIGATION */
+
+.galaxy-navigation {
+    max-width: 850px;
+    margin: 55px auto 20px;
+}
+
+.galaxy-navigation h3 {
+    text-align: center;
+    color: #8ca8d5;
+    font-size: 12px;
+    letter-spacing: 4px;
+    margin-bottom: 22px;
+}
+
+.galaxy-nav-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+}
+
+.galaxy-nav-grid button {
+    min-height: 85px;
+    background: rgba(13, 26, 58, 0.8);
+    border: 1px solid rgba(0, 220, 255, 0.2);
+    color: white;
+    border-radius: 14px;
+    cursor: pointer;
+    font-size: 23px;
+    transition: 0.25s;
+}
+
+.galaxy-nav-grid button:hover {
+    transform: translateY(-4px);
+    border-color: #00eaff;
+    box-shadow: 0 0 18px rgba(0, 220, 255, 0.2);
+}
+
+.galaxy-nav-grid button span {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 1px;
+    margin-top: 8px;
+}
+
+/* DÉCONNEXION */
+
+.galaxy-logout {
+    display: block;
+    margin: 25px auto;
+    padding: 12px 25px;
+    border: 1px solid #ff426a;
+    border-radius: 10px;
+    background: rgba(255, 30, 70, 0.12);
+    color: #ff6685;
+    cursor: pointer;
+}
+
+/* COMMANDES */
+
+.galaxy-controls {
+    text-align: center;
+    margin: 35px auto 15px;
+}
+
+.control-keys {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.galaxy-controls kbd {
+    background: #111f42;
+    border: 1px solid #00cfff;
+    border-radius: 6px;
+    color: #00eaff;
+    padding: 8px 12px;
+}
+
+.galaxy-controls small {
+    color: #8195b9;
+    font-size: 10px;
+}
+
+/* FOOTER */
+
+.galaxy-footer {
+    text-align: center;
+    color: #405577;
+    font-size: 9px;
+    letter-spacing: 3px;
+    padding: 25px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+
+    .galaxy-menu {
+        padding: 15px;
+    }
+
+    .galaxy-hero {
+        padding-top: 45px;
+    }
+
+    .galaxy-hero h1 {
+        letter-spacing: 3px;
+    }
+
+    .galaxy-statistics {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .galaxy-statistics .stat-card:last-child {
+        grid-column: span 2;
+    }
+
+    .galaxy-game-panel {
+        padding: 18px;
+    }
+
+    .galaxy-buttons,
+    .galaxy-modes {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .galaxy-nav-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .galaxy-nav-grid button {
+        min-height: 75px;
+    }
+
+    .galaxy-hero p {
+        font-size: 9px;
+        letter-spacing: 2px;
+    }
+
+    .galaxy-brand h2 {
+        font-size: 17px;
+    }
+
+}
