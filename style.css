@@ -2506,14 +2506,7 @@ width: 100%;
 
 
 
-@keyframes meteorFlight {
-    0% {
-        transform: translate(-100px, -100px) rotate(25deg);
-    }
-    100% {
-        transform: translate(120vw, 80vh) rotate(25deg);
-    }
-}
+
 
 /* FUSÉES */
 
