@@ -1951,16 +1951,28 @@ function checkCollisions() {
         if (!sameLane) continue;
 
         // BARRIÈRES
-        if (
-            obstacle.type === "barrier" &&
-            distance > -1.3 &&
-            distance < 1.3
-        ) {
-            // MODÈLE 1 : IL FAUT GLISSER
-            if (obstacle.variant === 0 && !sliding) {
-                endGame("Tu as heurté une barrière !");
-                return;
-            }
+if (
+    obstacle.type === "barrier" &&
+    distance > -1.3 &&
+    distance < 1.3
+) {
+    // VARIANTE 0 : BARRIÈRE SUSPENDUE
+    if (obstacle.variant === 0 && !sliding) {
+        endGame("Tu as heurté une barrière !");
+        return;
+    }
+
+    // VARIANTES 1 ET 2 : BARRIÈRES À SAUTER
+    if (obstacle.variant === 1 || obstacle.variant === 2) {
+
+        const hauteurSuffisante = player.position.y > 1.5;
+
+        if (!jumping || !hauteurSuffisante) {
+            endGame("Tu as heurté une barrière !");
+            return;
+        }
+    }
+}
 
             // MODÈLE 2 : IL FAUT SAUTER
             console.log("SAUT :", jumping, "HAUTEUR :", player.position.y);
@@ -3114,11 +3126,23 @@ if (
     distance > -1.3 &&
     distance < 1.3
 ) {
-    // Variante 0 : glissade obligatoire
+    // VARIANTE 0 : BARRIÈRE SUSPENDUE
     if (obstacle.variant === 0 && !sliding) {
         endGame("Tu as heurté une barrière !");
         return;
     }
+
+    // VARIANTES 1 ET 2 : BARRIÈRES À SAUTER
+    if (obstacle.variant === 1 || obstacle.variant === 2) {
+
+        const hauteurSuffisante = player.position.y > 1.5;
+
+        if (!jumping || !hauteurSuffisante) {
+            endGame("Tu as heurté une barrière !");
+            return;
+        }
+    }
+}
 
     // Variante 1 : saut obligatoire
 if (obstacle.variant === 1 && (!jumping || player.position.y < 1.0)) {
