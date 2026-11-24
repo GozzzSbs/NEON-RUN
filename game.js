@@ -1963,6 +1963,7 @@ function checkCollisions() {
             }
 
             // MODÈLE 2 : IL FAUT SAUTER
+            console.log("SAUT :", jumping, "HAUTEUR :", player.position.y);
 if (obstacle.variant === 1 && (!jumping || player.position.y < 1.0)) {
     endGame("Tu as heurté une barrière !");
     return;
