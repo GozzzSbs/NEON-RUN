@@ -2504,18 +2504,7 @@ width: 100%;
 
 /* MÉTÉORITES */
 
-#menu.galaxy-menu::after {
-    content: "☄";
-    position: absolute;
-    top: 15%;
-    left: -100px;
-    z-index: 0;
-    pointer-events: none;
-    font-size: 55px;
-    color: #ffb347;
-    filter: drop-shadow(0 0 12px orange);
-    animation: meteorFlight 7s linear infinite;
-}
+
 
 @keyframes meteorFlight {
     0% {
