@@ -1951,6 +1951,14 @@ function checkCollisions() {
         if (!sameLane) continue;
 
         // BARRIÈRES
+        if (obstacle.type === "barrier" && distance > -1.3 && distance < 1.3) {
+    console.log(
+        "BARRIÈRE",
+        "Variante :", obstacle.variant,
+        "Hauteur :", player.position.y,
+        "Saut :", jumping
+    );
+}
         if (
             obstacle.type === "barrier" &&
             distance > -1.3 &&
@@ -3102,6 +3110,14 @@ function checkCollisions() {
         if (!sameLane) continue;
 
         // BARRIÈRES
+        if (obstacle.type === "barrier" && distance > -1.3 && distance < 1.3) {
+    console.log(
+        "BARRIÈRE",
+        "Variante :", obstacle.variant,
+        "Hauteur :", player.position.y,
+        "Saut :", jumping
+    );
+}
         if (
             obstacle.type === "barrier" &&
             distance > -1.3 &&
