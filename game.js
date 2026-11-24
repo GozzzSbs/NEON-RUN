@@ -920,7 +920,99 @@ for (let i = 0; i < 12; i++) {
 
     desertDecor.add(cactus);
 }
+// DUNES STYLISÉES
+const duneGeometry = new THREE.SphereGeometry(1, 24, 16);
 
+for (let i = 0; i < 16; i++) {
+    const dune = new THREE.Mesh(duneGeometry, desertSand);
+
+    dune.scale.set(7, 1.8, 12);
+
+    dune.position.set(
+        i % 2 === 0 ? -14 : 14,
+        -0.5,
+        -i * 30
+    );
+
+    desertDecor.add(dune);
+}
+// MONTAGNES STYLISÉES
+const mountainColors = [
+    0xc76b45,
+    0xa94f42,
+    0xe08b52,
+    0x8f4850
+];
+
+for (let i = 0; i < 12; i++) {
+    const mountainMaterial = new THREE.MeshStandardMaterial({
+        color: mountainColors[i % mountainColors.length],
+        flatShading: true,
+        roughness: 1
+    });
+
+    const mountain = new THREE.Mesh(
+        new THREE.ConeGeometry(8, 13 + Math.random() * 8, 5),
+        mountainMaterial
+    );
+
+    mountain.position.set(
+        i % 2 === 0 ? -25 : 25,
+        5,
+        -i * 35 - 20
+    );
+
+    desertDecor.add(mountain);
+}
+// ROCHERS STYLISÉS
+const rockColors = [0x9b5945, 0xc47a50, 0x75483f];
+
+for (let i = 0; i < 20; i++) {
+    const rock = new THREE.Mesh(
+        new THREE.DodecahedronGeometry(1.5, 0),
+        new THREE.MeshStandardMaterial({
+            color: rockColors[i % rockColors.length],
+            flatShading: true,
+            roughness: 1
+        })
+    );
+
+    rock.scale.set(
+        0.8 + Math.random(),
+        0.6 + Math.random(),
+        0.8 + Math.random()
+    );
+
+    rock.position.set(
+        i % 2 === 0 ? -7 - Math.random() * 5 : 7 + Math.random() * 5,
+        0,
+        -i * 18 - 10
+    );
+
+    desertDecor.add(rock);
+}
+// BUISSONS DU DÉSERT
+const bushMaterial = new THREE.MeshStandardMaterial({
+    color: 0x71843c,
+    flatShading: true
+});
+
+for (let i = 0; i < 14; i++) {
+    const bush = new THREE.Mesh(
+        new THREE.DodecahedronGeometry(1, 1),
+        bushMaterial
+    );
+
+    bush.scale.set(1.2, 0.7, 1);
+
+    bush.position.set(
+        i % 2 === 0 ? -6 : 6,
+        0.3,
+        -i * 22 - 15
+    );
+
+    desertDecor.add(bush);
+}
 scene.add(desertDecor);
 // COULEURS DES IMMEUBLES
 const buildingColors = [
