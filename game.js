@@ -3116,12 +3116,11 @@ if (
         return;
     }
 
-    // Variante 1 : changer de voie
-    if (obstacle.variant === 1) {
-        endGame("Tu as heurté une barrière !");
-        return;
-    }
-
+    // Variante 1 : saut obligatoire
+if (obstacle.variant === 1 && (!jumping || player.position.y < 1.0)) {
+    endGame("Tu as heurté une barrière !");
+    return;
+}
     // Variante 2 : saut obligatoire
     if (obstacle.variant === 2 && (!jumping || player.position.y < 1.5)) {
     endGame("Tu as heurté une barrière !");
