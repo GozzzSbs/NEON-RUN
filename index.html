@@ -321,6 +321,24 @@
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="game.js"></script>
+<div id="map-screen" class="hidden">
+    <h2>🗺️ CHOIX DE LA MAP</h2>
 
+    <div class="map-list">
+        <button onclick="selectMap('city')">
+            🏙️ VILLE
+        </button>
+
+        <button onclick="selectMap('desert')">
+            🏜️ DÉSERT
+        </button>
+
+        <button onclick="selectMap('neon')">
+            🌃 NÉON
+        </button>
+    </div>
+
+    <button onclick="closeMapSelection()">⬅️ RETOUR</button>
+</div>
 </body>
 </html>
