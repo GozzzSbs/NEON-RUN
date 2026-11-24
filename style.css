@@ -2546,3 +2546,28 @@ width: 100%;
         transform: translate(120vw, -60vh) rotate(45deg);
     }
 }
+/* PROFONDEUR DU FOND SPATIAL */
+
+#menu.galaxy-menu {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+}
+
+/* Tous les éléments du menu restent devant le décor */
+#menu.galaxy-menu > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Le décor reste derrière */
+#menu.galaxy-menu::before,
+#menu.galaxy-menu::after {
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Les fusées restent derrière les boutons */
+#menu.galaxy-menu .space-rocket {
+    z-index: -1;
+}
