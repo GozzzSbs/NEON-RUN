@@ -2494,3 +2494,55 @@ width: 100%;
                              280px -280px, center, center;
     }
 }
+/* =================================
+   FUSÉES ET MÉTÉORITES
+================================= */
+
+#menu.galaxy-menu {
+    overflow: hidden;
+}
+
+/* MÉTÉORITES */
+
+#menu.galaxy-menu::after {
+    content: "☄";
+    position: absolute;
+    top: 15%;
+    left: -100px;
+    z-index: 0;
+    pointer-events: none;
+    font-size: 55px;
+    color: #ffb347;
+    filter: drop-shadow(0 0 12px orange);
+    animation: meteorFlight 7s linear infinite;
+}
+
+@keyframes meteorFlight {
+    0% {
+        transform: translate(-100px, -100px) rotate(25deg);
+    }
+    100% {
+        transform: translate(120vw, 80vh) rotate(25deg);
+    }
+}
+
+/* FUSÉES */
+
+.galaxy-menu .space-rocket {
+    position: absolute;
+    left: -100px;
+    z-index: 0;
+    pointer-events: none;
+    font-size: 38px;
+    filter: drop-shadow(0 0 12px #00eaff);
+    animation: rocketFlight 12s linear infinite;
+}
+
+@keyframes rocketFlight {
+    0% {
+        transform: translate(-100px, 0) rotate(45deg);
+    }
+    100% {
+        transform: translate(120vw, -60vh) rotate(45deg);
+    }
+}
