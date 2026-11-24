@@ -7129,11 +7129,13 @@ function closeMapSelection() {
     document.getElementById("map-screen").classList.add("hidden");
 }
 
-function selectMap(mapName) {
-    if (mapName === "city") {
-        closeMapSelection();
-        return;
-    }
+let selectedMap = "city";
 
-    alert("Cette map sera bientôt disponible !");
+function selectMap(mapName) {
+    if (!["city", "desert", "neon"].includes(mapName)) return;
+
+    selectedMap = mapName;
+    closeMapSelection();
+
+    console.log("Map sélectionnée :", selectedMap);
 }
