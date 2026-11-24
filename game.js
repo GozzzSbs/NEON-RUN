@@ -7298,8 +7298,8 @@ function selectMap(mapName) {
 
     // Changer l'ambiance du ciel
     if (isDesert) {
-        scene.background = new THREE.Color(0xe8a84a);
-        scene.fog = new THREE.Fog(0xe8a84a, 100, 350);
+        scene.background = new THREE.Color(0xc9a77b);
+scene.fog = new THREE.Fog(0xc9a77b, 100, 350);
     } else {
         scene.background = new THREE.Color(0x55baff);
         scene.fog = new THREE.Fog(0x55baff, 250, 500);
