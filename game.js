@@ -1965,7 +1965,7 @@ function checkCollisions() {
             // VARIANTES 1 ET 2 : SAUT OBLIGATOIRE
             if (
                 (obstacle.variant === 1 || obstacle.variant === 2) &&
-                (!jumping || player.position.y < 1.5)
+                player.position.y < 0.5
             ) {
                 endGame("Tu as heurté une barrière !");
                 return;
@@ -3116,7 +3116,7 @@ function checkCollisions() {
             // VARIANTES 1 ET 2 : SAUT OBLIGATOIRE
             if (
                 (obstacle.variant === 1 || obstacle.variant === 2) &&
-                (!jumping || player.position.y < 1.5)
+                player.position.y < 0.5
             ) {
                 endGame("Tu as heurté une barrière !");
                 return;
