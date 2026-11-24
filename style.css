@@ -2454,8 +2454,43 @@ width: 100%;
             center;
     }
 }
-/* TEST FOND GALAXIE */
+/* FOND GALAXIE ANIMÉ */
+
 #menu.galaxy-menu {
-    background: linear-gradient(135deg, #071b4a, #42106b, #001c35) !important;
-    min-height: 100vh;
+    position: relative;
+    isolation: isolate;
+    background: linear-gradient(135deg, #030817, #101044, #030817) !important;
+}
+
+#menu.galaxy-menu::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+
+    background-image:
+        radial-gradient(2px 2px at 10% 20%, white 99%, transparent),
+        radial-gradient(2px 2px at 30% 70%, #00eaff 99%, transparent),
+        radial-gradient(2px 2px at 60% 40%, white 99%, transparent),
+        radial-gradient(2px 2px at 80% 15%, white 99%, transparent),
+        radial-gradient(2px 2px at 90% 80%, #a879ff 99%, transparent),
+        radial-gradient(ellipse at 20% 30%, #25208080, transparent 45%),
+        radial-gradient(ellipse at 80% 70%, #006b9980, transparent 45%);
+
+    background-size: 250px 250px, 300px 300px, 200px 200px,
+                     350px 350px, 280px 280px, 100% 100%, 100% 100%;
+
+    animation: spaceStars 35s linear infinite;
+}
+
+@keyframes spaceStars {
+    from {
+        background-position: 0 0, 0 0, 0 0, 0 0, 0 0, center, center;
+    }
+    to {
+        background-position: 250px 500px, -300px 300px,
+                             200px -200px, -350px 350px,
+                             280px -280px, center, center;
+    }
 }
