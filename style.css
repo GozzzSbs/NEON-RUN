@@ -2553,3 +2553,30 @@ width: 100%;
 #menu.galaxy-menu .space-rocket {
     z-index: -1;
 }
+/* DÉCOR SPATIAL EN PROFONDEUR */
+
+#menu.galaxy-menu {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+}
+
+/* Désactive l'ancien décor étoilé CSS */
+#menu.galaxy-menu::before {
+    display: none;
+}
+
+#spaceBackground {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Interface toujours au premier plan */
+#menu.galaxy-menu > *:not(#spaceBackground) {
+    position: relative;
+    z-index: 2;
+}
