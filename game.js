@@ -3100,109 +3100,96 @@ function checkCollisions() {
             Math.abs(obstacle.object.position.x - player.position.x) < 1.25;
 
         if (!sameLane) continue;
-// BARRIÈRES
-if (
-    obstacle.type === "barrier" &&
-    distance > -1.3 &&
-    distance < 1.3
-) {
-    // VARIANTE 0 : BARRIÈRE SUSPENDUE
-    if (obstacle.variant === 0 && !sliding) {
-        endGame("Tu as heurté une barrière !");
-        return;
-    }
 
-    // VARIANTES 1 ET 2 : BARRIÈRES À SAUTER
-    if (obstacle.variant === 1 || obstacle.variant === 2) {
-
-        const hauteurSuffisante = player.position.y > 1.5;
-
-        if (!jumping || !hauteurSuffisante) {
-            endGame("Tu as heurté une barrière !");
-            return;
-        }
-    }
-}
-
-    // Variante 1 : saut obligatoire
-if (obstacle.variant === 1 && (!jumping || player.position.y < 1.0)) {
-    endGame("Tu as heurté une barrière !");
-    return;
-}
-    // Variante 2 : saut obligatoire
-    if (obstacle.variant === 2 && (!jumping || player.position.y < 0.8)) {
-    endGame("Tu as heurté une barrière !");
-    return;
-}
-}
+        // BARRIÈRES
         if (
-    obstacle.type === "train" &&
-    ridingTrain !== obstacle.object &&
-    player.position.y < 3.5 &&
-    distance > -8 &&
-    distance < 2
-) {
+            obstacle.type === "barrier" &&
+            distance > -1.3 &&
+            distance < 1.3
+        ) {
+            // VARIANTE 0 : BARRIÈRE SUSPENDUE
+            if (obstacle.variant === 0 && !sliding) {
+                endGame("Tu as heurté une barrière !");
+                return;
+            }
+
+            // VARIANTES 1 ET 2 : SAUT OBLIGATOIRE
+            if (
+                (obstacle.variant === 1 || obstacle.variant === 2) &&
+                (!jumping || player.position.y < 1.5)
+            ) {
+                endGame("Tu as heurté une barrière !");
+                return;
+            }
+        }
+
+        // TRAIN
+        if (
+            obstacle.type === "train" &&
+            ridingTrain !== obstacle.object &&
+            player.position.y < 3.5 &&
+            distance > -8 &&
+            distance < 2
+        ) {
             endGame("Un train spatial t'a percuté !");
             return;
         }
 
-        // PORTIQUE : IL FAUT SAUTER
-if (
-    obstacle.type === "metroGate" &&
-    distance > -1.3 &&
-    distance < 1.3 &&
-    !jumping
-) {
-    endGame("Tu as heurté un portique !");
-    return;
-}
+        // PORTIQUE
+        if (
+            obstacle.type === "metroGate" &&
+            distance > -1.3 &&
+            distance < 1.3 &&
+            !jumping
+        ) {
+            endGame("Tu as heurté un portique !");
+            return;
+        }
 
-// PORTES : IL FAUT CHANGER DE VOIE
-if (
-    obstacle.type === "metroDoor" &&
-    distance > -1.5 &&
-    distance < 1.5
-) {
-    endGame("Tu es resté devant les portes du métro !");
-    return;
-}
+        // PORTES
+        if (
+            obstacle.type === "metroDoor" &&
+            distance > -1.5 &&
+            distance < 1.5
+        ) {
+            endGame("Tu es resté devant les portes du métro !");
+            return;
+        }
 
-// CÂBLE : IL FAUT GLISSER
-if (
-    obstacle.type === "metroCable" &&
-    distance > -1.3 &&
-    distance < 1.3 &&
-    !sliding
-) {
-    endGame("Tu as heurté un câble !");
-    return;
-}
+        // CÂBLE
+        if (
+            obstacle.type === "metroCable" &&
+            distance > -1.3 &&
+            distance < 1.3 &&
+            !sliding
+        ) {
+            endGame("Tu as heurté un câble !");
+            return;
+        }
 
-// PANNEAU : IL FAUT GLISSER
-if (
-    obstacle.type === "metroSign" &&
-    distance > -1.3 &&
-    distance < 1.3 &&
-    !sliding
-) {
-    endGame("Tu as heurté un panneau !");
-    return;
-}
-            // GRAND TUNNEL : AUCUNE COLLISION
-// Le joueur peut courir normalement à l'intérieur.
-
+        // PANNEAU
+        if (
+            obstacle.type === "metroSign" &&
+            distance > -1.3 &&
+            distance < 1.3 &&
+            !sliding
+        ) {
+            endGame("Tu as heurté un panneau !");
+            return;
+        }
     }
 
-
-    // Ramassage des pièces
+    // RAMASSAGE DES PIÈCES
     for (let i = coinObjects.length - 1; i >= 0; i--) {
         const coin = coinObjects[i];
-const coinWorldPosition = new THREE.Vector3();
-coin.getWorldPosition(coinWorldPosition);
+
+        const coinWorldPosition = new THREE.Vector3();
+        coin.getWorldPosition(coinWorldPosition);
+
         if (
-           Math.abs(coinWorldPosition.z) < 0.8 &&
-Math.abs(coinWorldPosition.x - player.position.x) < 0.75 &&
-Math.abs(coinWorldPosition.y - (1.3 + player.position.y)) < 1.5
+            Math.abs(coinWorldPosition.z) < 0.8 &&
+            Math.abs(coinWorldPosition.x - player.position.x) < 0.75 &&
+            Math.abs(coinWorldPosition.y - (1.3 + player.position.y)) < 1.5
         ) {
             coin.parent.remove(coin);
             coinObjects.splice(i, 1);
@@ -3213,7 +3200,7 @@ Math.abs(coinWorldPosition.y - (1.3 + player.position.y)) < 1.5
             }
 
             coins++;
-updateDailyChallengeProgress("coins", 1);
+            updateDailyChallengeProgress("coins", 1);
             shopWallet++;
             localStorage.setItem("neonWallet", shopWallet);
 
@@ -3221,7 +3208,6 @@ updateDailyChallengeProgress("coins", 1);
         }
     }
 }
-
 // ======================================================
 // SYSTÈME DE DIAMANTS
 // ======================================================
