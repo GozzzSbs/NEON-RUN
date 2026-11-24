@@ -457,5 +457,198 @@
 
     <button onclick="closeMapSelection()">⬅️ RETOUR</button>
 </div>
+    <script>
+(() => {
+    const canvas = document.getElementById("spaceBackground");
+    const menu = document.getElementById("menu");
+
+    if (!canvas || !menu) return;
+
+    const ctx = canvas.getContext("2d");
+
+    let width = 0;
+    let height = 0;
+    let stars = [];
+    let meteors = [];
+    let rockets = [];
+    let lastMeteor = 0;
+    let lastRocket = 0;
+
+    function resize() {
+        const rect = menu.getBoundingClientRect();
+        width = rect.width;
+        height = rect.height;
+
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        stars = Array.from({ length: 180 }, () => ({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            depth: Math.random(),
+            size: Math.random() * 1.5 + 0.3
+        }));
+    }
+
+    function drawStars() {
+        for (const star of stars) {
+            star.y += 0.15 + star.depth * 0.8;
+
+            if (star.y > height) {
+                star.y = 0;
+                star.x = Math.random() * width;
+            }
+
+            ctx.globalAlpha = 0.3 + star.depth * 0.7;
+            ctx.fillStyle = "#ffffff";
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        ctx.globalAlpha = 1;
+    }
+
+    function createMeteor() {
+        const x = Math.random() * width;
+        const y = Math.random() * height * 0.55;
+
+        meteors.push({
+            x, y,
+            vx: 5 + Math.random() * 5,
+            vy: 2 + Math.random() * 3,
+            life: 1,
+            length: 45 + Math.random() * 75
+        });
+    }
+
+    function drawMeteors() {
+        for (let i = meteors.length - 1; i >= 0; i--) {
+            const m = meteors[i];
+
+            m.x += m.vx;
+            m.y += m.vy;
+            m.life -= 0.006;
+
+            const gradient = ctx.createLinearGradient(
+                m.x, m.y,
+                m.x - m.length, m.y - m.length * 0.45
+            );
+
+            gradient.addColorStop(0, "rgba(255,255,255,0.95)");
+            gradient.addColorStop(0.3, "rgba(80,200,255,0.6)");
+            gradient.addColorStop(1, "rgba(80,200,255,0)");
+
+            ctx.globalAlpha = Math.max(0, m.life);
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(m.x, m.y);
+            ctx.lineTo(m.x - m.length, m.y - m.length * 0.45);
+            ctx.stroke();
+
+            ctx.fillStyle = "#ffffff";
+            ctx.beginPath();
+            ctx.arc(m.x, m.y, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            if (m.life <= 0 || m.x > width + 100 || m.y > height + 100) {
+                meteors.splice(i, 1);
+            }
+        }
+
+        ctx.globalAlpha = 1;
+    }
+
+    function createRocket() {
+        rockets.push({
+            x: -40,
+            y: Math.random() * height * 0.7,
+            speed: 0.8 + Math.random() * 0.8,
+            size: 0.45 + Math.random() * 0.35
+        });
+    }
+
+    function drawRockets() {
+        for (let i = rockets.length - 1; i >= 0; i--) {
+            const r = rockets[i];
+
+            r.x += r.speed;
+
+            ctx.save();
+            ctx.translate(r.x, r.y);
+            ctx.scale(r.size, r.size);
+
+            ctx.globalAlpha = 0.45;
+            ctx.fillStyle = "#ff9d55";
+            ctx.beginPath();
+            ctx.moveTo(-12, 0);
+            ctx.lineTo(-28, -4);
+            ctx.lineTo(-23, 0);
+            ctx.lineTo(-28, 4);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = "#cbd9ed";
+            ctx.beginPath();
+            ctx.moveTo(14, 0);
+            ctx.lineTo(2, -5);
+            ctx.lineTo(-12, -4);
+            ctx.lineTo(-12, 4);
+            ctx.lineTo(2, 5);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = "#4bdfff";
+            ctx.beginPath();
+            ctx.arc(3, 0, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+
+            if (r.x > width + 60) {
+                rockets.splice(i, 1);
+            }
+        }
+
+        ctx.globalAlpha = 1;
+    }
+
+    function animate(time) {
+        ctx.clearRect(0, 0, width, height);
+
+        drawStars();
+
+        if (time - lastMeteor > 4500 + Math.random() * 4000) {
+            createMeteor();
+            lastMeteor = time;
+        }
+
+        if (time - lastRocket > 12000) {
+            createRocket();
+            lastRocket = time;
+        }
+
+        drawMeteors();
+        drawRockets();
+
+        requestAnimationFrame(animate);
+    }
+
+    resize();
+
+    if ("ResizeObserver" in window) {
+        new ResizeObserver(resize).observe(menu);
+    } else {
+        window.addEventListener("resize", resize);
+    }
+
+    requestAnimationFrame(animate);
+})();
+</script>
 </body>
 </html>
