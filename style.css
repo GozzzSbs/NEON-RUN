@@ -2409,3 +2409,48 @@ width: 100%;
     }
 
 }
+/* =================================
+   FOND GALAXIE ANIMÉ
+================================= */
+
+.galaxy-menu {
+    background-image:
+        radial-gradient(2px 2px at 20px 30px, #ffffff 99%, transparent),
+        radial-gradient(1px 1px at 100px 150px, #00eaff 99%, transparent),
+        radial-gradient(2px 2px at 180px 80px, #ffffff 99%, transparent),
+        radial-gradient(ellipse at 50% 0%, rgba(0, 190, 255, 0.2), transparent 50%),
+        radial-gradient(ellipse at 10% 50%, rgba(120, 0, 255, 0.2), transparent 50%),
+        linear-gradient(145deg, #030817, #080d24, #020511);
+
+    background-size:
+        200px 200px,
+        250px 250px,
+        300px 300px,
+        100% 100%,
+        100% 100%,
+        100% 100%;
+
+    animation: galaxyMove 25s linear infinite;
+}
+
+@keyframes galaxyMove {
+    from {
+        background-position:
+            0 0,
+            50px 50px,
+            100px 100px,
+            center,
+            center,
+            center;
+    }
+
+    to {
+        background-position:
+            200px 200px,
+            300px 300px,
+            400px 400px,
+            center,
+            center,
+            center;
+    }
+}
