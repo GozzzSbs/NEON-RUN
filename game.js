@@ -1969,10 +1969,14 @@ if (obstacle.variant === 1 && (!jumping || player.position.y < 1.0)) {
     return;
 }
 
-            // MODÈLE 3 : IL FAUT SAUTER
-            if (obstacle.variant === 2 && (!jumping || player.position.y < 0.8)) {
-    endGame("Tu as heurté une barrière !");
-    return;
+            // MODÈLE 3 : GRANDE BARRIÈRE À FRANCHIR EN SAUTANT
+if (obstacle.variant === 2) {
+    const jumpIsHighEnough = player.position.y > 1.5;
+
+    if (!jumpIsHighEnough) {
+        endGame("Tu as heurté une barrière !");
+        return;
+    }
 }
       }
 
