@@ -1757,11 +1757,11 @@ function createBarrier(laneIndex, z) {
     if (variant === 0) {
 
         // GRANDE BARRIÈRE SUSPENDUE
-        box(2.1, 1.15, 0.35, red, 0, 2.15, 0, barrier);
+box(2.1, 1.6, 0.35, red, 0, 2.5, 0, barrier);
 
-        for (const side of [-1, 1]) {
-            box(0.12, 2.2, 0.25, metal, side * 1.05, 1.1, 0, barrier);
-        }
+for (const side of [-1, 1]) {
+    box(0.12, 2.8, 0.25, metal, side * 1.05, 1.4, 0, barrier);
+}
 
     } else if (variant === 1) {
 
