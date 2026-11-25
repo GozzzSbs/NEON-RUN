@@ -2360,16 +2360,15 @@ function isPlayerAboveLavaPlatform() {
 
         const sameLane =
             Math.abs(p.position.x - player.position.x) <
-            p.userData.width / 2 + 0.4;
+            p.userData.width / 2 + 0.8;
 
         const abovePlatform =
             Math.abs(p.position.z) <
-            p.userData.depth / 2 + 0.4;
+            p.userData.depth / 2 + 1.5;
 
         return sameLane && abovePlatform;
     });
 }
-
 // ======================================================
 // GÉNÉRATION
 // ======================================================
