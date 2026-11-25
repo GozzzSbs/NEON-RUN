@@ -2371,7 +2371,6 @@ function isPlayerAboveLavaPlatform() {
         return sameLane && abovePlatform;
     });
 }
-}
 
 // ======================================================
 // GÉNÉRATION
