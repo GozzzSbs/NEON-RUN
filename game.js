@@ -2329,7 +2329,7 @@ function moveLavaPlatforms() {
     if (selectedMode !== "lava") return;
 
     lavaPlatformTimer++;
-
+console.log("Plateformes :", lavaPlatforms.map(item => item.object.position.z));
     lavaPlatforms.forEach(item => {
         item.object.position.z += speed;
     });
