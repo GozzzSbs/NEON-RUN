@@ -1774,11 +1774,11 @@ for (const side of [-1, 1]) {
 
     } else {
 
-        // BARRIÈRE BASSE À SAUTER
-        box(2.1, 1.05, 0.35, red, 0, 0.95, 0, barrier);
+        // GRANDE BARRIÈRE À SAUTER
+box(2.1, 1.6, 0.35, red, 0, 1.3, 0, barrier);
 
         for (const side of [-1, 1]) {
-            box(0.12, 0.9, 0.25, metal, side * 1.05, 0.45, 0, barrier);
+            box(0.12, 1.6, 0.25, metal, side * 1.05, 0.8, 0, barrier);
         }
     }
 
