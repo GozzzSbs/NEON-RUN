@@ -2252,18 +2252,24 @@ function setLavaVisuals(enabled) {
 function createLavaPlatform(laneIndex, z, width = 2.55, depth = 5.2) {
     const platform = new THREE.Group();
 
-    const rock = new THREE.Mesh(
-        new THREE.BoxGeometry(width, 0.55, depth),
-        mat(0x40332e)
-    );
+    const wood = new THREE.Mesh(
+    new THREE.BoxGeometry(width, 0.55, depth),
+    mat(0x8B5A2B)
+);
+
+wood.position.y = -0.02;
+platform.add(wood);
 
     rock.position.y = -0.02;
     platform.add(rock);
 
     const top = new THREE.Mesh(
-        new THREE.BoxGeometry(width - 0.2, 0.12, depth - 0.2),
-        mat(0x716052)
-    );
+    new THREE.BoxGeometry(width - 0.2, 0.12, depth - 0.2),
+    mat(0xA66A35)
+);
+
+top.position.y = 0.31;
+platform.add(top);
 
     top.position.y = 0.31;
     platform.add(top);
@@ -2354,13 +2360,17 @@ function isPlayerAboveLavaPlatform() {
     return lavaPlatforms.some(item => {
         const p = item.object;
 
-        return (
+        const sameLane =
             Math.abs(p.position.x - player.position.x) <
-                (p.userData.width / 2 - 0.15) &&
+            p.userData.width / 2 + 0.4;
+
+        const abovePlatform =
             Math.abs(p.position.z) <
-                (p.userData.depth / 2 - 0.15)
-        );
+            p.userData.depth / 2 + 0.4;
+
+        return sameLane && abovePlatform;
     });
+}
 }
 
 // ======================================================
