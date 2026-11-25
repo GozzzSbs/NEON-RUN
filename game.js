@@ -3983,36 +3983,7 @@ function stopNoCoinTimer() {
 }
 function startGame() {
 
-    // THE FLOOR IS LAVA : ÉCRAN SOON
-    if (selectedMode === "lava") {
-
-        let soonScreen = document.getElementById("soonScreen");
-
-        if (!soonScreen) {
-            soonScreen = document.createElement("div");
-            soonScreen.id = "soonScreen";
-
-            soonScreen.style.cssText = `
-                position: fixed;
-                inset: 0;
-                background: #000;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                color: white;
-                font-family: Arial, sans-serif;
-                font-size: clamp(40px, 8vw, 80px);
-                font-weight: bold;
-                z-index: 999999;
-            `;
-
-            soonScreen.textContent = "SOON...";
-            document.body.appendChild(soonScreen);
-        }
-
-        soonScreen.style.display = "flex";
-        return;
-    }
+    
 // =====================================
 // ACTIVATION DU DÉCOR MÉTRO
 // =====================================
@@ -4095,8 +4066,8 @@ if (playerParts.body) {
     obstacles = [];
     coinObjects = [];
 
-    setLavaVisuals(false);
-    resetLavaPlatforms();
+    setLavaVisuals(selectedMode === "lava");
+resetLavaPlatforms();
 
     applyShopSkin();
     applyShopCape();
@@ -4131,6 +4102,7 @@ if (devBadge) devBadge.style.display = "none";
     if (modeName) {
         modeName.textContent =
     selectedMode === "nocoin" ? "NO COIN" :
+    selectedMode === "lava" ? "🌋 THE FLOOR IS LAVA" :
     selectedMode === "metro" ? "🚇 MÉTRO" :
     "SPACE GALAXY";
     }
