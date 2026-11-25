@@ -2668,9 +2668,9 @@ if (pattern === "single") {
     let spawnedTrain = null;
 
     if (trainSpawned) {
-        spawnedTrain = createTrain(laneIndex, -115);
+        createTrain(laneIndex, -155);
     } else {
-        createBarrier(laneIndex, -105);
+        createBarrier(laneIndex, -145);
     }
 
     if (selectedMode === "lava") return;
