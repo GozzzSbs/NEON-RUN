@@ -3925,10 +3925,10 @@ function startNoCoinTimer() {
 
     let display = document.getElementById("noCoinTimer");
 
-    if (selectedMode !== "nocoin") {
-        if (display) display.style.display = "none";
-        return;
-    }
+    if (selectedMode !== "nocoin" && selectedMode !== "lava") {
+    if (display) display.style.display = "none";
+    return;
+}
 
     if (!display) {
         display = document.createElement("div");
@@ -3971,7 +3971,7 @@ function stopNoCoinTimer() {
     clearInterval(noCoinTimerInterval);
     noCoinTimerInterval = null;
 
-    if (selectedMode === "nocoin") {
+    if (selectedMode === "nocoin" || selectedMode === "lava") {
         noCoinElapsed = (performance.now() - noCoinStartTime) / 1000;
 
         const timer = document.getElementById("noCoinTimer");
