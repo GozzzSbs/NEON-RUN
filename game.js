@@ -2252,28 +2252,25 @@ function setLavaVisuals(enabled) {
 function createLavaPlatform(laneIndex, z, width = 2.55, depth = 5.2) {
     const platform = new THREE.Group();
 
+    // BASE EN BOIS
     const wood = new THREE.Mesh(
-    new THREE.BoxGeometry(width, 0.55, depth),
-    mat(0x8B5A2B)
-);
+        new THREE.BoxGeometry(width, 0.55, depth),
+        mat(0x8B5A2B)
+    );
 
-wood.position.y = -0.02;
-platform.add(wood);
+    wood.position.y = -0.02;
+    platform.add(wood);
 
-    rock.position.y = -0.02;
-    platform.add(rock);
-
+    // SURFACE EN BOIS
     const top = new THREE.Mesh(
-    new THREE.BoxGeometry(width - 0.2, 0.12, depth - 0.2),
-    mat(0xA66A35)
-);
-
-top.position.y = 0.31;
-platform.add(top);
+        new THREE.BoxGeometry(width - 0.2, 0.12, depth - 0.2),
+        mat(0xA66A35)
+    );
 
     top.position.y = 0.31;
     platform.add(top);
 
+    // BORDS LUMINEUX
     const edgeMaterial = new THREE.MeshBasicMaterial({
         color: 0xff5a12
     });
@@ -2293,6 +2290,7 @@ platform.add(top);
     platform.userData.depth = depth;
 
     scene.add(platform);
+
     lavaPlatforms.push({
         object: platform,
         lane: laneIndex
