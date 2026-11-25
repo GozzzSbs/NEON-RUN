@@ -2037,6 +2037,7 @@ function checkCollisions() {
     }
 
     // RAMASSAGE DES PIÈCES
+    if (selectedMode === "lava") return;
     for (let i = coinObjects.length - 1; i >= 0; i--) {
         const coin = coinObjects[i];
 
