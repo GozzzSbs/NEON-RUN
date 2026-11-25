@@ -2798,9 +2798,9 @@ if (pattern === "slalom") {
     const secondLane = (firstLane + 1) % 3;
     const thirdLane = (firstLane + 2) % 3;
 
-    createTrain(firstLane, -115);
-    createTrain(secondLane, -175);
-    createTrain(thirdLane, -235);
+    createTrain(firstLane, -155);
+    createTrain(secondLane, -215);
+    createTrain(thirdLane, -275);
 
     return;
 }
