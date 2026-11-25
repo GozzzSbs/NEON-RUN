@@ -2318,7 +2318,7 @@ function resetLavaPlatforms() {
 
     if (selectedMode !== "lava") return;
 
-    createLavaPlatform(1, -25, 9.2, 60);
+    createLavaPlatform(1, -25, 9.2, 100);
 
     for (let i = 0; i < 12; i++) {
         spawnLavaSegment(-65 - i * 12);
