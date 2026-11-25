@@ -2335,10 +2335,13 @@ console.log("Plateformes :", lavaPlatforms.map(item => item.object.position.z));
     });
 
     lavaPlatforms = lavaPlatforms.filter(item => {
-        if (item.object.position.z > 18) {
-            scene.remove(item.object);
-            return false;
-        }
+        const platformEnd =
+    item.object.position.z - item.object.userData.depth / 2;
+
+if (platformEnd > 2) {
+    scene.remove(item.object);
+    return false;
+}
 
         return true;
     });
