@@ -2553,3 +2553,23 @@ width: 100%;
 #menu.galaxy-menu .space-rocket {
     z-index: -1;
 }
+/* =================================
+   PERSONNAGE 3D AU CENTRE DU MENU
+================================= */
+
+#menuCharacterPreview {
+    width: 100%;
+    height: 360px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+#menuCharacterCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
