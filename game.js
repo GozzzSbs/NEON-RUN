@@ -1398,7 +1398,164 @@ player.position.set(0, 0, 0);
 
     scene.add(player);
 }
+// =============================================
+// APERÇU 3D DU PERSONNAGE DANS LE MENU
+// =============================================
 
+let menuPreviewScene;
+let menuPreviewCamera;
+let menuPreviewRenderer;
+let menuPreviewPlayer = null;
+
+function initMenuCharacterPreview() {
+
+    const canvas = document.getElementById("menuCharacterCanvas");
+
+    if (!canvas || !window.THREE || !THREE.GLTFLoader) return;
+
+    menuPreviewScene = new THREE.Scene();
+
+    menuPreviewCamera = new THREE.PerspectiveCamera(
+        35,
+        canvas.clientWidth / canvas.clientHeight,
+        0.1,
+        100
+    );
+
+    menuPreviewCamera.position.set(0, 1.8, 8);
+    menuPreviewCamera.lookAt(0, 1.5, 0);
+
+    menuPreviewRenderer = new THREE.WebGLRenderer({
+        canvas: canvas,
+        alpha: true,
+        antialias: true
+    });
+
+    menuPreviewRenderer.setPixelRatio(
+        Math.min(window.devicePixelRatio, 2)
+    );
+
+    menuPreviewRenderer.setSize(
+        canvas.clientWidth,
+        canvas.clientHeight
+    );
+
+    // Éclairage
+    const ambient = new THREE.AmbientLight(0xffffff, 1.5);
+    menuPreviewScene.add(ambient);
+
+    const light = new THREE.DirectionalLight(0xffffff, 2);
+    light.position.set(3, 6, 5);
+    menuPreviewScene.add(light);
+
+    // Charger le skin équipé
+    updateMenuCharacterPreview();
+
+    // Animation indépendante du jeu
+    function renderPreview() {
+        requestAnimationFrame(renderPreview);
+
+        if (menuPreviewPlayer) {
+            menuPreviewPlayer.rotation.y += 0.005;
+        }
+
+        menuPreviewRenderer.render(
+            menuPreviewScene,
+            menuPreviewCamera
+        );
+    }
+
+    renderPreview();
+}
+
+
+// =============================================
+// CHARGEMENT DU SKIN ÉQUIPÉ
+// =============================================
+
+function updateMenuCharacterPreview() {
+
+    if (!menuPreviewScene) return;
+
+    const skins = {
+        default: "grab3d-cozy-character%20(2).glb",
+        street_king: "grab3d-cozy-character.glb",
+        astronaut: "grab3d-cozy-character%20(1).glb",
+        culprit: "grab3d-cozy-character%20(5).glb",
+        cooker: "grab3d-cozy-character%20(6).glb",
+        shella: "grab3d-cozy-character%20(7).glb"
+    };
+
+    const skinKey = equippedSkin;
+    const fileName = skins[skinKey];
+
+    if (!fileName) return;
+
+    const loader = new THREE.GLTFLoader();
+
+    loader.load(
+        fileName,
+
+        function (gltf) {
+
+            // Ignorer un chargement devenu obsolète
+            if (equippedSkin !== skinKey) return;
+
+            if (menuPreviewPlayer) {
+                menuPreviewScene.remove(menuPreviewPlayer);
+            }
+
+            const model = gltf.scene;
+
+            if (skinKey === "default") {
+                model.rotation.y += Math.PI;
+            }
+
+            const box = new THREE.Box3().setFromObject(model);
+            const size = box.getSize(new THREE.Vector3());
+
+            const scale = 3 / size.y;
+            model.scale.setScalar(scale);
+
+            const scaledBox = new THREE.Box3().setFromObject(model);
+            const center = scaledBox.getCenter(new THREE.Vector3());
+
+            model.position.x -= center.x;
+            model.position.z -= center.z;
+            model.position.y -= scaledBox.min.y;
+
+            model.traverse(function (child) {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            });
+
+            menuPreviewPlayer = new THREE.Group();
+
+            menuPreviewPlayer.add(model);
+            menuPreviewPlayer.rotation.y = Math.PI;
+
+            menuPreviewScene.add(menuPreviewPlayer);
+
+        },
+
+        undefined,
+
+        function (error) {
+            console.error(
+                "Erreur aperçu du personnage :",
+                error
+            );
+        }
+    );
+}
+
+
+// Initialisation après le chargement de la page
+window.addEventListener("load", function () {
+    initMenuCharacterPreview();
+});
 function createStreetKing() {
     createGLBCharacter("grab3d-cozy-character.glb", "streetKing");
 }
